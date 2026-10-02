@@ -46,7 +46,9 @@ const AboutSection = () => {
               <span>PHILOSOPHY & SPECIALIZATION</span>
             </span>
           </div>
-          <h2 className="editorial-main-title">ABOUT ME</h2>
+          <h2 className="editorial-main-title">
+            ABOUT <span className="heading-gradient-word">ME</span>
+          </h2>
           <span className="editorial-subtitle">BCA STUDENT • DEVELOPER • CREATIVE TECHNOLOGIST</span>
         </div>
 

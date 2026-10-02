@@ -144,7 +144,7 @@
 
 .hero-name-line.name-ali {
   color: var(--color-primary);
-  background: linear-gradient(135deg, #4D3A4D 0%, #63325B 65%, #823873 100%);
+  background: linear-gradient(135deg, #4D3A4D 10%, #7E386F 45%, #BE5CA9 80%, #D59CC5 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: 0.04em;

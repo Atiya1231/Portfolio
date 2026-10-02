@@ -102,7 +102,9 @@ const JourneySection = () => {
               <span>TIMELINE & MILESTONES</span>
             </span>
           </div>
-          <h2 className="editorial-main-title">MY JOURNEY</h2>
+          <h2 className="editorial-main-title">
+            MY <span className="heading-gradient-word">JOURNEY</span>
+          </h2>
           <span className="editorial-subtitle">ACADEMIC GROWTH, TECHNICAL FOUNDATIONS & PROJECT MILESTONES</span>
         </div>
 

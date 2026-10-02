@@ -102,21 +102,19 @@ h1, h2, h3, h4, h5, h6 {
 .text-muted { color: var(--color-text-muted); }
 .text-dim { color: var(--color-text-dim); }
 
-/* Vibrant Sunset Editorial Gradients */
-.gradient-text-sunset {
-  background: linear-gradient(135deg, var(--color-primary) 15%, var(--color-secondary) 65%, var(--color-tertiary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
+/* Vibrant Sunset Editorial Heading Gradients (Matching LET'S BUILD SOMETHING Reference) */
+.heading-gradient-word,
 .gradient-text-pink {
-  background: linear-gradient(135deg, var(--color-primary) 20%, var(--color-secondary) 70%, var(--color-tertiary) 100%);
+  background: linear-gradient(135deg, #4D3A4D 10%, #7E386F 45%, #BE5CA9 80%, #D59CC5 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  color: var(--color-primary);
+  display: inline;
 }
 
-.gradient-text-crimson {
-  background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+.gradient-text-sunset {
+  background: linear-gradient(135deg, #4D3A4D 15%, #9B4B87 60%, #BE5CA9 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  color: var(--color-primary);
 }

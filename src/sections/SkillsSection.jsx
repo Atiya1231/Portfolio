@@ -114,7 +114,9 @@ const SkillsSection = () => {
               <span>TECHNICAL CAPABILITIES</span>
             </span>
           </div>
-          <h2 className="editorial-main-title">TECHNICAL SKILLS</h2>
+          <h2 className="editorial-main-title">
+            MY <span className="heading-gradient-word">SKILLS</span>
+          </h2>
           <span className="editorial-subtitle">LANGUAGES, FRAMEWORKS, DATABASES & DESIGN TOOLS</span>
         </div>
 

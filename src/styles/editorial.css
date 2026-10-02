@@ -52,9 +52,18 @@
   font-size: clamp(2.6rem, 6.5vw, 5.2rem);
   font-weight: 800;
   line-height: 0.95;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   color: var(--color-primary);
   margin-top: 0.5rem;
+}
+
+/* Selective Gradient Word Treatment: Dark Plum (#4D3A4D) -> Sunset Pink/Magenta (#BE5CA9 / #D59CC5) */
+.heading-gradient-word {
+  background: linear-gradient(135deg, #4D3A4D 10%, #7E386F 45%, #BE5CA9 80%, #D59CC5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--color-primary);
+  display: inline;
 }
 
 .editorial-subtitle {

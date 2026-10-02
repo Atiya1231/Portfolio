@@ -67,7 +67,7 @@ const ContactSection = () => {
             <div>
               <h2 className="contact-editorial-statement">
                 LET'S<br />
-                <span className="gradient-text-pink">BUILD</span><br />
+                <span className="heading-gradient-word">BUILD</span><br />
                 SOMETHING
               </h2>
             </div>

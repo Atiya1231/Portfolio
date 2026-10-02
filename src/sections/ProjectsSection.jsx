@@ -103,7 +103,9 @@ const ProjectsSection = () => {
               <span>PORTFOLIO SHOWCASE</span>
             </span>
           </div>
-          <h2 className="editorial-main-title">SELECTED WORK</h2>
+          <h2 className="editorial-main-title">
+            SELECTED <span className="heading-gradient-word">WORK</span>
+          </h2>
           <span className="editorial-subtitle">ACADEMIC, WEB APPLICATION & CREATIVE COMPUTING PROJECTS</span>
         </div>
 
