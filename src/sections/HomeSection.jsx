@@ -3,13 +3,14 @@ import { ArrowUpRight, MessageCircle } from 'lucide-react';
 import { gsap, ScrollTrigger, scrollToSection } from '../animations/gsapUtils';
 import Hero3DCanvas from '../components/Hero3DCanvas';
 import MagneticButton from '../components/MagneticButton';
-import portraitImg from '../assets/atiya-cutout.png';
+import portraitNormal from '../assets/atiya-normal.png';
+import portraitFuturistic from '../assets/atiya-futuristic.png';
 
 /**
- * HomeSection (Phase 2): Full-screen Cinematic 3D Hero.
+ * HomeSection: Full-screen Cinematic 3D Hero with Cursor-Following Image Reveal.
  * Features:
  * - Visually dominant editorial typography (ATIYA ALI)
- * - Authentic cinematic portrait with feathered ambient rim lighting & glow
+ * - Authentic cinematic portrait with smooth cursor reveal (Base: Normal, Reveal: Futuristic)
  * - Real-time interactive 3D WebGL metallic sculpture with Three.js / R3F
  * - 8-step orchestrated GSAP cinematic entrance timeline
  * - Smooth mouse magnetic pull & scroll parallax transitions
@@ -17,6 +18,7 @@ import portraitImg from '../assets/atiya-cutout.png';
 const HomeSection = () => {
   const sectionRef = useRef(null);
   const portraitRef = useRef(null);
+  const revealLayerRef = useRef(null);
   const glowCrimsonRef = useRef(null);
   const glowPinkRef = useRef(null);
   const glowLeftRef = useRef(null);
@@ -24,27 +26,63 @@ const HomeSection = () => {
   const nameAliRef = useRef(null);
   const contentLeftRef = useRef(null);
 
-  // 3D Card tilt effect on portrait mouse hover (desktop only)
+  // Smooth lerp coordinates for circular cursor reveal
+  const targetReveal = useRef({ x: 0, y: 0, r: 0 });
+  const currentReveal = useRef({ x: 0, y: 0, r: 0 });
+  const rafRef = useRef(null);
+
+  // 3D Card tilt effect & relative cursor position on portrait mouse hover (desktop only)
   const handlePortraitMouseMove = (e) => {
     if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
     const card = portraitRef.current;
     if (!card) return;
 
     const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
+    const relX = e.clientX - rect.left;
+    const relY = e.clientY - rect.top;
 
-    const rotX = -(y / (rect.height / 2)) * 6; // max 6 deg
-    const rotY = (x / (rect.width / 2)) * 6;
+    targetReveal.current = { x: relX, y: relY, r: 150 };
+
+    const rotX = -((relY - rect.height / 2) / (rect.height / 2)) * 6; // max 6 deg
+    const rotY = ((relX - rect.width / 2) / (rect.width / 2)) * 6;
 
     card.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-4px) scale(1.01)`;
   };
 
   const handlePortraitMouseLeave = () => {
+    targetReveal.current.r = 0;
     const card = portraitRef.current;
     if (!card) return;
     card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)';
   };
+
+  // Smooth fluid animation loop with requestAnimationFrame
+  useEffect(() => {
+    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isReducedMotion) return;
+
+    const animate = () => {
+      const target = targetReveal.current;
+      const current = currentReveal.current;
+
+      current.x += (target.x - current.x) * 0.12;
+      current.y += (target.y - current.y) * 0.12;
+      current.r += (target.r - current.r) * 0.1;
+
+      if (revealLayerRef.current) {
+        revealLayerRef.current.style.setProperty('--mouse-x', `${current.x.toFixed(1)}px`);
+        revealLayerRef.current.style.setProperty('--mouse-y', `${current.y.toFixed(1)}px`);
+        revealLayerRef.current.style.setProperty('--reveal-r', `${current.r.toFixed(1)}px`);
+      }
+
+      rafRef.current = requestAnimationFrame(animate);
+    };
+
+    rafRef.current = requestAnimationFrame(animate);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -333,13 +371,30 @@ const HomeSection = () => {
             onMouseLeave={handlePortraitMouseLeave}
           >
             <div className="hero-portrait-inner">
+              {/* BASE NORMAL PORTRAIT */}
               <img
-                src={portraitImg}
+                src={portraitNormal}
                 alt="Atiya Ali — BCA student and aspiring developer"
-                className="hero-portrait-image"
+                className="hero-portrait-image hero-portrait-base"
                 loading="eager"
                 decoding="async"
               />
+
+              {/* REVEAL FUTURISTIC PORTRAIT */}
+              <div
+                ref={revealLayerRef}
+                className="hero-portrait-reveal-layer"
+                aria-hidden="true"
+              >
+                <img
+                  src={portraitFuturistic}
+                  alt=""
+                  className="hero-portrait-image hero-portrait-futuristic"
+                  loading="eager"
+                  decoding="async"
+                />
+              </div>
+
               {/* Soft Ambient Rim Light Overlay */}
               <div className="hero-portrait-lighting-overlay" aria-hidden="true" />
             </div>
