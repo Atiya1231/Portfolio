@@ -1,6 +1,6 @@
 /* ==========================================================================
    CINEMATIC EDITORIAL HERO SECTION STYLES
-   Visual Target: 100dvh Viewport Lock + Vertically Centered Portrait + Rich Depth
+   Visual Target: 100dvh Viewport Lock + Bottom-Aligned Large Portrait + Continuous Depth
    Palette: Background (#EADADA), Soft Pink (#D59CC5), 
             Magenta (#BE5CA9), Dark Plum (#4D3A4D)
    ========================================================================== */
@@ -13,28 +13,28 @@
   max-height: 100dvh;
   width: 100%;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  padding: var(--nav-height) var(--section-padding-x) 1rem;
+  padding: 0 var(--section-padding-x) 0;
   overflow: hidden;
   box-sizing: border-box;
-  /* Multi-stop atmospheric gradient: Light #EADADA (Left) -> #D59CC5 -> #BE5CA9 -> Deep #4D3A4D (Right) */
+  /* Multi-stop continuous atmospheric gradient: Light #EADADA (Left) -> #D59CC5 -> #BE5CA9 -> Deep #4D3A4D (Right) */
   background: 
-    radial-gradient(ellipse 65% 80% at 88% 50%, rgba(77, 58, 77, 0.48) 0%, rgba(190, 92, 169, 0.32) 48%, transparent 76%),
-    radial-gradient(circle at 74% 46%, rgba(190, 92, 169, 0.4) 0%, rgba(213, 156, 197, 0.3) 42%, transparent 72%),
-    radial-gradient(circle at 48% 50%, rgba(213, 156, 197, 0.25) 0%, transparent 60%),
-    linear-gradient(90deg, #EADADA 0%, #EADADA 30%, #E2CAD9 52%, #D59CC5 70%, #BE5CA9 86%, #4D3A4D 100%);
-  border-bottom: 1px solid rgba(77, 58, 77, 0.12);
+    radial-gradient(ellipse 65% 80% at 85% 55%, rgba(77, 58, 77, 0.44) 0%, rgba(190, 92, 169, 0.3) 45%, transparent 75%),
+    radial-gradient(circle at 74% 45%, rgba(190, 92, 169, 0.35) 0%, rgba(213, 156, 197, 0.25) 45%, transparent 70%),
+    radial-gradient(circle at 45% 50%, rgba(213, 156, 197, 0.2) 0%, transparent 60%),
+    linear-gradient(90deg, #EADADA 0%, #EADADA 32%, #E2CAD9 54%, #D59CC5 72%, #BE5CA9 88%, #4D3A4D 100%);
+  border-bottom: 1px solid rgba(77, 58, 77, 0.1);
 }
 
 /* ==========================================================================
-   ATMOSPHERIC GLOWS & BACKGROUND DEPTH
+   ATMOSPHERIC GLOWS & BACKGROUND DEPTH (Pure Gradient, No Geometric Shapes)
    ========================================================================== */
 .hero-glow-atmosphere {
   position: absolute;
-  top: 48%;
+  top: 45%;
   right: 15%;
-  transform: translate(25%, -50%);
+  transform: translate(25%, -45%);
   width: min(850px, 85vw);
   height: min(850px, 85vw);
   border-radius: 50%;
@@ -53,14 +53,14 @@
   position: absolute;
   top: 46%;
   right: 26%;
-  transform: translate(20%, -50%);
+  transform: translate(20%, -45%);
   width: min(550px, 58vw);
   height: min(550px, 58vw);
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(213, 156, 197, 0.42) 0%,
-    rgba(190, 92, 169, 0.28) 48%,
+    rgba(213, 156, 197, 0.4) 0%,
+    rgba(190, 92, 169, 0.26) 48%,
     transparent 75%
   );
   filter: blur(50px);
@@ -76,31 +76,13 @@
   height: min(650px, 70vw);
   background: radial-gradient(
     ellipse at bottom right,
-    rgba(77, 58, 77, 0.55) 0%,
-    rgba(190, 92, 169, 0.25) 45%,
+    rgba(77, 58, 77, 0.52) 0%,
+    rgba(190, 92, 169, 0.22) 45%,
     transparent 72%
   );
   filter: blur(65px);
   pointer-events: none;
   z-index: 0;
-}
-
-/* Fluid Atmospheric Waves SVG */
-.hero-bg-waves {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
-  opacity: 0.95;
-}
-
-.hero-waves-svg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 /* Main Grid Layout: Balanced 100dvh Editorial Presentation */
@@ -110,7 +92,7 @@
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1.05fr 1.05fr;
-  align-items: center;
+  align-items: flex-end;
   gap: clamp(1.25rem, 3.5vw, 3.5rem);
   position: relative;
   z-index: 2;
@@ -124,18 +106,21 @@
 .hero-content-left {
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   align-items: flex-start;
-  gap: clamp(0.65rem, 1.6vh, 1.25rem);
-  padding-top: 0.25rem;
+  gap: clamp(0.55rem, 1.4vh, 1.1rem);
+  padding-top: calc(var(--nav-height) + 1.25rem);
+  padding-bottom: clamp(1.25rem, 3.2vh, 2.5rem);
   z-index: 3;
 }
 
-/* Role / Status Badge */
+/* Role / Status Badge (Comfortable margin below top-left navbar) */
 .hero-status-pill {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
   padding: 0.38rem 1.1rem;
+  margin-bottom: 0.35rem;
   background: rgba(213, 156, 197, 0.38);
   border: 1px solid rgba(190, 92, 169, 0.45);
   border-radius: 9999px;
@@ -165,6 +150,7 @@
   flex-direction: column;
   line-height: 0.9;
   user-select: none;
+  margin-bottom: 0.2rem;
 }
 
 .hero-name-line {
@@ -315,7 +301,7 @@
 
 /* Scroll Indicator */
 .hero-scroll-indicator {
-  margin-top: clamp(0.5rem, 1.4vh, 1.25rem);
+  margin-top: clamp(0.4rem, 1.2vh, 0.9rem);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -351,7 +337,7 @@
 
 .hero-scroll-line-container {
   width: 1px;
-  height: 30px;
+  height: 28px;
   background: rgba(77, 58, 77, 0.2);
   position: relative;
   overflow: hidden;
@@ -386,48 +372,52 @@
 }
 
 /* ==========================================================================
-   RIGHT COLUMN: LARGE VERTICALLY CENTERED PORTRAIT (85-90vh)
+   RIGHT COLUMN: LARGE BOTTOM-ALIGNED PORTRAIT (88-95vh)
+   0-10px Bottom Gap, No Cutoff Masks, Natural Silhouette
    ========================================================================== */
 .hero-visual-right {
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   height: 100%;
   max-height: 100%;
+  bottom: 0;
+  margin-bottom: 0;
 }
 
-/* Soft Radial Ambient Glow Behind Portrait */
+/* Soft Radial Ambient Glow Behind Portrait Cutout */
 .hero-portrait-ambient-glow {
   position: absolute;
-  width: 125%;
-  height: 125%;
-  top: 50%;
+  width: 120%;
+  height: 120%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
   background: radial-gradient(
-    ellipse at 50% 48%,
-    rgba(213, 156, 197, 0.58) 0%,
-    rgba(190, 92, 169, 0.35) 45%,
-    rgba(77, 58, 77, 0.25) 70%,
+    ellipse at 50% 45%,
+    rgba(213, 156, 197, 0.5) 0%,
+    rgba(190, 92, 169, 0.3) 45%,
+    rgba(77, 58, 77, 0.2) 70%,
     transparent 85%
   );
-  filter: blur(50px);
+  filter: blur(55px);
   pointer-events: none;
   z-index: 1;
 }
 
-/* Seamless Portrait Container: Vertically Centered & Shifted Slightly Upward */
+/* Seamless Portrait Container: Anchored to Bottom Edge */
 .hero-portrait-wrapper {
   position: relative;
   z-index: 2;
-  height: min(86vh, 740px);
+  height: min(92vh, 800px);
   width: auto;
   max-width: 100%;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  transform: translateY(-3%); /* Centered upward balance */
+  bottom: 0;
+  margin-bottom: 0;
   background: transparent;
   border: none;
   box-shadow: none;
@@ -435,19 +425,16 @@
   transition: transform 0.5s var(--ease-out-expo);
 }
 
-/* Genuine Authentic Cutout Image */
+/* Genuine Authentic Cutout Image: Complete Natural Silhouette (No Cutoff Masks) */
 .hero-portrait-image {
   height: 100%;
   width: auto;
   max-width: 100%;
-  max-height: min(86vh, 740px);
+  max-height: min(92vh, 800px);
   object-fit: contain;
-  object-position: center center;
+  object-position: center bottom;
   display: block;
-  filter: drop-shadow(0 20px 50px rgba(77, 58, 77, 0.22)) drop-shadow(0 0 35px rgba(190, 92, 169, 0.25));
-  /* Feathered bottom fade seamlessly merging into the rich Hero background */
-  mask-image: linear-gradient(to bottom, #000000 0%, #000000 82%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, #000000 0%, #000000 82%, transparent 100%);
+  filter: drop-shadow(0 20px 50px rgba(77, 58, 77, 0.2)) drop-shadow(0 0 35px rgba(190, 92, 169, 0.22));
   transition: transform 0.4s var(--ease-out-expo), filter var(--transition-normal);
 }
 
@@ -460,7 +447,7 @@
   .hero-layout-grid {
     grid-template-columns: 1.05fr 0.95fr;
     gap: 1.5rem;
-    align-items: center;
+    align-items: flex-end;
   }
 
   .hero-name-line {
@@ -470,8 +457,7 @@
   }
 
   .hero-portrait-wrapper {
-    height: min(65vh, 520px);
-    transform: translateY(0);
+    height: min(70vh, 560px);
   }
 }
 
@@ -531,9 +517,8 @@
   }
 
   .hero-portrait-wrapper {
-    height: min(48vh, 380px);
+    height: min(50vh, 400px);
     width: 100%;
-    transform: translateY(0);
     background: transparent;
     border: none;
     box-shadow: none;
