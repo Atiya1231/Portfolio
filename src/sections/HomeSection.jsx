@@ -1,477 +1,299 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { ArrowUpRight, MessageCircle } from 'lucide-react';
-import { gsap, ScrollTrigger, scrollToSection } from '../animations/gsapUtils';
-import Hero3DCanvas from '../components/Hero3DCanvas';
-import MagneticButton from '../components/MagneticButton';
-import portraitNormal from '../assets/atiya-normal.png';
-import portraitFuturistic from '../assets/atiya-futuristic.png';
+import React, { useState, useEffect, useRef } from 'react';
+import { Menu } from 'lucide-react';
+import { scrollToSection } from '../animations/gsapUtils';
+
+const SPOTLIGHT_R = 260;
 
 /**
- * HomeSection: Full-screen Cinematic Editorial Hero with Centered Portrait & Two-Layer Cursor Reveal.
- *
- * Concepts:
- * - Centered Stage: Authentic portrait centered prominently in the Hero environment.
- * - Top / Center: Oversized Editorial Typography (ATIYA ALI) with high-contrast Dark Plum & Magenta accents.
- * - Layer 1: Normal authentic portrait (atiya-normal.png).
- * - Layer 2: Futuristic portrait (atiya-futuristic.png with chrome visor and metallic outfit).
- * - Interaction: Smooth fluid cursor-driven circular mask reveal with lerp easing.
- * - Bottom Row: Left-aligned editorial statement & description, Right-aligned magnetic CTA buttons.
- * - Palette: Strictly #EADADA (Background), #4D3A4D (Dark Plum), #BE5CA9 (Magenta), #D59CC5 (Soft Pink).
+ * RevealLayer: Renders a dynamic canvas radial gradient mask
+ * that smoothly reveals the second image inside a soft glowing spotlight.
  */
-const HomeSection = () => {
-  const sectionRef = useRef(null);
-  const portraitWrapperRef = useRef(null);
-  const futuristicLayerRef = useRef(null);
-  const glowCrimsonRef = useRef(null);
-  const glowPinkRef = useRef(null);
-  const glowLeftRef = useRef(null);
-  const nameAtiyaRef = useRef(null);
-  const nameAliRef = useRef(null);
-  const bottomBarRef = useRef(null);
+const RevealLayer = ({ image, cursorX, cursorY, radius = SPOTLIGHT_R }) => {
+  const canvasRef = useRef(null);
+  const revealDivRef = useRef(null);
 
-  // Smooth lerp coordinates for the circular cursor reveal
-  const targetReveal = useRef({ x: 240, y: 240, radius: 0, active: false });
-  const currentReveal = useRef({ x: 240, y: 240, radius: 0 });
-  const rafRef = useRef(null);
-
-  // Parallax subtle tilt offsets
-  const [, setMouseOffset] = useState({ x: 0, y: 0 });
-
-  // Update reveal target based on pointer position relative to centered portrait
-  const updateRevealPosition = useCallback((clientX, clientY) => {
-    if (!portraitWrapperRef.current) return;
-    const rect = portraitWrapperRef.current.getBoundingClientRect();
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
-
-    // Check if cursor is over or near the portrait
-    const isInside =
-      x >= -60 && x <= rect.width + 60 && y >= -60 && y <= rect.height + 60;
-
-    targetReveal.current.x = x;
-    targetReveal.current.y = y;
-    targetReveal.current.radius = isInside ? 165 : 0;
-    targetReveal.current.active = isInside;
-
-    // Subtle 3D portrait parallax shift (max 8px)
-    const normX = (x / rect.width - 0.5) * 2;
-    const normY = (y / rect.height - 0.5) * 2;
-    setMouseOffset({ x: normX, y: normY });
-
-    if (portraitWrapperRef.current) {
-      const rotX = -normY * 3;
-      const rotY = normX * 3;
-      portraitWrapperRef.current.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translate3d(${normX * 4}px, ${normY * 4}px, 0)`;
-    }
-  }, []);
-
-  const handlePointerMove = (e) => {
-    updateRevealPosition(e.clientX, e.clientY);
-  };
-
-  const handlePointerLeave = () => {
-    targetReveal.current.radius = 0;
-    targetReveal.current.active = false;
-    if (portraitWrapperRef.current) {
-      portraitWrapperRef.current.style.transform =
-        'perspective(1000px) rotateX(0deg) rotateY(0deg) translate3d(0, 0, 0)';
-    }
-  };
-
-  // Touch support for mobile & tablet devices
-  const handleTouchMove = (e) => {
-    if (e.touches && e.touches[0]) {
-      updateRevealPosition(e.touches[0].clientX, e.touches[0].clientY);
-    }
-  };
-
-  const handleTouchEnd = () => {
-    targetReveal.current.radius = 0;
-    targetReveal.current.active = false;
-  };
-
-  // Continuous Fluid RequestAnimationFrame Lerp Loop
   useEffect(() => {
-    const isReducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches;
-    if (isReducedMotion) return;
+    const updateMask = () => {
+      const canvas = canvasRef.current;
+      const revealDiv = revealDivRef.current;
+      if (!canvas || !revealDiv) return;
 
-    const lerp = (start, end, factor) => start + (end - start) * factor;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      canvas.width = w;
+      canvas.height = h;
 
-    const animateReveal = () => {
-      const target = targetReveal.current;
-      const current = currentReveal.current;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
 
-      current.x = lerp(current.x, target.x, 0.12);
-      current.y = lerp(current.y, target.y, 0.12);
-      current.radius = lerp(current.radius, target.radius, 0.1);
+      ctx.clearRect(0, 0, w, h);
 
-      if (futuristicLayerRef.current) {
-        futuristicLayerRef.current.style.setProperty('--reveal-x', `${current.x.toFixed(1)}px`);
-        futuristicLayerRef.current.style.setProperty('--reveal-y', `${current.y.toFixed(1)}px`);
-        futuristicLayerRef.current.style.setProperty('--reveal-r', `${current.radius.toFixed(1)}px`);
+      // Only draw when cursor is on screen
+      if (cursorX > -500 && cursorY > -500) {
+        const grad = ctx.createRadialGradient(
+          cursorX,
+          cursorY,
+          0,
+          cursorX,
+          cursorY,
+          radius
+        );
+        grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+        grad.addColorStop(0.4, 'rgba(255, 255, 255, 1)');
+        grad.addColorStop(0.6, 'rgba(255, 255, 255, 0.75)');
+        grad.addColorStop(0.75, 'rgba(255, 255, 255, 0.4)');
+        grad.addColorStop(0.88, 'rgba(255, 255, 255, 0.12)');
+        grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cursorX, cursorY, radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        try {
+          const dataUrl = canvas.toDataURL();
+          revealDiv.style.maskImage = `url(${dataUrl})`;
+          revealDiv.style.webkitMaskImage = `url(${dataUrl})`;
+          revealDiv.style.maskSize = '100% 100%';
+          revealDiv.style.webkitMaskSize = '100% 100%';
+          revealDiv.style.maskRepeat = 'no-repeat';
+          revealDiv.style.webkitMaskRepeat = 'no-repeat';
+        } catch {
+          // Fallback CSS radial-gradient if canvas export fails
+          const maskVal = `radial-gradient(circle ${radius}px at ${cursorX}px ${cursorY}px, black 0%, black 40%, rgba(0,0,0,0.75) 60%, rgba(0,0,0,0.4) 75%, rgba(0,0,0,0.12) 88%, transparent 100%)`;
+          revealDiv.style.maskImage = maskVal;
+          revealDiv.style.webkitMaskImage = maskVal;
+        }
+      } else {
+        revealDiv.style.maskImage = 'none';
+        revealDiv.style.webkitMaskImage = 'none';
       }
-
-      rafRef.current = requestAnimationFrame(animateReveal);
     };
 
-    rafRef.current = requestAnimationFrame(animateReveal);
+    updateMask();
+  }, [cursorX, cursorY, radius]);
+
+  return (
+    <>
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 pointer-events-none"
+        style={{ display: 'none' }}
+      />
+      <div
+        ref={revealDivRef}
+        className="absolute inset-0 bg-center bg-cover bg-no-repeat z-30 pointer-events-none"
+        style={{
+          backgroundImage: `url(${image})`,
+        }}
+      />
+    </>
+  );
+};
+
+/**
+ * HomeSection: Full-screen, dark-themed hero section with cursor-following spotlight reveal.
+ */
+const HomeSection = () => {
+  const mouseRef = useRef({ x: -999, y: -999 });
+  const smoothRef = useRef({ x: -999, y: -999 });
+  const rafRef = useRef(null);
+  const [cursorPos, setCursorPos] = useState({ x: -999, y: -999 });
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      mouseRef.current = { x: e.clientX, y: e.clientY };
+    };
+
+    const handleTouchMove = (e) => {
+      if (e.touches && e.touches[0]) {
+        mouseRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+    };
+
+    const handleMouseLeave = () => {
+      mouseRef.current = { x: -999, y: -999 };
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    document.addEventListener('mouseleave', handleMouseLeave);
+
+    // Continuous requestAnimationFrame lerp loop
+    const animate = () => {
+      const mouse = mouseRef.current;
+      const smooth = smoothRef.current;
+
+      if (mouse.x === -999 && mouse.y === -999) {
+        smooth.x = -999;
+        smooth.y = -999;
+      } else {
+        if (smooth.x === -999) {
+          smooth.x = mouse.x;
+          smooth.y = mouse.y;
+        } else {
+          smooth.x += (mouse.x - smooth.x) * 0.1;
+          smooth.y += (mouse.y - smooth.y) * 0.1;
+        }
+      }
+
+      setCursorPos({ x: smooth.x, y: smooth.y });
+      rafRef.current = requestAnimationFrame(animate);
+    };
+
+    rafRef.current = requestAnimationFrame(animate);
 
     return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('mouseleave', handleMouseLeave);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
-  // Global mousemove for hero depth tracking
-  useEffect(() => {
-    const onGlobalMouseMove = (e) => {
-      if (sectionRef.current) {
-        const rect = sectionRef.current.getBoundingClientRect();
-        if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
-          updateRevealPosition(e.clientX, e.clientY);
-        }
-      }
-    };
-
-    window.addEventListener('mousemove', onGlobalMouseMove, { passive: true });
-    return () => window.removeEventListener('mousemove', onGlobalMouseMove);
-  }, [updateRevealPosition]);
-
-  // GSAP Cinematic Entrance Timeline
-  useEffect(() => {
-    const isReducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches;
-
-    const ctx = gsap.context(() => {
-      if (isReducedMotion) {
-        gsap.set(
-          [
-            glowCrimsonRef.current,
-            glowPinkRef.current,
-            glowLeftRef.current,
-            '.hero-3d-canvas-container',
-            portraitWrapperRef.current,
-            nameAtiyaRef.current,
-            nameAliRef.current,
-            '.hero-status-pill',
-            '.hero-tagline',
-            '.hero-description',
-            '.hero-editorial-statement',
-            '.magnetic-btn',
-            '.hero-scroll-indicator'
-          ],
-          { opacity: 1, visibility: 'visible', clearProps: 'transform,filter' }
-        );
-        return;
-      }
-
-      // Initial clean state
-      gsap.set([glowCrimsonRef.current, glowPinkRef.current, glowLeftRef.current], { opacity: 0 });
-      gsap.set('.hero-3d-canvas-container', { opacity: 0, scale: 0.9 });
-      gsap.set(portraitWrapperRef.current, { opacity: 0, y: 40, scale: 1.05, filter: 'blur(10px)' });
-      gsap.set('.hero-status-pill', { opacity: 0, y: 15 });
-      gsap.set(nameAtiyaRef.current, { opacity: 0, y: 40, filter: 'blur(8px)' });
-      gsap.set(nameAliRef.current, { opacity: 0, y: 40, filter: 'blur(8px)' });
-      gsap.set('.hero-tagline', { opacity: 0, y: 20 });
-      gsap.set(['.hero-editorial-statement', '.hero-description'], { opacity: 0, y: 20 });
-      gsap.set('.magnetic-btn', { opacity: 0, y: 18, scale: 0.96 });
-      gsap.set('.hero-scroll-indicator', { opacity: 0, y: 12 });
-
-      // Orchestrated Cinematic Timeline (< 1.4s total entrance)
-      const entranceTl = gsap.timeline({
-        defaults: { ease: 'power3.out' },
-        delay: 0.15
-      });
-
-      entranceTl
-        // 1. Atmospheric ambient light glows appear
-        .to([glowCrimsonRef.current, glowPinkRef.current, glowLeftRef.current], {
-          opacity: 1,
-          duration: 1.1,
-          ease: 'power2.out'
-        })
-        // 2. 3D ambient depth canvas scales in softly
-        .to(
-          '.hero-3d-canvas-container',
-          {
-            opacity: 1,
-            scale: 1,
-            duration: 1.3,
-            ease: 'expo.out'
-          },
-          '-=0.8'
-        )
-        // 3. Portrait reveals smoothly with subtle settling scale (1.05 -> 1.0)
-        .to(
-          portraitWrapperRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1.0,
-            filter: 'blur(0px)',
-            duration: 1.3,
-            ease: 'power3.out',
-            clearProps: 'filter'
-          },
-          '-=1.0'
-        )
-        // 4. Status Pill & Editorial Typography reveal
-        .to(
-          '.hero-status-pill',
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6
-          },
-          '-=0.9'
-        )
-        .to(
-          nameAtiyaRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            filter: 'blur(0px)',
-            duration: 1.0,
-            ease: 'power3.out',
-            clearProps: 'filter'
-          },
-          '-=0.7'
-        )
-        .to(
-          nameAliRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            filter: 'blur(0px)',
-            duration: 1.0,
-            ease: 'power3.out',
-            clearProps: 'filter'
-          },
-          '-=0.8'
-        )
-        .to(
-          '.hero-tagline',
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.7
-          },
-          '-=0.7'
-        )
-        // 5. Bottom left statement & description
-        .to(
-          ['.hero-editorial-statement', '.hero-description'],
-          {
-            opacity: 1,
-            y: 0,
-            stagger: 0.12,
-            duration: 0.75
-          },
-          '-=0.7'
-        )
-        // 6. Action buttons fade in
-        .to(
-          '.magnetic-btn',
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            stagger: 0.12,
-            duration: 0.7
-          },
-          '-=0.5'
-        )
-        // 7. Scroll indicator gently appears
-        .to(
-          '.hero-scroll-indicator',
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: 'power2.out'
-          },
-          '-=0.4'
-        );
-
-      // Parallax Scroll Animation into About section
-      if (typeof ScrollTrigger !== 'undefined') {
-        gsap.to(portraitWrapperRef.current, {
-          y: -35,
-          scale: 0.98,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1
-          }
-        });
-
-        gsap.to('.hero-bottom-bar', {
-          y: -25,
-          opacity: 0.75,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1
-          }
-        });
-      }
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section
-      id="home"
-      ref={sectionRef}
-      className="hero-section hero-center-composition"
-      aria-label="Atiya Ali Hero Presentation"
-      onMouseMove={handlePointerMove}
-      onMouseLeave={handlePointerLeave}
+    <div
+      className="min-h-screen bg-white tracking-[-0.02em]"
+      style={{ fontFamily: "'Inter', sans-serif" }}
     >
-      {/* Subtle Noise / Film-Grain Texture Layer */}
-      <div className="hero-grain-overlay" aria-hidden="true" />
-
-      {/* Atmospheric Ambient Lighting Glows (Vibrant Sunset Palette: #4D3A4D, #BE5CA9, #D59CC5, #EADADA) */}
-      <div ref={glowCrimsonRef} className="hero-glow-crimson" aria-hidden="true" />
-      <div ref={glowPinkRef} className="hero-glow-pink" aria-hidden="true" />
-      <div ref={glowLeftRef} className="hero-glow-left" aria-hidden="true" />
-
-      {/* 3D WebGL Ambient Lighting & Depth Canvas */}
-      <Hero3DCanvas />
-
-      {/* ==========================================================================
-          TOP / CENTER EDITORIAL MASTHEAD: STATUS, HEADING & SUBTITLE
-          ========================================================================== */}
-      <div className="hero-top-masthead">
-        {/* Status Badge */}
-        <div className="hero-status-pill">
-          <span className="hero-status-dot" />
-          <span>AVAILABLE FOR OPPORTUNITIES</span>
-        </div>
-
-        {/* Large Dominant Editorial Typography */}
-        <div className="hero-name-container">
-          <h1 className="hero-name-line name-atiya" ref={nameAtiyaRef}>
-            ATIYA
-          </h1>
-          <span className="hero-name-line name-ali" ref={nameAliRef}>
-            ALI
+      {/* Navigation (Fixed, over hero) */}
+      <nav className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between p-4 sm:p-5">
+        {/* Left: SVG Logo + Wordmark */}
+        <div className="flex items-center gap-2.5 z-10">
+          <svg
+            className="w-[26px] h-[26px]"
+            viewBox="0 0 256 256"
+            fill="#ffffff"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M 256 256 L 128 256 L 0 128 L 128 128 Z M 256 128 L 128 128 L 0 0 L 128 0 Z" />
+          </svg>
+          <span className="text-white font-medium text-base tracking-tight select-none">
+            Nasha.co
           </span>
         </div>
 
-        {/* Tagline Subtitle */}
-        <div className="hero-tagline">
-          <span>BCA STUDENT</span>
-          <span className="hero-tagline-bullet">•</span>
-          <span>DEVELOPER</span>
-        </div>
-      </div>
-
-      {/* ==========================================================================
-          CENTER PORTRAIT STAGE: TWO-LAYER CURSOR REVEAL
-          ========================================================================== */}
-      <div
-        ref={portraitWrapperRef}
-        className="hero-center-portrait-wrapper interactive"
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        {/* Atmospheric Pastel Glow Backdrop */}
-        <div className="hero-portrait-glow-backdrop" aria-hidden="true" />
-
-        <div className="hero-portrait-inner">
-          {/* LAYER 1: BASE AUTHENTIC PORTRAIT (Natural styling, pink dress) */}
-          <img
-            src={portraitNormal}
-            alt="Atiya Ali — Developer & BCA Student"
-            className="hero-portrait-image hero-portrait-base"
-            loading="eager"
-            decoding="async"
-          />
-
-          {/* LAYER 2: FUTURISTIC PORTRAIT (Chrome visor, silver outfit — revealed via cursor mask) */}
-          <div
-            ref={futuristicLayerRef}
-            className="hero-portrait-futuristic-layer"
-            aria-hidden="true"
+        {/* Center Pill Navigation */}
+        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 bg-white/20 backdrop-blur-md border border-white/30 rounded-full px-2 py-2 items-center gap-1 z-10">
+          <button
+            type="button"
+            onClick={() => scrollToSection('about')}
+            className="text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors hover:bg-white/20"
           >
-            <img
-              src={portraitFuturistic}
-              alt=""
-              className="hero-portrait-image hero-portrait-futuristic-img"
-              loading="eager"
-              decoding="async"
-            />
-          </div>
-
-          {/* Soft Ambient Light Catch & Bottom Gradient Blend */}
-          <div className="hero-portrait-blend-overlay" aria-hidden="true" />
-        </div>
-      </div>
-
-      {/* ==========================================================================
-          BOTTOM ROW: LEFT STATEMENT/DESCRIPTION & RIGHT ACTION CTAs
-          ========================================================================== */}
-      <div className="hero-bottom-bar" ref={bottomBarRef}>
-        {/* Bottom Left: Editorial Statement & Description */}
-        <div className="hero-bottom-left">
-          <p className="hero-editorial-statement">
-            "Building digital experiences where technology meets creativity."
-          </p>
-          <p className="hero-description">
-            Crafting immersive web applications with modern engineering, precision aesthetics, and interactive 3D environments.
-          </p>
+            About
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollToSection('projects')}
+            className="text-white/80 hover:bg-white/20 hover:text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors"
+          >
+            Projects
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollToSection('contact')}
+            className="text-white/80 hover:bg-white/20 hover:text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors"
+          >
+            Contact
+          </button>
         </div>
 
-        {/* Bottom Right: Magnetic CTA Buttons */}
-        <div className="hero-bottom-right">
-          <div className="hero-cta-group">
-            <MagneticButton
-              id="hero-btn-explore"
-              variant="primary"
-              onClick={() => scrollToSection('projects')}
-              ariaLabel="Explore my projects and work"
-            >
-              <span>EXPLORE MY WORK</span>
-              <ArrowUpRight size={17} />
-            </MagneticButton>
-
-            <MagneticButton
-              id="hero-btn-contact"
-              variant="secondary"
-              onClick={() => scrollToSection('contact')}
-              ariaLabel="Contact Atiya Ali"
-            >
-              <span>CONTACT ME</span>
-              <MessageCircle size={16} />
-            </MagneticButton>
-          </div>
+        {/* Right: Desktop CTA Button */}
+        <div className="hidden md:block z-10">
+          <button
+            type="button"
+            onClick={() => scrollToSection('contact')}
+            className="bg-white text-gray-900 text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-gray-100 transition-colors shadow-sm"
+          >
+            Let's talk
+          </button>
         </div>
-      </div>
 
-      {/* ==========================================================================
-          BOTTOM SCROLL INDICATOR
-          ========================================================================== */}
-      <button
-        type="button"
-        className="hero-scroll-indicator interactive"
-        onClick={() => scrollToSection('about')}
-        aria-label="Scroll to About section"
+        {/* Right: Mobile Hamburger */}
+        <button
+          type="button"
+          onClick={() => scrollToSection('contact')}
+          className="md:hidden text-white p-2 rounded-full bg-white/15 backdrop-blur-md border border-white/25 z-10"
+          aria-label="Open menu"
+        >
+          <Menu size={20} />
+        </button>
+      </nav>
+
+      {/* Main Full-Screen Hero Section */}
+      <section
+        id="home"
+        className="relative w-full overflow-hidden h-screen bg-black"
+        style={{ height: '100dvh' }}
       >
-        <span className="hero-scroll-text">SCROLL TO EXPLORE</span>
-        <div className="hero-scroll-line-container">
-          <div className="hero-scroll-line" />
+        {/* Layer 1: Base Image (z-10) with slow Ken Burns zoom */}
+        <div
+          className="absolute inset-0 bg-center bg-cover bg-no-repeat z-10 hero-zoom pointer-events-none"
+          style={{
+            backgroundImage: "url('./images/Base_image.png')",
+          }}
+        />
+
+        {/* Layer 2: Reveal Layer (z-30) showing Reveal_image through cursor mask */}
+        <RevealLayer
+          image="./images/Reveal_image.png"
+          cursorX={cursorPos.x}
+          cursorY={cursorPos.y}
+          radius={SPOTLIGHT_R}
+        />
+
+        {/* Layer 3: Heading (z-50) */}
+        <div
+          className="absolute top-1/2 -translate-y-1/2 flex flex-col items-start text-left px-5 pointer-events-none z-50"
+          style={{ left: '80px' }}
+        >
+          <h1 className="text-white leading-[0.95]">
+            <span
+              className="block font-playfair italic font-normal text-5xl sm:text-7xl md:text-8xl hero-anim hero-reveal"
+              style={{ letterSpacing: '-0.05em', animationDelay: '0.25s' }}
+            >
+              I'm
+            </span>
+            <span
+              className="block font-normal text-5xl sm:text-7xl md:text-8xl -mt-1 hero-anim hero-reveal"
+              style={{ letterSpacing: '-0.08em', animationDelay: '0.42s' }}
+            >
+              NASHA
+            </span>
+            <span
+              className="block font-playfair italic text-white/90 text-base sm:text-lg md:text-xl mt-3 sm:mt-4 hero-anim hero-reveal"
+              style={{ letterSpacing: '-0.02em', animationDelay: '0.58s' }}
+            >
+              UXUI Designer
+            </span>
+          </h1>
         </div>
-      </button>
-    </section>
+
+        {/* Layer 4: Bottom-Left Paragraph (z-50) */}
+        <div
+          className="hidden sm:block absolute bottom-14 max-w-[260px] hero-anim hero-fade z-50 pointer-events-none"
+          style={{ left: '100px', animationDelay: '0.7s' }}
+        >
+          <p className="text-sm text-white/80 leading-relaxed">
+            I design with curiosity and build with code. Obsessed with AI tools, live coding, and finding new ways to make digital experiences feel alive.
+          </p>
+        </div>
+
+        {/* Layer 5: Bottom-Right Block (z-50) */}
+        <div
+          className="absolute bottom-10 sm:bottom-24 left-5 right-5 sm:left-auto sm:right-10 md:right-14 max-w-full sm:max-w-[260px] flex flex-col items-start gap-4 sm:gap-5 z-50 hero-anim hero-fade pointer-events-none"
+          style={{ animationDelay: '0.85s' }}
+        >
+          <p className="text-xs sm:text-sm text-white/80 leading-relaxed">
+            UX/UI designer who codes. I use AI to design faster, build smarter, and create digital experiences that actually work.
+          </p>
+        </div>
+      </section>
+    </div>
   );
 };
 
 export default HomeSection;
+
 
 
