@@ -28,7 +28,7 @@
   --glow-plum: 0 0 30px rgba(77, 58, 77, 0.18);
 
   /* Typography System (Editorial Serif Display + Clean Modern Sans UI) */
-  --font-display: 'Bodoni Moda', 'Playfair Display', 'Italiana', Georgia, serif;
+  --font-display: 'Playfair Display', 'Bodoni Moda', 'Italiana', Georgia, serif;
   --font-serif: 'Playfair Display', 'Bodoni Moda', Georgia, serif;
   --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
