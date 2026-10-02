@@ -406,7 +406,7 @@
   z-index: 1;
 }
 
-/* Seamless Portrait Container: Anchored to Bottom Edge */
+/* Seamless Portrait Container: Anchored and Lifted 42px Upward for Ideal Vertical Balance */
 .hero-portrait-wrapper {
   position: relative;
   z-index: 2;
@@ -416,7 +416,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  bottom: 0;
+  bottom: 42px;
   margin-bottom: 0;
   background: transparent;
   border: none;
