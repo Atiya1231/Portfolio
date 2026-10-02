@@ -363,6 +363,58 @@
 }
 
 /* ==========================================================================
+   FUTURISTIC TRANSLUCENT FASHION EDITORIAL VISOR / GLASSES
+   Palette: Dark Plum (#4D3A4D), Magenta (#BE5CA9), Soft Pink (#D59CC5)
+   ========================================================================== */
+.editorial-visor-container {
+  position: absolute;
+  top: 36.3%;
+  left: 41.8%;
+  width: 29.5%;
+  aspect-ratio: 320 / 95;
+  transform: translate(-50%, -50%) rotate(-19.3deg);
+  transform-origin: center center;
+  z-index: 4;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 14px rgba(77, 58, 77, 0.22)) drop-shadow(0 0 16px rgba(190, 92, 169, 0.32));
+  will-change: transform, opacity, filter;
+}
+
+/* Optical Refraction Behind Lens */
+.visor-backdrop-refraction {
+  position: absolute;
+  inset: 6% 4% 8% 4%;
+  border-radius: 36px;
+  backdrop-filter: blur(2.2px) contrast(1.08) brightness(1.04);
+  -webkit-backdrop-filter: blur(2.2px) contrast(1.08) brightness(1.04);
+  z-index: 1;
+}
+
+/* SVG Vector Visor Shield */
+.visor-svg-shield {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  overflow: visible;
+}
+
+.visor-lens-path {
+  transition: filter 0.3s ease;
+}
+
+.visor-glare-group {
+  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.4, 1);
+  will-change: transform;
+}
+
+.visor-brow-bar {
+  filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.6));
+}
+
+/* ==========================================================================
    BOTTOM SCROLL INDICATOR
    ========================================================================== */
 .hero-scroll-indicator {

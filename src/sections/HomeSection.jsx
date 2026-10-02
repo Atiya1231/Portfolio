@@ -1,17 +1,18 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ArrowUpRight, MessageCircle } from 'lucide-react';
 import { gsap, ScrollTrigger, scrollToSection } from '../animations/gsapUtils';
 import Hero3DCanvas from '../components/Hero3DCanvas';
+import EditorialVisor from '../components/EditorialVisor';
 import MagneticButton from '../components/MagneticButton';
 import portraitImg from '../assets/atiya-cutout.png';
 
 /**
- * HomeSection (Phase 2): Full-screen Cinematic 3D Hero.
+ * HomeSection (Phase 2 & 3): Full-screen Cinematic 3D Hero.
  * Features:
  * - Visually dominant editorial typography (ATIYA ALI)
- * - Authentic cinematic portrait with feathered ambient rim lighting & glow
- * - Real-time interactive 3D WebGL metallic sculpture with Three.js / R3F
- * - 8-step orchestrated GSAP cinematic entrance timeline
+ * - Authentic cinematic portrait with high-fashion translucent visor
+ * - Cinematic volumetric sunset lighting & depth
+ * - Orchestrated GSAP cinematic entrance timeline
  * - Smooth mouse magnetic pull & scroll parallax transitions
  */
 const HomeSection = () => {
@@ -23,8 +24,9 @@ const HomeSection = () => {
   const nameAtiyaRef = useRef(null);
   const nameAliRef = useRef(null);
   const contentLeftRef = useRef(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
-  // 3D Card tilt effect on portrait mouse hover (desktop only)
+  // 3D Tilt effect on portrait mouse hover (desktop only)
   const handlePortraitMouseMove = (e) => {
     if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
     const card = portraitRef.current;
@@ -34,8 +36,8 @@ const HomeSection = () => {
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
 
-    const rotX = -(y / (rect.height / 2)) * 6; // max 6 deg
-    const rotY = (x / (rect.width / 2)) * 6;
+    const rotX = -(y / (rect.height / 2)) * 5; // subtle 5 deg
+    const rotY = (x / (rect.width / 2)) * 5;
 
     card.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-4px) scale(1.01)`;
   };
@@ -45,6 +47,19 @@ const HomeSection = () => {
     if (!card) return;
     card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)';
   };
+
+  // Mouse tracking for parallax lighting & visor specular reflection
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const { innerWidth, innerHeight } = window;
+      const x = (e.clientX / innerWidth) * 2 - 1;
+      const y = (e.clientY / innerHeight) * 2 - 1;
+      setMousePos({ x, y });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   useEffect(() => {
     const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -59,6 +74,7 @@ const HomeSection = () => {
             glowLeftRef.current,
             '.hero-3d-canvas-container',
             portraitRef.current,
+            '.editorial-visor-container',
             nameAtiyaRef.current,
             nameAliRef.current,
             '.hero-status-pill',
@@ -72,10 +88,11 @@ const HomeSection = () => {
         return;
       }
 
-      // Initial state: dark / hidden
+      // Initial state: clean #EADADA background, elements hidden
       gsap.set([glowCrimsonRef.current, glowPinkRef.current, glowLeftRef.current], { opacity: 0 });
       gsap.set('.hero-3d-canvas-container', { opacity: 0, scale: 0.88 });
       gsap.set(portraitRef.current, { opacity: 0, y: 35, filter: 'blur(12px)' });
+      gsap.set('.editorial-visor-container', { opacity: 0, scale: 0.92, filter: 'blur(8px)' });
       gsap.set('.hero-status-pill', { opacity: 0, y: 20 });
       gsap.set(nameAtiyaRef.current, { opacity: 0, y: 45, filter: 'blur(10px)' });
       gsap.set(nameAliRef.current, { opacity: 0, y: 45, filter: 'blur(10px)' });
@@ -83,20 +100,20 @@ const HomeSection = () => {
       gsap.set('.magnetic-btn', { opacity: 0, y: 20, scale: 0.96 });
       gsap.set('.hero-scroll-indicator', { opacity: 0, y: 15 });
 
-      // Orchestrated 8-Step GSAP Cinematic Entrance Timeline
+      // Orchestrated GSAP Cinematic Editorial Entrance Timeline
       const entranceTl = gsap.timeline({
         defaults: { ease: 'power3.out' },
         delay: 0.2
       });
 
       entranceTl
-        // Step 2: Atmospheric ambient glows fade in
+        // 1. Atmospheric ambient light glows appear
         .to([glowCrimsonRef.current, glowPinkRef.current, glowLeftRef.current], {
           opacity: 1,
           duration: 1.4,
           ease: 'power2.out'
         })
-        // Step 3: 3D sculpture scales & reveals smoothly
+        // 2. 3D depth canvas scales & reveals smoothly behind
         .to(
           '.hero-3d-canvas-container',
           {
@@ -107,7 +124,7 @@ const HomeSection = () => {
           },
           '-=1.0'
         )
-        // Step 4: Authentic portrait smoothly reveals with blur-to-sharp transition
+        // 3. Authentic portrait gradually reveals with subtle depth and blur-to-sharp focus
         .to(
           portraitRef.current,
           {
@@ -120,7 +137,27 @@ const HomeSection = () => {
           },
           '-=1.3'
         )
-        // Step 5: Status Pill & "ATIYA" editorial reveal
+        // 4. Futuristic visor/glasses appears naturally over the eyes
+        .to(
+          '.editorial-visor-container',
+          {
+            opacity: 1,
+            scale: 1,
+            filter: 'blur(0px)',
+            duration: 1.4,
+            ease: 'power2.out',
+            clearProps: 'filter'
+          },
+          '-=0.9'
+        )
+        // 5. Soft specular reflection glides across the visor lens
+        .fromTo(
+          '.visor-glare-group',
+          { x: -50, opacity: 0 },
+          { x: 30, opacity: 1, duration: 1.6, ease: 'power2.inOut' },
+          '-=0.9'
+        )
+        // 6. Editorial typography reveals smoothly
         .to(
           '.hero-status-pill',
           {
@@ -142,7 +179,6 @@ const HomeSection = () => {
           },
           '-=0.8'
         )
-        // Step 6: "ALI" reveals
         .to(
           nameAliRef.current,
           {
@@ -155,18 +191,18 @@ const HomeSection = () => {
           },
           '-=1.0'
         )
-        // Step 7: Subtitle & Description slide in
+        // 7. Subtitle & Description slide in
         .to(
-          ['.hero-tagline', '.hero-description'],
+          ['.hero-tagline', '.hero-description', '.hero-editorial-statement'],
           {
             opacity: 1,
             y: 0,
-            stagger: 0.16,
+            stagger: 0.14,
             duration: 0.9
           },
           '-=0.8'
         )
-        // Step 8: Action buttons appear with subtle stagger
+        // 8. Action buttons appear
         .to(
           '.magnetic-btn',
           {
@@ -178,7 +214,7 @@ const HomeSection = () => {
           },
           '-=0.6'
         )
-        // Step 9: Scroll indicator gently appears
+        // 9. Scroll indicator gently appears
         .to(
           '.hero-scroll-indicator',
           {
@@ -340,6 +376,8 @@ const HomeSection = () => {
                 loading="eager"
                 decoding="async"
               />
+              {/* Futuristic Translucent Fashion Editorial Visor */}
+              <EditorialVisor mousePos={mousePos} />
               {/* Soft Ambient Rim Light Overlay */}
               <div className="hero-portrait-lighting-overlay" aria-hidden="true" />
             </div>
