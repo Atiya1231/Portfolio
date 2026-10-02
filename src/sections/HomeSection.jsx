@@ -3,19 +3,20 @@ import { ArrowUpRight, MessageCircle } from 'lucide-react';
 import { gsap, ScrollTrigger, scrollToSection } from '../animations/gsapUtils';
 import MagneticButton from '../components/MagneticButton';
 import portraitNormal from '../assets/atiya-normal.png';
+import portraitFuturistic from '../assets/atiya-futuristic.png';
 
 /**
  * HomeSection: Cinematic Editorial Hero for Atiya Ali Portfolio
- * Final Visual Cleanup:
+ * Final Visual Polish:
  * - Exactly 100dvh viewport height (overflow: hidden, zero extra scrolling)
- * - Large portrait (88-95vh) anchored to bottom (bottom: 0, 0-10px gap)
+ * - Large portrait (88-95vh) anchored to bottom + 42px lift
  * - Pure continuous atmospheric sunset gradient (#EADADA -> #D59CC5 -> #BE5CA9 -> #4D3A4D)
- * - No geometric shapes, no SVG polygons, no hard masks on portrait
- * - Perfect editorial typography spacing and navbar clearance
+ * - Interactive Cursor Spotlight Reveal: Soft circular mask reveals futuristic portrait over normal portrait
  */
 const HomeSection = () => {
   const sectionRef = useRef(null);
   const portraitRef = useRef(null);
+  const revealImageRef = useRef(null);
   const glowAtmosphereRef = useRef(null);
   const glowPinkRef = useRef(null);
   const glowPlumRef = useRef(null);
@@ -156,7 +157,7 @@ const HomeSection = () => {
           '-=0.4'
         );
 
-      // Subtle Parallax on scroll
+  // Subtle Parallax on scroll
       if (typeof ScrollTrigger !== 'undefined') {
         gsap.to('.hero-content-left', {
           y: -30,
@@ -182,6 +183,96 @@ const HomeSection = () => {
     }, sectionRef);
 
     return () => ctx.revert();
+  }, []);
+
+  // Cinematic Cursor-Following Spotlight Reveal for Futuristic Portrait Layer
+  useEffect(() => {
+    const section = sectionRef.current;
+    const revealEl = revealImageRef.current;
+    if (!section || !revealEl) return;
+
+    // Respect reduced-motion and touch device constraints
+    const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isTouch || isReducedMotion) {
+      revealEl.style.display = 'none';
+      return;
+    }
+
+    const mouse = { x: -1000, y: -1000 };
+    const current = { x: -1000, y: -1000 };
+    let currentOpacity = 0;
+    let isHovered = false;
+    let animationFrameId = null;
+
+    const lerp = (start, end, factor) => start + (end - start) * factor;
+
+    const onPointerMove = (e) => {
+      isHovered = true;
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    };
+
+    const onPointerLeave = () => {
+      isHovered = false;
+    };
+
+    const render = () => {
+      const heroRect = section.getBoundingClientRect();
+      const isInsideHero =
+        isHovered &&
+        mouse.x >= heroRect.left &&
+        mouse.x <= heroRect.right &&
+        mouse.y >= heroRect.top &&
+        mouse.y <= heroRect.bottom;
+
+      const targetOpacity = isInsideHero ? 1 : 0;
+      currentOpacity = lerp(currentOpacity, targetOpacity, 0.12);
+
+      if (currentOpacity > 0.005) {
+        const rect = revealEl.getBoundingClientRect();
+        const targetX = mouse.x - rect.left;
+        const targetY = mouse.y - rect.top;
+
+        // On first frame, snap smoothly to avoid starting at origin
+        if (current.x === -1000) {
+          current.x = targetX;
+          current.y = targetY;
+        } else {
+          current.x = lerp(current.x, targetX, 0.14);
+          current.y = lerp(current.y, targetY, 0.14);
+        }
+
+        const radius = 170;
+        const maskGradient = `radial-gradient(circle ${radius}px at ${current.x.toFixed(2)}px ${current.y.toFixed(2)}px, black 0%, black 42%, rgba(0, 0, 0, 0.6) 65%, transparent 100%)`;
+
+        revealEl.style.maskImage = maskGradient;
+        revealEl.style.webkitMaskImage = maskGradient;
+        revealEl.style.opacity = currentOpacity.toFixed(3);
+        revealEl.style.visibility = 'visible';
+      } else {
+        currentOpacity = 0;
+        revealEl.style.opacity = '0';
+        revealEl.style.visibility = 'hidden';
+        current.x = -1000;
+        current.y = -1000;
+      }
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    animationFrameId = requestAnimationFrame(render);
+
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+    section.addEventListener('pointerleave', onPointerLeave);
+    document.addEventListener('mouseleave', onPointerLeave);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('pointermove', onPointerMove);
+      section.removeEventListener('pointerleave', onPointerLeave);
+      document.removeEventListener('mouseleave', onPointerLeave);
+    };
   }, []);
 
   return (
@@ -277,7 +368,7 @@ const HomeSection = () => {
 
         {/* ==========================================================================
             RIGHT COLUMN: LARGE BOTTOM-ALIGNED EDITORIAL PORTRAIT (88-95vh)
-            Strictly NO square, NO rectangle, NO card, NO frame, NO mask cutoff
+            Base Normal Portrait + Cursor-Revealed Futuristic Portrait Layer
             ========================================================================== */}
         <div className="hero-visual-right">
           {/* Soft Radial Ambient Glow Behind Portrait */}
@@ -285,10 +376,22 @@ const HomeSection = () => {
 
           {/* Bottom-Aligned Authentic Portrait Container */}
           <div ref={portraitRef} className="hero-portrait-wrapper">
+            {/* Permanent Base Normal Portrait */}
             <img
               src={portraitNormal}
               alt="Atiya Ali — BCA Student & Aspiring Developer"
-              className="hero-portrait-image"
+              className="hero-portrait-image hero-portrait-base"
+              loading="eager"
+              decoding="async"
+            />
+
+            {/* Futuristic Reveal Portrait (Overlaid and revealed via soft circular cursor spotlight) */}
+            <img
+              ref={revealImageRef}
+              src={portraitFuturistic}
+              alt=""
+              aria-hidden="true"
+              className="hero-portrait-image hero-portrait-reveal"
               loading="eager"
               decoding="async"
             />
