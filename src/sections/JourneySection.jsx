@@ -60,7 +60,7 @@ const JOURNEY_MILESTONES = [
 ];
 
 /**
- * JourneySection (Phase 3): Editorial Timeline Experience
+ * JourneySection: Editorial Timeline Experience
  * Visualizes Atiya's real academic, programming, and web development trajectory.
  */
 const JourneySection = () => {
@@ -72,18 +72,42 @@ const JourneySection = () => {
 
     const ctx = gsap.context(() => {
       if (typeof ScrollTrigger !== 'undefined') {
-        gsap.from('.journey-timeline-item-animate', {
-          y: 40,
-          opacity: 0,
-          duration: 0.85,
-          stagger: 0.15,
-          ease: 'power3.out',
+        const tl = gsap.timeline({
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top 75%',
+            start: 'top 80%',
             toggleActions: 'play none none none'
           }
         });
+
+        tl.from('.journey-header-animate', {
+          y: 28,
+          opacity: 0,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: 'power3.out'
+        })
+        .from(
+          '.journey-timeline-line',
+          {
+            scaleY: 0,
+            transformOrigin: 'top center',
+            duration: 1.1,
+            ease: 'power2.out'
+          },
+          '-=0.5'
+        )
+        .from(
+          '.journey-timeline-item-animate',
+          {
+            y: 35,
+            opacity: 0,
+            duration: 0.85,
+            stagger: 0.12,
+            ease: 'power3.out'
+          },
+          '-=0.8'
+        );
       }
     }, sectionRef);
 
@@ -95,10 +119,12 @@ const JourneySection = () => {
       <div className="section-container">
         {/* Editorial Section Header */}
         <div className="editorial-section-header">
-          <h2 className="editorial-main-title">
+          <h2 className="editorial-main-title journey-header-animate">
             MY <span className="heading-gradient-word">JOURNEY</span>
           </h2>
-          <span className="editorial-subtitle">ACADEMIC GROWTH, TECHNICAL FOUNDATIONS & PROJECT MILESTONES</span>
+          <span className="editorial-subtitle journey-header-animate">
+            ACADEMIC GROWTH, TECHNICAL FOUNDATIONS & PROJECT MILESTONES
+          </span>
         </div>
 
         {/* Editorial Timeline */}

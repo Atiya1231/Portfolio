@@ -1,9 +1,9 @@
 import React, { useRef, useEffect } from 'react';
-import { Compass, Sparkles, Terminal, Code2, Database } from 'lucide-react';
+import { Sparkles, Terminal, Code2, Database } from 'lucide-react';
 import { gsap, ScrollTrigger } from '../animations/gsapUtils';
 
 /**
- * AboutSection (Phase 3): High-Contrast Editorial Magazine Layout
+ * AboutSection: High-Contrast Editorial Magazine Layout
  * Introduces Atiya Ali — BCA student, frontend developer, and creative technologist.
  */
 const AboutSection = () => {
@@ -16,18 +16,43 @@ const AboutSection = () => {
 
     const ctx = gsap.context(() => {
       if (typeof ScrollTrigger !== 'undefined') {
-        gsap.from('.about-animate-item', {
-          y: 35,
-          opacity: 0,
-          duration: 0.9,
-          stagger: 0.15,
-          ease: 'power3.out',
+        const tl = gsap.timeline({
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top 80%',
             toggleActions: 'play none none none'
           }
         });
+
+        tl.from('.about-header-animate', {
+          y: 28,
+          opacity: 0,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: 'power3.out'
+        })
+        .from(
+          '.about-card-animate',
+          {
+            y: 35,
+            opacity: 0,
+            duration: 0.85,
+            stagger: 0.15,
+            ease: 'power3.out'
+          },
+          '-=0.5'
+        )
+        .from(
+          ['.about-pillar-item', '.about-spec-box'],
+          {
+            y: 18,
+            opacity: 0,
+            duration: 0.6,
+            stagger: 0.06,
+            ease: 'power2.out'
+          },
+          '-=0.4'
+        );
       }
     }, sectionRef);
 
@@ -38,17 +63,19 @@ const AboutSection = () => {
     <section id="about" ref={sectionRef} className="section-wrapper" aria-label="About Atiya Ali">
       <div className="section-container" ref={contentRef}>
         {/* Editorial Section Header */}
-        <div className="editorial-section-header about-animate-item">
-          <h2 className="editorial-main-title">
+        <div className="editorial-section-header">
+          <h2 className="editorial-main-title about-header-animate">
             ABOUT <span className="heading-gradient-word">ME</span>
           </h2>
-          <span className="editorial-subtitle">BCA STUDENT • DEVELOPER • CREATIVE TECHNOLOGIST</span>
+          <span className="editorial-subtitle about-header-animate">
+            BCA STUDENT • DEVELOPER • CREATIVE TECHNOLOGIST
+          </span>
         </div>
 
         {/* Editorial 2-Column Magazine Grid */}
         <div className="about-editorial-grid">
           {/* Left Column: Editorial Statement & Engineering Pillars */}
-          <div className="about-statement-card about-animate-item">
+          <div className="about-statement-card about-card-animate">
             <blockquote className="about-quote-large">
               "Fusing algorithmic rigor with refined digital aesthetics to engineer interfaces that feel intuitive, alive, and mathematically precise."
             </blockquote>
@@ -87,7 +114,7 @@ const AboutSection = () => {
           </div>
 
           {/* Right Column: Narrative Biography & Academic Specifications */}
-          <div className="about-narrative-card about-animate-item">
+          <div className="about-narrative-card about-card-animate">
             <p className="about-narrative-lead">
               I am Atiya Ali, an aspiring software developer and BCA student passionate about transforming complex engineering logic into seamless interactive experiences.
             </p>

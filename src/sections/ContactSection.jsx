@@ -114,18 +114,32 @@ const ContactSection = () => {
 
     const ctx = gsap.context(() => {
       if (typeof ScrollTrigger !== 'undefined') {
-        gsap.from('.contact-animate-item', {
-          y: 35,
-          opacity: 0,
-          duration: 0.85,
-          stagger: 0.12,
-          ease: 'power3.out',
+        const tl = gsap.timeline({
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top 75%',
+            start: 'top 80%',
             toggleActions: 'play none none none'
           }
         });
+
+        tl.from('.contact-header-animate', {
+          y: 30,
+          opacity: 0,
+          duration: 0.85,
+          stagger: 0.12,
+          ease: 'power3.out'
+        })
+        .from(
+          '.contact-social-row',
+          {
+            y: 24,
+            opacity: 0,
+            duration: 0.7,
+            stagger: 0.08,
+            ease: 'power2.out'
+          },
+          '-=0.45'
+        );
       }
     }, sectionRef);
 
@@ -138,20 +152,20 @@ const ContactSection = () => {
         {/* Editorial Contact Presentation Container */}
         <div className="contact-editorial-container">
           {/* Main Editorial Statement & Supporting Message */}
-          <div className="contact-statement-header contact-animate-item">
-            <h2 className="contact-editorial-statement">
+          <div className="contact-statement-header">
+            <h2 className="contact-editorial-statement contact-header-animate">
               LET'S<br />
               <span className="heading-gradient-word">BUILD</span><br />
               SOMETHING
             </h2>
 
-            <p className="contact-supporting-text">
+            <p className="contact-supporting-text contact-header-animate">
               Have an idea, project, or opportunity? Let's create something meaningful together.
             </p>
           </div>
 
           {/* Premium Editorial Horizontal Social Rows */}
-          <div className="contact-social-rows-list contact-animate-item" role="list">
+          <div className="contact-social-rows-list" role="list">
             {SOCIAL_LINKS.map((item) => (
               <a
                 key={item.id}

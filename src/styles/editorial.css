@@ -149,6 +149,14 @@
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.about-spec-box:hover {
+  border-color: rgba(190, 92, 169, 0.4);
+  background: rgba(255, 255, 255, 0.75);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(77, 58, 77, 0.06);
 }
 
 .about-spec-label {
@@ -812,19 +820,40 @@
   .about-editorial-grid,
   .project-showcase-card {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 2.25rem;
+  }
+
+  .skills-category-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   }
 }
 
 @media (max-width: 768px) {
   .about-statement-card,
+  .about-narrative-card,
+  .skills-category-card,
   .project-showcase-card {
     padding: 1.5rem;
     border-radius: 20px;
   }
 
   .about-specs-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .skills-category-grid {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .project-showcase-card {
+    gap: 1.75rem;
+  }
+
+  .project-visual-right {
+    aspect-ratio: 16 / 11;
+    padding: 1rem;
   }
 
   .journey-timeline-line {
@@ -832,9 +861,9 @@
   }
 
   .journey-node-dot {
-    width: 42px;
-    height: 42px;
-    min-width: 42px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
     font-size: 0.85rem;
   }
 
@@ -843,6 +872,30 @@
   }
 
   .journey-card-content {
-    padding: 1.25rem;
+    padding: 1.25rem 1.4rem;
+    border-radius: 16px;
+  }
+}
+
+/* Universal Reduced Motion Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .about-header-animate,
+  .about-card-animate,
+  .about-pillar-item,
+  .about-spec-box,
+  .skills-header-animate,
+  .skills-card-animate,
+  .skill-tag-item,
+  .projects-header-animate,
+  .project-showcase-animate,
+  .journey-header-animate,
+  .journey-timeline-line,
+  .journey-timeline-item-animate,
+  .contact-header-animate,
+  .contact-social-row {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
   }
 }

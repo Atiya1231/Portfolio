@@ -61,7 +61,7 @@ const PROJECTS = [
 ];
 
 /**
- * ProjectsSection (Phase 3): Large Editorial Project Showcase
+ * ProjectsSection: Large Editorial Project Showcase
  * Presents real projects with rich metadata, feature breakdowns, and tech stacks.
  */
 const ProjectsSection = () => {
@@ -73,18 +73,32 @@ const ProjectsSection = () => {
 
     const ctx = gsap.context(() => {
       if (typeof ScrollTrigger !== 'undefined') {
-        gsap.from('.project-showcase-animate', {
-          y: 45,
-          opacity: 0,
-          duration: 0.95,
-          stagger: 0.2,
-          ease: 'power3.out',
+        const tl = gsap.timeline({
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top 75%',
+            start: 'top 80%',
             toggleActions: 'play none none none'
           }
         });
+
+        tl.from('.projects-header-animate', {
+          y: 28,
+          opacity: 0,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: 'power3.out'
+        })
+        .from(
+          '.project-showcase-animate',
+          {
+            y: 40,
+            opacity: 0,
+            duration: 0.9,
+            stagger: 0.18,
+            ease: 'power3.out'
+          },
+          '-=0.5'
+        );
       }
     }, sectionRef);
 
@@ -96,10 +110,12 @@ const ProjectsSection = () => {
       <div className="section-container">
         {/* Editorial Section Header */}
         <div className="editorial-section-header">
-          <h2 className="editorial-main-title">
+          <h2 className="editorial-main-title projects-header-animate">
             SELECTED <span className="heading-gradient-word">WORK</span>
           </h2>
-          <span className="editorial-subtitle">ACADEMIC, WEB APPLICATION & CREATIVE COMPUTING PROJECTS</span>
+          <span className="editorial-subtitle projects-header-animate">
+            ACADEMIC, WEB APPLICATION & CREATIVE COMPUTING PROJECTS
+          </span>
         </div>
 
         {/* Large Editorial Projects List */}

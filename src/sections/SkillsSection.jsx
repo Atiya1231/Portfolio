@@ -72,7 +72,7 @@ const SKILL_CATEGORIES = [
 ];
 
 /**
- * SkillsSection (Phase 3): Interactive Editorial Skill Showcase
+ * SkillsSection: Interactive Editorial Skill Showcase
  * Displays real technical competencies categorized clearly without generic percentage bars.
  */
 const SkillsSection = () => {
@@ -84,18 +84,43 @@ const SkillsSection = () => {
 
     const ctx = gsap.context(() => {
       if (typeof ScrollTrigger !== 'undefined') {
-        gsap.from('.skills-card-animate', {
-          y: 35,
-          opacity: 0,
-          duration: 0.8,
-          stagger: 0.12,
-          ease: 'power3.out',
+        const tl = gsap.timeline({
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top 80%',
             toggleActions: 'play none none none'
           }
         });
+
+        tl.from('.skills-header-animate', {
+          y: 28,
+          opacity: 0,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: 'power3.out'
+        })
+        .from(
+          '.skills-card-animate',
+          {
+            y: 35,
+            opacity: 0,
+            duration: 0.85,
+            stagger: 0.12,
+            ease: 'power3.out'
+          },
+          '-=0.5'
+        )
+        .from(
+          '.skill-tag-item',
+          {
+            y: 12,
+            opacity: 0,
+            duration: 0.5,
+            stagger: 0.02,
+            ease: 'power2.out'
+          },
+          '-=0.4'
+        );
       }
     }, sectionRef);
 
@@ -107,10 +132,12 @@ const SkillsSection = () => {
       <div className="section-container">
         {/* Editorial Section Header */}
         <div className="editorial-section-header">
-          <h2 className="editorial-main-title">
+          <h2 className="editorial-main-title skills-header-animate">
             MY <span className="heading-gradient-word">SKILLS</span>
           </h2>
-          <span className="editorial-subtitle">LANGUAGES, FRAMEWORKS, DATABASES & DESIGN TOOLS</span>
+          <span className="editorial-subtitle skills-header-animate">
+            LANGUAGES, FRAMEWORKS, DATABASES & DESIGN TOOLS
+          </span>
         </div>
 
         {/* Editorial Category Grid */}
