@@ -1,4 +1,4 @@
-/* Custom Futuristic Cursor */
+/* Custom Futuristic Cursor — Vibrant Sunset */
 
 .custom-cursor-dot,
 .custom-cursor-ring {
@@ -15,15 +15,15 @@
 .custom-cursor-dot {
   width: 6px;
   height: 6px;
-  background-color: var(--color-neon-pink);
-  box-shadow: 0 0 10px var(--color-neon-pink), 0 0 20px var(--color-crimson);
+  background-color: var(--color-primary); /* #4D3A4D */
+  box-shadow: 0 0 8px rgba(77, 58, 77, 0.35), 0 0 16px rgba(190, 92, 169, 0.4);
 }
 
 .custom-cursor-ring {
-  width: 34px;
-  height: 34px;
-  border: 1px solid rgba(255, 79, 135, 0.45);
-  background: rgba(177, 18, 69, 0.06);
+  width: 32px;
+  height: 32px;
+  border: 1.5px solid rgba(190, 92, 169, 0.55); /* Accent #BE5CA9 */
+  background: rgba(190, 92, 169, 0.06);
   transition: width 0.25s var(--ease-out-expo),
               height 0.25s var(--ease-out-expo),
               border-color 0.25s var(--ease-out-expo),
@@ -33,16 +33,16 @@
 
 /* Hovering on Interactive Elements */
 .custom-cursor-ring.hovered {
-  width: 54px;
-  height: 54px;
-  border-color: var(--color-neon-pink);
-  background: rgba(255, 79, 135, 0.12);
-  box-shadow: 0 0 25px rgba(255, 79, 135, 0.3);
+  width: 50px;
+  height: 50px;
+  border-color: var(--color-tertiary); /* Hover state: #D59CC5 */
+  background: rgba(213, 156, 197, 0.2);
+  box-shadow: 0 0 25px rgba(213, 156, 197, 0.45);
 }
 
 .custom-cursor-dot.hovered {
-  transform: translate(-50%, -50%) scale(1.5);
-  background-color: #FFFFFF;
+  transform: translate(-50%, -50%) scale(1.4);
+  background-color: var(--color-secondary); /* #BE5CA9 */
 }
 
 /* Disable Custom Cursor on Touch Devices */

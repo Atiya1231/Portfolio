@@ -1,4 +1,4 @@
-/* Navigation Bar Styling */
+/* Navigation Bar Styling — Vibrant Sunset */
 
 .navbar {
   position: fixed;
@@ -20,11 +20,11 @@
 }
 
 .navbar.scrolled {
-  background: rgba(13, 8, 11, 0.78);
+  background: rgba(234, 218, 218, 0.88);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(177, 18, 69, 0.22);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+  border-bottom: 1px solid rgba(77, 58, 77, 0.12);
+  box-shadow: 0 10px 30px -10px rgba(77, 58, 77, 0.08);
 }
 
 .navbar-inner {
@@ -44,27 +44,27 @@
   font-size: 1.15rem;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: var(--color-text-primary);
+  color: var(--color-primary);
   text-transform: uppercase;
   transition: transform var(--transition-fast), color var(--transition-fast);
 }
 
 .brand-logo:hover {
-  color: var(--color-soft-pink);
+  color: var(--color-secondary);
 }
 
 .brand-dot {
-  width: 6px;
-  height: 6px;
-  background-color: var(--color-neon-pink);
+  width: 7px;
+  height: 7px;
+  background-color: var(--color-secondary);
   border-radius: 50%;
-  box-shadow: 0 0 10px var(--color-neon-pink);
+  box-shadow: 0 0 10px var(--color-secondary);
   animation: pulse-dot 2.5s infinite ease-in-out;
 }
 
 @keyframes pulse-dot {
   0%, 100% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.4); opacity: 1; box-shadow: 0 0 14px var(--color-neon-pink); }
+  50% { transform: scale(1.35); opacity: 1; box-shadow: 0 0 14px var(--color-secondary); }
 }
 
 /* Desktop Navigation Links */
@@ -78,7 +78,7 @@
   position: relative;
   font-family: var(--font-mono);
   font-size: 0.8rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--color-text-muted);
@@ -87,11 +87,11 @@
 }
 
 .nav-link-item:hover {
-  color: var(--color-text-primary);
+  color: var(--color-primary);
 }
 
 .nav-link-item.active {
-  color: var(--color-neon-pink);
+  color: var(--color-secondary);
 }
 
 .nav-link-item::after {
@@ -101,7 +101,7 @@
   left: 0;
   width: 0%;
   height: 2px;
-  background: linear-gradient(90deg, var(--color-crimson), var(--color-neon-pink));
+  background: linear-gradient(90deg, var(--color-secondary), var(--color-tertiary));
   transition: width var(--transition-normal);
   border-radius: 2px;
 }
@@ -114,22 +114,22 @@
 /* Mobile Hamburger Button */
 .mobile-menu-toggle {
   display: none;
-  background: rgba(90, 11, 36, 0.2);
-  border: 1px solid rgba(177, 18, 69, 0.35);
+  background: rgba(213, 156, 197, 0.28);
+  border: 1px solid rgba(77, 58, 77, 0.2);
   border-radius: 8px;
   width: 44px;
   height: 44px;
   align-items: center;
   justify-content: center;
-  color: var(--color-text-primary);
+  color: var(--color-primary);
   transition: background var(--transition-fast), border-color var(--transition-fast);
   z-index: calc(var(--z-overlay) + 1);
 }
 
 .mobile-menu-toggle:hover {
-  background: rgba(177, 18, 69, 0.35);
-  border-color: var(--color-neon-pink);
-  color: var(--color-soft-pink);
+  background: rgba(190, 92, 169, 0.2);
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
 }
 
 /* Mobile Drawer Overlay */
@@ -144,11 +144,11 @@
   width: 85%;
   max-width: 360px;
   height: 100vh;
-  background: rgba(13, 8, 11, 0.96);
+  background: rgba(234, 218, 218, 0.97);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border-left: 1px solid rgba(177, 18, 69, 0.3);
-  box-shadow: -15px 0 40px rgba(0, 0, 0, 0.85);
+  border-left: 1px solid rgba(77, 58, 77, 0.18);
+  box-shadow: -15px 0 40px rgba(77, 58, 77, 0.12);
   z-index: var(--z-overlay);
   display: flex;
   flex-direction: column;
@@ -166,7 +166,7 @@
   display: block;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(77, 58, 77, 0.35);
   backdrop-filter: blur(4px);
   z-index: calc(var(--z-overlay) - 1);
 }
@@ -188,21 +188,21 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.6rem 0;
-  border-bottom: 1px solid rgba(177, 18, 69, 0.15);
+  border-bottom: 1px solid rgba(77, 58, 77, 0.12);
   transition: color var(--transition-fast), padding-left var(--transition-fast);
 }
 
 .mobile-nav-item:hover,
 .mobile-nav-item.active {
-  color: var(--color-neon-pink);
+  color: var(--color-secondary);
   padding-left: 0.5rem;
-  border-bottom-color: rgba(255, 79, 135, 0.5);
+  border-bottom-color: var(--color-secondary);
 }
 
 .mobile-nav-item span.index {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--color-crimson);
+  color: var(--color-secondary);
 }
 
 .mobile-drawer-footer {

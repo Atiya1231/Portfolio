@@ -11,8 +11,10 @@ const pseudoRandom = (seed) => {
 };
 
 /**
- * 3D Metallic Sculpture: Fluid twisted knot with rich dark metallic & burgundy/crimson material,
- * glossy glass-like highlights, and subtle mouse tilt.
+ * 3D Metallic Sculpture: Fluid twisted knot with Vibrant Sunset materials:
+ * - Main material: #4D3A4D
+ * - Highlights: #BE5CA9
+ * - Soft reflections: #D59CC5
  */
 const SculpturalCore = ({ mouseRef, isReducedMotion }) => {
   const meshRef = useRef(null);
@@ -35,8 +37,8 @@ const SculpturalCore = ({ mouseRef, isReducedMotion }) => {
       const mouseX = mouseRef.current ? mouseRef.current.x : 0;
       const mouseY = mouseRef.current ? mouseRef.current.y : 0;
 
-      targetRotation.current.x = mouseY * 0.4;
-      targetRotation.current.y = mouseX * 0.55;
+      targetRotation.current.x = mouseY * 0.38;
+      targetRotation.current.y = mouseX * 0.52;
 
       if (meshRef.current) {
         // Smooth lerp rotation towards mouse + continuous idle rotation
@@ -77,46 +79,46 @@ const SculpturalCore = ({ mouseRef, isReducedMotion }) => {
 
   return (
     <group position={[0, 0, 0]}>
-      {/* Primary Abstract Metallic Sculpture */}
+      {/* Primary Abstract Metallic Sculpture: #4D3A4D with #BE5CA9 & #D59CC5 highlights */}
       <mesh ref={meshRef} castShadow receiveShadow>
         <torusKnotGeometry args={[1.22, 0.34, 160, 42, 2, 3]} />
         <meshPhysicalMaterial
-          color="#16030c"
-          emissive="#3a0617"
-          emissiveIntensity={0.42}
-          roughness={0.16}
-          metalness={0.94}
+          color="#4D3A4D"
+          emissive="#5E2E54"
+          emissiveIntensity={0.32}
+          roughness={0.18}
+          metalness={0.88}
           clearcoat={0.92}
-          clearcoatRoughness={0.08}
-          reflectivity={0.95}
+          clearcoatRoughness={0.1}
+          reflectivity={0.92}
         />
       </mesh>
 
-      {/* Orbiting Thin Delicate Neon-Pink Accent Halo Ring */}
+      {/* Orbiting Thin Delicate Secondary (#BE5CA9) Accent Halo Ring */}
       <mesh ref={outerRingRef} scale={1.82}>
         <torusGeometry args={[1.05, 0.014, 16, 100]} />
         <meshStandardMaterial
-          color="#ff4f87"
-          emissive="#ff4f87"
-          emissiveIntensity={0.8}
-          roughness={0.3}
+          color="#BE5CA9"
+          emissive="#BE5CA9"
+          emissiveIntensity={0.7}
+          roughness={0.25}
           metalness={0.8}
           transparent
           opacity={0.65}
         />
       </mesh>
 
-      {/* Orbiting Thin Crimson Ambient Ring */}
+      {/* Orbiting Thin Tertiary (#D59CC5) Ambient Ring */}
       <mesh ref={innerRingRef} scale={1.45}>
         <torusGeometry args={[1.15, 0.009, 16, 100]} />
         <meshStandardMaterial
-          color="#b11245"
-          emissive="#b11245"
+          color="#D59CC5"
+          emissive="#D59CC5"
           emissiveIntensity={0.6}
-          roughness={0.4}
-          metalness={0.9}
+          roughness={0.35}
+          metalness={0.85}
           transparent
-          opacity={0.45}
+          opacity={0.5}
         />
       </mesh>
     </group>
@@ -124,7 +126,7 @@ const SculpturalCore = ({ mouseRef, isReducedMotion }) => {
 };
 
 /**
- * 3D Ambient Dust Particles in Burgundy / Crimson / Neon Pink
+ * 3D Ambient Dust Particles in Vibrant Sunset Palette (#BE5CA9, #D59CC5, #4D3A4D)
  */
 const Ambient3DParticles = ({ count = 50 }) => {
   const pointsRef = useRef(null);
@@ -134,10 +136,10 @@ const Ambient3DParticles = ({ count = 50 }) => {
     const col = new Float32Array(count * 3);
 
     const colorPalette = [
-      new THREE.Color('#b11245'), // Crimson
-      new THREE.Color('#ff4f87'), // Neon pink
-      new THREE.Color('#5a0b24'), // Burgundy
-      new THREE.Color('#ff9dba')  // Soft pink
+      new THREE.Color('#BE5CA9'), // Secondary Vibrant Sunset Orchid
+      new THREE.Color('#D59CC5'), // Tertiary Soft Sunset Rose
+      new THREE.Color('#4D3A4D'), // Primary Deep Plum
+      new THREE.Color('#DFCACA')  // Warm Neutral
     ];
 
     for (let i = 0; i < count; i++) {
@@ -184,11 +186,11 @@ const Ambient3DParticles = ({ count = 50 }) => {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.045}
+        size={0.042}
         vertexColors
         transparent
-        opacity={0.75}
-        blending={THREE.AdditiveBlending}
+        opacity={0.65}
+        blending={THREE.NormalBlending}
         depthWrite={false}
       />
     </points>
@@ -196,7 +198,12 @@ const Ambient3DParticles = ({ count = 50 }) => {
 };
 
 /**
- * Hero3DCanvas: Container component rendering the interactive 3D WebGL digital sculpture.
+ * Hero3DCanvas: Container component rendering the interactive 3D WebGL digital sculpture
+ * with soft cinematic Vibrant Sunset lighting:
+ * - KEY LIGHT: #D59CC5
+ * - ACCENT LIGHT: #BE5CA9
+ * - SHADOW / DEPTH: #4D3A4D
+ * - ENVIRONMENT: #EADADA
  */
 const Hero3DCanvas = ({ className = '', style = {} }) => {
   const mouseRef = useRef({ x: 0, y: 0 });
@@ -212,7 +219,6 @@ const Hero3DCanvas = ({ className = '', style = {} }) => {
     mediaQuery.addEventListener('change', handleMediaChange);
 
     const handleMouseMove = (e) => {
-      // Normalize mouse coordinates: -1 to 1
       const x = (e.clientX / window.innerWidth) * 2 - 1;
       const y = -(e.clientY / window.innerHeight) * 2 + 1;
       mouseRef.current = { x, y };
@@ -237,37 +243,37 @@ const Hero3DCanvas = ({ className = '', style = {} }) => {
         }}
         style={{ width: '100%', height: '100%', pointerEvents: 'none' }}
       >
-        {/* Cinematic Ambient & Specular Lighting (Burgundy / Crimson / Neon Pink only - NO blue) */}
-        <ambientLight color="#400818" intensity={1.2} />
+        {/* Soft Environment Light: #EADADA */}
+        <ambientLight color="#EADADA" intensity={1.5} />
         
-        {/* Main Crimson Key Light */}
+        {/* Key Light: #D59CC5 */}
         <directionalLight
-          position={[4, 3, 4]}
-          color="#b11245"
-          intensity={4.2}
+          position={[3.5, 3.5, 3.5]}
+          color="#D59CC5"
+          intensity={4.5}
         />
 
-        {/* Neon Pink Rim Light */}
+        {/* Accent Light: #BE5CA9 */}
         <pointLight
-          position={[-3.8, -2.2, 3]}
-          color="#ff4f87"
-          intensity={6.0}
-          distance={14}
+          position={[-3.5, -2, 2.5]}
+          color="#BE5CA9"
+          intensity={5.8}
+          distance={15}
         />
 
-        {/* Top Soft Pink Specular Highlight */}
+        {/* Soft Reflection Highlight: #D59CC5 */}
         <pointLight
-          position={[0.5, 3.5, 2.5]}
-          color="#ff9dba"
-          intensity={3.2}
+          position={[0.5, 3, 2]}
+          color="#D59CC5"
+          intensity={2.8}
           distance={10}
         />
 
-        {/* Deep Burgundy Backlight */}
+        {/* Shadow / Depth Backlight: #4D3A4D */}
         <pointLight
           position={[0, 0, -3.5]}
-          color="#5a0b24"
-          intensity={7.0}
+          color="#4D3A4D"
+          intensity={4.2}
           distance={12}
         />
 

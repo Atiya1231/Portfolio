@@ -248,7 +248,7 @@ const HomeSection = () => {
       className="hero-section"
       aria-label="Atiya Ali Hero Presentation"
     >
-      {/* Atmospheric Ambient Lighting Glows (Strictly Burgundy, Crimson, Neon Pink - NO blue) */}
+      {/* Atmospheric Ambient Lighting Glows (Vibrant Sunset Palette: #4D3A4D, #BE5CA9, #D59CC5, #EADADA) */}
       <div ref={glowCrimsonRef} className="hero-glow-crimson" aria-hidden="true" />
       <div ref={glowPinkRef} className="hero-glow-pink" aria-hidden="true" />
       <div ref={glowLeftRef} className="hero-glow-left" aria-hidden="true" />

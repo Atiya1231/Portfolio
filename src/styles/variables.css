@@ -1,26 +1,31 @@
 :root {
-  /* Color Palette */
-  --bg-primary: #050505;
-  --bg-secondary: #0D080B;
-  --bg-tertiary: #140C11;
-  --bg-surface: rgba(20, 12, 17, 0.6);
-  --bg-surface-hover: rgba(45, 12, 28, 0.4);
+  /* Vibrant Sunset Color Palette */
+  --color-primary: #4D3A4D;       /* Primary Deep Plum */
+  --color-secondary: #BE5CA9;     /* Secondary Vibrant Sunset Orchid */
+  --color-tertiary: #D59CC5;      /* Tertiary Soft Sunset Rose */
+  --color-bg: #EADADA;            /* Background Warm Sunset Blush */
 
-  --color-burgundy: #5A0B24;
-  --color-crimson: #B11245;
-  --color-neon-pink: #FF4F87;
-  --color-soft-pink: #FF9DBA;
-  --color-text-primary: #F5F1F2;
-  --color-text-muted: #A79CA0;
-  --color-text-dim: #6E5E65;
+  /* Background Tokens */
+  --bg-primary: #EADADA;
+  --bg-secondary: #F4E8E8;
+  --bg-tertiary: #DFCACA;
+  --bg-surface: rgba(255, 255, 255, 0.62);
+  --bg-surface-hover: rgba(213, 156, 197, 0.22);
+  --bg-card: rgba(255, 255, 255, 0.52);
+
+  /* Text Contrast Tokens */
+  --color-text-primary: #4D3A4D;
+  --color-text-muted: #6E536E;
+  --color-text-dim: #947791;
+  --color-text-inverse: #EADADA;
 
   /* Accent Borders & Glows */
-  --border-subtle: rgba(177, 18, 69, 0.18);
-  --border-hover: rgba(255, 79, 135, 0.45);
-  --border-active: rgba(255, 79, 135, 0.8);
-  --glow-burgundy: 0 0 40px rgba(90, 11, 36, 0.35);
-  --glow-crimson: 0 0 25px rgba(177, 18, 69, 0.4);
-  --glow-pink: 0 0 20px rgba(255, 79, 135, 0.5);
+  --border-subtle: rgba(77, 58, 77, 0.16);
+  --border-hover: rgba(190, 92, 169, 0.48);
+  --border-active: rgba(190, 92, 169, 0.88);
+  --glow-sunset: 0 0 35px rgba(190, 92, 169, 0.25);
+  --glow-tertiary: 0 0 25px rgba(213, 156, 197, 0.35);
+  --glow-plum: 0 0 30px rgba(77, 58, 77, 0.18);
 
   /* Typography */
   --font-display: 'Syne', sans-serif;

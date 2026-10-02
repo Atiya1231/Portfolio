@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 
 /**
- * BackgroundCanvas: Generates subtle, cinematic atmospheric dust particles
- * with burgundy and soft pink tones floating across the dark background.
+ * BackgroundCanvas: Generates subtle, elegant atmospheric floating dust/light particles
+ * with vibrant sunset tones (#BE5CA9 and #D59CC5) with low opacity on the warm background.
  */
 const BackgroundCanvas = () => {
   const canvasRef = useRef(null);
@@ -23,24 +23,24 @@ const BackgroundCanvas = () => {
 
     window.addEventListener('resize', handleResize);
 
-    // Color palette for subtle particles
+    // Subtle Vibrant Sunset floating particles: #BE5CA9 and #D59CC5
     const particleColors = [
-      'rgba(177, 18, 69, 0.45)',  // Crimson
-      'rgba(255, 79, 135, 0.35)', // Neon Pink
-      'rgba(90, 11, 36, 0.55)',   // Burgundy
-      'rgba(255, 157, 186, 0.25)' // Soft Pink
+      'rgba(190, 92, 169, 0.4)', // Secondary Vibrant Sunset Orchid
+      'rgba(213, 156, 197, 0.45)', // Tertiary Soft Sunset Rose
+      'rgba(77, 58, 77, 0.25)',  // Primary Plum low-opacity dust
+      'rgba(213, 156, 197, 0.3)'
     ];
 
-    const particleCount = Math.min(Math.floor((width * height) / 25000), 55);
+    const particleCount = Math.min(Math.floor((width * height) / 28000), 45);
     const particles = Array.from({ length: particleCount }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
-      radius: Math.random() * 1.6 + 0.6,
+      radius: Math.random() * 1.5 + 0.6,
       color: particleColors[Math.floor(Math.random() * particleColors.length)],
-      vx: (Math.random() - 0.5) * 0.25,
-      vy: (Math.random() - 0.5) * 0.25 - 0.1, // Slight upward drift
-      alpha: Math.random() * 0.7 + 0.3,
-      alphaChange: (Math.random() * 0.008 + 0.003) * (Math.random() > 0.5 ? 1 : -1)
+      vx: (Math.random() - 0.5) * 0.2,
+      vy: (Math.random() - 0.5) * 0.2 - 0.08, // Very gentle upward drift
+      alpha: Math.random() * 0.5 + 0.2,
+      alphaChange: (Math.random() * 0.006 + 0.002) * (Math.random() > 0.5 ? 1 : -1)
     }));
 
     let mouseX = -1000;
@@ -63,7 +63,7 @@ const BackgroundCanvas = () => {
 
         // Subtle alpha breathing
         p.alpha += p.alphaChange;
-        if (p.alpha > 0.85 || p.alpha < 0.15) {
+        if (p.alpha > 0.65 || p.alpha < 0.12) {
           p.alphaChange = -p.alphaChange;
         }
 
@@ -77,10 +77,10 @@ const BackgroundCanvas = () => {
         const dx = p.x - mouseX;
         const dy = p.y - mouseY;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 120) {
-          const force = (120 - dist) / 120;
-          p.x += (dx / dist) * force * 0.6;
-          p.y += (dy / dist) * force * 0.6;
+        if (dist < 110) {
+          const force = (110 - dist) / 110;
+          p.x += (dx / dist) * force * 0.5;
+          p.y += (dy / dist) * force * 0.5;
         }
 
         // Draw particle
@@ -89,8 +89,8 @@ const BackgroundCanvas = () => {
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
         ctx.globalAlpha = Math.max(0, Math.min(1, p.alpha));
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = 'rgba(255, 79, 135, 0.4)';
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = 'rgba(190, 92, 169, 0.3)';
         ctx.fill();
         ctx.restore();
       });
@@ -115,7 +115,7 @@ const BackgroundCanvas = () => {
         inset: 0,
         zIndex: 'var(--z-canvas)',
         pointerEvents: 'none',
-        opacity: 0.85
+        opacity: 0.75
       }}
       aria-hidden="true"
     />

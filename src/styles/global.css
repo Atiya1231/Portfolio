@@ -26,25 +26,25 @@ body {
   line-height: 1.6;
 }
 
-/* Cinematic Background Gradient Atmosphere */
+/* Atmospheric Vibrant Sunset Background Atmosphere */
 .cinematic-bg-glow {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: var(--z-bg);
   background: 
-    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(90, 11, 36, 0.28) 0%, rgba(5, 5, 5, 0) 70%),
-    radial-gradient(ellipse 60% 40% at 85% 60%, rgba(177, 18, 69, 0.12) 0%, rgba(5, 5, 5, 0) 65%),
-    radial-gradient(ellipse 50% 50% at 15% 80%, rgba(90, 11, 36, 0.15) 0%, rgba(5, 5, 5, 0) 70%);
+    radial-gradient(ellipse 75% 55% at 50% 0%, rgba(213, 156, 197, 0.35) 0%, rgba(234, 218, 218, 0) 70%),
+    radial-gradient(ellipse 65% 45% at 85% 60%, rgba(190, 92, 169, 0.16) 0%, rgba(234, 218, 218, 0) 65%),
+    radial-gradient(ellipse 55% 55% at 15% 80%, rgba(213, 156, 197, 0.22) 0%, rgba(234, 218, 218, 0) 70%);
 }
 
-/* Subtle Grain / Film Noise Overlay */
+/* Subtle Warm Film Noise Overlay */
 .film-grain-overlay {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: var(--z-bg);
-  opacity: 0.035;
+  opacity: 0.025;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
@@ -58,18 +58,18 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(177, 18, 69, 0.35);
+  background: rgba(190, 92, 169, 0.45);
   border-radius: 4px;
-  border: 1px solid rgba(255, 79, 135, 0.15);
+  border: 1px solid rgba(77, 58, 77, 0.15);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 79, 135, 0.6);
+  background: var(--color-secondary);
 }
 
 /* Selection Color */
 ::selection {
-  background-color: var(--color-crimson);
+  background-color: var(--color-secondary);
   color: #FFFFFF;
 }
 
