@@ -406,7 +406,7 @@
   z-index: 1;
 }
 
-/* Seamless Portrait Container: Large & Immersive (95vh), Anchored Directly to Bottom Edge */
+/* Seamless Portrait Container: Large & Immersive (95vh), Lifted 38px for Ideal Top Breathing Space */
 .hero-portrait-wrapper {
   position: relative;
   z-index: 2;
@@ -416,7 +416,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  bottom: 0;
+  bottom: 38px;
   margin-bottom: 0;
   background: transparent;
   border: none;
