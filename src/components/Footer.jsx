@@ -2,17 +2,19 @@ import React from 'react';
 import { ArrowUp } from 'lucide-react';
 import { scrollToSection } from '../animations/gsapUtils';
 
+const CURRENT_YEAR = 2025;
+
 const Footer = () => {
   return (
     <footer className="site-footer">
       <div className="footer-inner">
         <div className="footer-copy">
-          © {new Date().getFullYear()} ATIYA ALI — ALL RIGHTS RESERVED.
+          © {CURRENT_YEAR} ATIYA ALI — ALL RIGHTS RESERVED.
         </div>
 
         <div className="footer-status">
           <span className="status-dot" />
-          <span>PHASE 1 FOUNDATION ONLINE</span>
+          <span>PHASE 2 HERO ONLINE</span>
         </div>
 
         <button
