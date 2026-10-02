@@ -335,32 +335,31 @@
   justify-content: center;
 }
 
-/* The Genuine Authentic Personal Portrait Image (Edges softly fade into pastel background) */
+/* The Genuine Authentic Transparent Portrait Cutout */
 .hero-portrait-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center top;
+  object-fit: contain;
+  object-position: center bottom;
   display: block;
-  filter: contrast(1.02) brightness(0.99);
-  /* Feathered seamless mask so edges blend organically into the pastel environment */
-  mask-image: radial-gradient(ellipse 90% 90% at 50% 48%, #000000 68%, rgba(0, 0, 0, 0.65) 84%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 48%, #000000 68%, rgba(0, 0, 0, 0.65) 84%, transparent 100%);
-  transition: filter var(--transition-normal);
+  filter: drop-shadow(0 18px 40px rgba(77, 58, 77, 0.14)) drop-shadow(0 0 30px rgba(190, 92, 169, 0.22));
+  /* Soft bottom fade so the dress merges seamlessly into the background */
+  mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
+  transition: transform 0.4s var(--ease-out-expo), filter var(--transition-normal);
 }
 
-/* Soft Ambient Lighting Overlay on Portrait matching 3D environment */
+/* Soft Ambient Rim Light Glow on Portrait Silhouette */
 .hero-portrait-lighting-overlay {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background: 
-    radial-gradient(ellipse at 85% 20%, rgba(213, 156, 197, 0.18) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 20%, rgba(213, 156, 197, 0.15) 0%, transparent 50%),
     radial-gradient(ellipse at 15% 85%, rgba(190, 92, 169, 0.1) 0%, transparent 60%);
   z-index: 3;
-  /* Match the feathered mask */
-  mask-image: radial-gradient(ellipse 90% 90% at 50% 48%, #000000 68%, rgba(0, 0, 0, 0.65) 84%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 48%, #000000 68%, rgba(0, 0, 0, 0.65) 84%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
 }
 
 /* ==========================================================================
