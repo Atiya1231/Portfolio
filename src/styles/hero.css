@@ -272,65 +272,70 @@
 }
 
 /* ==========================================================================
-   RIGHT COLUMN: CINEMATIC PORTRAIT + 3D SCULPTURE COMPOSITION
+   RIGHT COLUMN: AUTHENTIC PORTRAIT + 3D PASTEL ENVIRONMENT
    ========================================================================== */
 .hero-visual-right {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 520px;
+  min-height: 540px;
 }
 
-/* 3D WebGL Canvas Layer (Behind & wrapping organically around Portrait) */
+/* Atmospheric Pastel Glow Backdrop Behind Portrait */
+.hero-portrait-glow-backdrop {
+  position: absolute;
+  width: 135%;
+  height: 135%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at 50% 50%, rgba(213, 156, 197, 0.5) 0%, rgba(190, 92, 169, 0.22) 42%, rgba(234, 218, 218, 0) 72%);
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 3D WebGL Canvas Layer (Translucent ribbons, floating spheres, ambient particles) */
 .hero-3d-canvas-container {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 120%;
-  height: 120%;
+  width: 130%;
+  height: 130%;
   z-index: 1;
   pointer-events: none;
 }
 
-/* Portrait Glass/Cinematic Window with Soft Ambient Sunset Glow */
+/* Seamless Portrait Silhouette Container (No rectangular card, frame, or ring) */
 .hero-portrait-wrapper {
   position: relative;
   z-index: 2;
-  width: min(370px, 80vw);
+  width: min(390px, 82vw);
   aspect-ratio: 3 / 4.15;
-  border-radius: 32px;
-  overflow: hidden;
-  padding: 1.5px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(213, 156, 197, 0.35) 40%, rgba(190, 92, 169, 0.25) 80%, rgba(77, 58, 77, 0.1) 100%);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 
-    0 16px 40px rgba(77, 58, 77, 0.09),
-    0 0 40px rgba(213, 156, 197, 0.32),
-    0 0 20px rgba(190, 92, 169, 0.2);
-  transition: transform 0.45s var(--ease-out-expo), box-shadow 0.45s var(--ease-out-expo);
-}
-
-.hero-portrait-wrapper:hover {
-  transform: translateY(-3px) scale(1.008);
-  box-shadow: 
-    0 22px 50px rgba(77, 58, 77, 0.14),
-    0 0 50px rgba(190, 92, 169, 0.38),
-    0 0 25px rgba(213, 156, 197, 0.3);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.5s var(--ease-out-expo);
 }
 
 .hero-portrait-inner {
   position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 31px;
-  overflow: hidden;
   background: transparent;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* The Genuine Personal Portrait Image */
+/* The Genuine Authentic Personal Portrait Image (Edges softly fade into pastel background) */
 .hero-portrait-image {
   width: 100%;
   height: 100%;
@@ -338,9 +343,9 @@
   object-position: center top;
   display: block;
   filter: contrast(1.02) brightness(0.99);
-  /* Feathered bottom edge so it flows naturally into the sunset environment */
-  mask-image: linear-gradient(to bottom, #000000 0%, #000000 86%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, #000000 0%, #000000 86%, transparent 100%);
+  /* Feathered seamless mask so edges blend organically into the pastel environment */
+  mask-image: radial-gradient(ellipse 90% 90% at 50% 48%, #000000 68%, rgba(0, 0, 0, 0.65) 84%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 48%, #000000 68%, rgba(0, 0, 0, 0.65) 84%, transparent 100%);
   transition: filter var(--transition-normal);
 }
 
@@ -350,40 +355,12 @@
   inset: 0;
   pointer-events: none;
   background: 
-    radial-gradient(ellipse at 85% 20%, rgba(213, 156, 197, 0.2) 0%, transparent 50%),
-    radial-gradient(ellipse at 15% 85%, rgba(190, 92, 169, 0.12) 0%, transparent 60%),
-    linear-gradient(to top, rgba(77, 58, 77, 0.18) 0%, transparent 22%);
-  z-index: 2;
-}
-
-/* Floating Status Chip on Portrait */
-.hero-portrait-chip {
-  position: absolute;
-  bottom: 16px;
-  left: 16px;
-  z-index: 4;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.32rem 0.85rem;
-  background: rgba(77, 58, 77, 0.78);
-  border: 1px solid rgba(213, 156, 197, 0.38);
-  border-radius: 9999px;
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  color: var(--color-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-.hero-portrait-chip-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: var(--color-secondary);
-  box-shadow: 0 0 8px var(--color-secondary);
+    radial-gradient(ellipse at 85% 20%, rgba(213, 156, 197, 0.18) 0%, transparent 50%),
+    radial-gradient(ellipse at 15% 85%, rgba(190, 92, 169, 0.1) 0%, transparent 60%);
+  z-index: 3;
+  /* Match the feathered mask */
+  mask-image: radial-gradient(ellipse 90% 90% at 50% 48%, #000000 68%, rgba(0, 0, 0, 0.65) 84%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 48%, #000000 68%, rgba(0, 0, 0, 0.65) 84%, transparent 100%);
 }
 
 /* ==========================================================================
@@ -547,18 +524,22 @@
   }
 
   .hero-portrait-wrapper {
-    width: min(280px, 75vw);
-    aspect-ratio: 3 / 4.1;
-    border-radius: 24px;
+    width: min(290px, 78vw);
+    aspect-ratio: 3 / 4.15;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    overflow: visible;
   }
 
   .hero-portrait-inner {
-    border-radius: 23px;
+    background: transparent;
+    overflow: visible;
   }
 
   .hero-3d-canvas-container {
-    width: 110%;
-    height: 110%;
+    width: 125%;
+    height: 125%;
   }
 
   .hero-tagline {

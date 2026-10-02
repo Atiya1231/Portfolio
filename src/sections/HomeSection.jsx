@@ -316,13 +316,16 @@ const HomeSection = () => {
         </div>
 
         {/* ==========================================================================
-            RIGHT COLUMN / SECTION: AUTHENTIC PORTRAIT + 3D SCULPTURE COMPOSITION
+            RIGHT COLUMN / SECTION: AUTHENTIC PORTRAIT + 3D PASTEL ENVIRONMENT
             ========================================================================== */}
         <div className="hero-visual-right">
-          {/* 3D WebGL Digital Sculpture Canvas (Passes behind & around portrait) */}
+          {/* Atmospheric Pastel Glow Backdrop (#D59CC5 / #BE5CA9) */}
+          <div className="hero-portrait-glow-backdrop" aria-hidden="true" />
+
+          {/* 3D WebGL Digital Sculpture Canvas (Flows softly behind portrait) */}
           <Hero3DCanvas />
 
-          {/* Layered Cinematic Portrait Card */}
+          {/* Authentic Portrait (Integrated seamlessly into pastel environment) */}
           <div
             ref={portraitRef}
             className="hero-portrait-wrapper interactive"
@@ -337,14 +340,8 @@ const HomeSection = () => {
                 loading="eager"
                 decoding="async"
               />
-              {/* Soft Rim Light & Ambient Gradient Overlay */}
+              {/* Soft Ambient Rim Light Overlay */}
               <div className="hero-portrait-lighting-overlay" aria-hidden="true" />
-
-              {/* Status Chip */}
-              <div className="hero-portrait-chip" aria-hidden="true">
-                <span className="hero-portrait-chip-dot" />
-                <span>ATIYA ALI // DEV</span>
-              </div>
             </div>
           </div>
         </div>
