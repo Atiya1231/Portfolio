@@ -1,7 +1,8 @@
 /* ==========================================================================
-   CINEMATIC 3D HERO SECTION STYLES (PHASE 2) — VIBRANT SUNSET
-   Palette: Primary (#4D3A4D), Secondary (#BE5CA9), 
-            Tertiary (#D59CC5), Background (#EADADA)
+   CINEMATIC EDITORIAL HERO SECTION STYLES
+   Visual Target: Reference Image 1
+   Palette: Background (#EADADA), Primary (#4D3A4D),
+            Secondary (#BE5CA9), Tertiary (#D59CC5)
    ========================================================================== */
 
 /* Main Hero Section Wrapper */
@@ -14,23 +15,31 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: calc(var(--nav-height) + 1.5rem) var(--section-padding-x) 3rem;
+  padding: calc(var(--nav-height) + 0.5rem) var(--section-padding-x) 1.5rem;
   overflow: hidden;
   background-color: var(--bg-primary);
-  border-bottom: 1px solid rgba(77, 58, 77, 0.1);
+  border-bottom: 1px solid rgba(77, 58, 77, 0.08);
 }
 
-/* Atmospheric Ambient Sunset Glows behind Portrait & Hero */
-.hero-glow-crimson {
+/* ==========================================================================
+   ATMOSPHERIC SUNSET GRADIENTS & FLUID AMBIENCE
+   Strictly locked: #EADADA (Base), #D59CC5, #BE5CA9, #4D3A4D
+   ========================================================================== */
+.hero-glow-atmosphere {
   position: absolute;
   top: 45%;
   right: 18%;
-  transform: translate(50%, -50%);
-  width: min(600px, 75vw);
-  height: min(600px, 75vw);
+  transform: translate(30%, -45%);
+  width: min(850px, 85vw);
+  height: min(850px, 85vw);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(213, 156, 197, 0.4) 0%, rgba(190, 92, 169, 0.16) 50%, rgba(234, 218, 218, 0) 75%);
-  filter: blur(65px);
+  background: radial-gradient(
+    circle,
+    rgba(213, 156, 197, 0.48) 0%,
+    rgba(190, 92, 169, 0.22) 48%,
+    rgba(234, 218, 218, 0) 76%
+  );
+  filter: blur(80px);
   pointer-events: none;
   z-index: 0;
 }
@@ -38,41 +47,70 @@
 .hero-glow-pink {
   position: absolute;
   top: 50%;
-  right: 22%;
-  transform: translate(50%, -50%);
-  width: min(360px, 48vw);
-  height: min(360px, 48vw);
+  right: 25%;
+  transform: translate(25%, -45%);
+  width: min(520px, 58vw);
+  height: min(520px, 58vw);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(190, 92, 169, 0.2) 0%, rgba(213, 156, 197, 0.1) 60%, rgba(234, 218, 218, 0) 80%);
-  filter: blur(45px);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.hero-glow-left {
-  position: absolute;
-  top: 30%;
-  left: 5%;
-  width: min(420px, 55vw);
-  height: min(420px, 55vw);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(213, 156, 197, 0.25) 0%, rgba(234, 218, 218, 0) 70%);
+  background: radial-gradient(
+    circle,
+    rgba(190, 92, 169, 0.26) 0%,
+    rgba(213, 156, 197, 0.16) 55%,
+    transparent 78%
+  );
   filter: blur(55px);
   pointer-events: none;
   z-index: 0;
 }
 
-/* Grid Layout: Typography Left, Portrait + 3D Right */
+.hero-glow-plum {
+  position: absolute;
+  bottom: -5%;
+  right: 0%;
+  width: min(700px, 70vw);
+  height: min(550px, 65vw);
+  background: radial-gradient(
+    ellipse at bottom right,
+    rgba(77, 58, 77, 0.22) 0%,
+    rgba(190, 92, 169, 0.12) 45%,
+    transparent 72%
+  );
+  filter: blur(65px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Atmospheric Ambient Wave Curves (SVG overlay matching Reference Image 1) */
+.hero-bg-waves {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  opacity: 0.95;
+}
+
+.hero-waves-svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.02);
+}
+
+/* Grid Layout: Editorial Typography Left, Large Dominant Portrait Right */
 .hero-layout-grid {
   width: 100%;
   max-width: var(--container-max-width);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  align-items: center;
-  gap: clamp(2rem, 5vw, 4.5rem);
+  grid-template-columns: 1.08fr 1.05fr;
+  align-items: flex-end;
+  gap: clamp(1.5rem, 3.8vw, 3.5rem);
   position: relative;
   z-index: 2;
+  height: 100%;
 }
 
 /* ==========================================================================
@@ -82,7 +120,8 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: clamp(1.25rem, 2.5vh, 2rem);
+  gap: clamp(0.9rem, 2vh, 1.55rem);
+  padding-bottom: clamp(1rem, 2.8vh, 2.5rem);
   z-index: 3;
 }
 
@@ -91,19 +130,19 @@
   display: inline-flex;
   align-items: center;
   gap: 0.65rem;
-  padding: 0.4rem 1.1rem;
-  background: rgba(213, 156, 197, 0.28);
-  border: 1px solid rgba(190, 92, 169, 0.38);
+  padding: 0.42rem 1.15rem;
+  background: rgba(213, 156, 197, 0.35);
+  border: 1px solid rgba(190, 92, 169, 0.42);
   border-radius: 9999px;
   font-family: var(--font-mono);
-  font-size: clamp(0.7rem, 0.9vw, 0.78rem);
+  font-size: clamp(0.7rem, 0.85vw, 0.76rem);
   font-weight: 600;
   letter-spacing: 0.2em;
   color: var(--color-primary);
   text-transform: uppercase;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 4px 14px rgba(77, 58, 77, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 14px rgba(77, 58, 77, 0.06);
 }
 
 .hero-status-dot {
@@ -119,16 +158,16 @@
 .hero-name-container {
   display: flex;
   flex-direction: column;
-  line-height: 0.94;
+  line-height: 0.92;
   user-select: none;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.2rem;
 }
 
 .hero-name-line {
   font-family: var(--font-display);
-  font-size: clamp(3.8rem, 8.8vw, 8rem);
+  font-size: clamp(3.8rem, 8.5vw, 7.8rem);
   font-weight: 800;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.015em;
   text-transform: uppercase;
   display: block;
   -webkit-font-smoothing: antialiased;
@@ -137,17 +176,16 @@
 }
 
 .hero-name-line.name-atiya {
-  color: var(--color-primary); /* #4D3A4D - high contrast dark plum */
-  letter-spacing: 0.025em;
-  text-shadow: none;
+  color: var(--color-primary); /* #4D3A4D - high-contrast deep plum */
+  letter-spacing: 0.02em;
 }
 
 .hero-name-line.name-ali {
   color: var(--color-primary);
-  background: linear-gradient(135deg, #4D3A4D 10%, #7E386F 45%, #BE5CA9 80%, #D59CC5 100%);
+  background: linear-gradient(135deg, #4D3A4D 15%, #7E386F 50%, #BE5CA9 82%, #D59CC5 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.035em;
   margin-left: clamp(0.75rem, 2.5vw, 2.5rem);
 }
 
@@ -157,7 +195,7 @@
   align-items: center;
   gap: 0.65rem;
   font-family: var(--font-mono);
-  font-size: clamp(0.9rem, 1.35vw, 1.15rem);
+  font-size: clamp(0.88rem, 1.25vw, 1.1rem);
   font-weight: 600;
   letter-spacing: 0.22em;
   color: var(--color-primary);
@@ -171,8 +209,8 @@
 
 .hero-editorial-statement {
   font-family: var(--font-display);
-  font-size: clamp(1.2rem, 1.8vw, 1.55rem);
-  line-height: 1.35;
+  font-size: clamp(1.15rem, 1.65vw, 1.48rem);
+  line-height: 1.38;
   color: var(--color-primary);
   font-style: italic;
   font-weight: 500;
@@ -183,7 +221,7 @@
 /* Hero Description */
 .hero-description {
   font-family: var(--font-sans);
-  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  font-size: clamp(0.96rem, 1.15vw, 1.1rem);
   font-weight: 400;
   line-height: 1.65;
   color: var(--color-text-muted);
@@ -196,7 +234,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 1.15rem;
-  margin-top: 0.5rem;
+  margin-top: 0.35rem;
 }
 
 /* Magnetic Button Styles */
@@ -206,7 +244,7 @@
   align-items: center;
   justify-content: center;
   padding: 0.95rem 2rem;
-  border-radius: 10px;
+  border-radius: 9px;
   font-family: var(--font-mono);
   font-size: 0.82rem;
   font-weight: 600;
@@ -224,19 +262,19 @@
   background: var(--color-primary);
   border: 1px solid var(--color-primary);
   color: var(--color-bg);
-  box-shadow: 0 4px 18px rgba(77, 58, 77, 0.18);
+  box-shadow: 0 4px 18px rgba(77, 58, 77, 0.16);
   transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .magnetic-btn-primary:hover {
   background: var(--color-secondary);
   border-color: var(--color-secondary);
-  box-shadow: 0 0 30px rgba(190, 92, 169, 0.4), 0 6px 20px rgba(77, 58, 77, 0.2);
+  box-shadow: 0 0 28px rgba(190, 92, 169, 0.38), 0 6px 20px rgba(77, 58, 77, 0.18);
 }
 
-/* Secondary Button: Transparent/#EADADA background, Border #4D3A4D, Text #4D3A4D, Hover #D59CC5 */
+/* Secondary Button: Translucent background, Border #4D3A4D, Text #4D3A4D */
 .magnetic-btn-secondary {
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.58);
   border: 1.5px solid var(--color-primary);
   color: var(--color-primary);
   backdrop-filter: blur(12px);
@@ -246,8 +284,8 @@
 
 .magnetic-btn-secondary:hover {
   border-color: var(--color-tertiary);
-  background: rgba(213, 156, 197, 0.28);
-  box-shadow: 0 0 25px rgba(213, 156, 197, 0.4);
+  background: rgba(213, 156, 197, 0.3);
+  box-shadow: 0 0 24px rgba(213, 156, 197, 0.38);
 }
 
 .magnetic-btn-content {
@@ -272,155 +310,20 @@
 }
 
 /* ==========================================================================
-   RIGHT COLUMN: AUTHENTIC PORTRAIT + 3D PASTEL ENVIRONMENT
-   ========================================================================== */
-.hero-visual-right {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 540px;
-}
-
-/* Atmospheric Pastel Glow Backdrop Behind Portrait */
-.hero-portrait-glow-backdrop {
-  position: absolute;
-  width: 135%;
-  height: 135%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(ellipse at 50% 50%, rgba(213, 156, 197, 0.5) 0%, rgba(190, 92, 169, 0.22) 42%, rgba(234, 218, 218, 0) 72%);
-  filter: blur(50px);
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* 3D WebGL Canvas Layer (Translucent ribbons, floating spheres, ambient particles) */
-.hero-3d-canvas-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 130%;
-  height: 130%;
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* Seamless Portrait Silhouette Container (No rectangular card, frame, or ring) */
-.hero-portrait-wrapper {
-  position: relative;
-  z-index: 2;
-  width: min(460px, 90vw);
-  aspect-ratio: 1.16 / 1;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  overflow: visible;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.5s var(--ease-out-expo);
-}
-
-.hero-portrait-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  overflow: visible;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* The Genuine Authentic Transparent Portrait Cutout */
-.hero-portrait-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center bottom;
-  display: block;
-  filter: drop-shadow(0 18px 45px rgba(77, 58, 77, 0.16)) drop-shadow(0 0 32px rgba(190, 92, 169, 0.24));
-  /* Soft bottom fade so the dress merges seamlessly into the background */
-  mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
-  transition: transform 0.4s var(--ease-out-expo), filter var(--transition-normal);
-}
-
-.hero-portrait-base {
-  position: relative;
-  z-index: 1;
-}
-
-/* Layer 2: Futuristic Portrait — Soft Circular Cursor Mask Reveal */
-.hero-portrait-reveal-layer {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 2;
-  mask-image: radial-gradient(
-    circle var(--reveal-r, 0px) at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    black 0%,
-    black 55%,
-    transparent 100%
-  );
-  -webkit-mask-image: radial-gradient(
-    circle var(--reveal-r, 0px) at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    black 0%,
-    black 55%,
-    transparent 100%
-  );
-  will-change: mask-image, -webkit-mask-image;
-}
-
-.hero-portrait-futuristic {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center bottom;
-  display: block;
-  filter: drop-shadow(0 18px 45px rgba(77, 58, 77, 0.16)) drop-shadow(0 0 32px rgba(190, 92, 169, 0.24));
-  mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
-}
-
-/* Soft Ambient Rim Light Glow on Portrait Silhouette */
-.hero-portrait-lighting-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: 
-    radial-gradient(ellipse at 85% 20%, rgba(213, 156, 197, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse at 15% 85%, rgba(190, 92, 169, 0.1) 0%, transparent 60%);
-  z-index: 3;
-  mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
-}
-
-/* ==========================================================================
-   BOTTOM SCROLL INDICATOR
+   SCROLL INDICATOR (Aligned With Left Editorial Column)
    ========================================================================== */
 .hero-scroll-indicator {
-  position: absolute;
-  bottom: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
+  margin-top: clamp(0.75rem, 2vh, 1.8rem);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.65rem;
+  align-items: flex-start;
+  gap: 0.5rem;
   z-index: 3;
   cursor: pointer;
   background: none;
   border: none;
   outline: none;
-  padding: 0.5rem;
+  padding: 0;
   transition: opacity var(--transition-fast);
 }
 
@@ -435,9 +338,9 @@
 
 .hero-scroll-text {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.24em;
   color: var(--color-text-dim);
   text-transform: uppercase;
   transition: color var(--transition-fast);
@@ -446,10 +349,11 @@
 
 .hero-scroll-line-container {
   width: 1px;
-  height: 38px;
+  height: 36px;
   background: rgba(77, 58, 77, 0.18);
   position: relative;
   overflow: hidden;
+  margin-left: 2rem;
 }
 
 .hero-scroll-line {
@@ -480,6 +384,71 @@
 }
 
 /* ==========================================================================
+   RIGHT COLUMN: LARGE SEAMLESS EDITORIAL PORTRAIT (85-95vh)
+   Strictly NO square, NO rectangle, NO card, NO frame, NO border
+   ========================================================================== */
+.hero-visual-right {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 100%;
+  min-height: 580px;
+}
+
+/* Soft Radial Ambient Glow Behind Portrait Cutout */
+.hero-portrait-ambient-glow {
+  position: absolute;
+  width: 130%;
+  height: 130%;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    ellipse at 50% 45%,
+    rgba(213, 156, 197, 0.52) 0%,
+    rgba(190, 92, 169, 0.24) 44%,
+    rgba(234, 218, 218, 0) 74%
+  );
+  filter: blur(55px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Seamless Portrait Container (85-95vh desktop scale, absolutely borderless) */
+.hero-portrait-wrapper {
+  position: relative;
+  z-index: 2;
+  height: clamp(560px, 90vh, 880px);
+  width: auto;
+  max-width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
+  transition: transform 0.5s var(--ease-out-expo);
+}
+
+/* The Genuine Authentic Transparent Portrait Cutout */
+.hero-portrait-image {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  max-height: clamp(560px, 90vh, 880px);
+  object-fit: contain;
+  object-position: center bottom;
+  display: block;
+  filter: drop-shadow(0 20px 48px rgba(77, 58, 77, 0.14)) drop-shadow(0 0 32px rgba(190, 92, 169, 0.18));
+  /* Feathered bottom fade seamlessly merging into the Hero ground */
+  mask-image: linear-gradient(to bottom, #000000 0%, #000000 84%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000000 0%, #000000 84%, transparent 100%);
+  transition: transform 0.4s var(--ease-out-expo), filter var(--transition-normal);
+}
+
+/* ==========================================================================
    RESPONSIVE LAYOUTS (TABLET & MOBILE)
    ========================================================================== */
 
@@ -488,6 +457,7 @@
   .hero-layout-grid {
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
+    align-items: center;
   }
 
   .hero-name-line {
@@ -497,27 +467,15 @@
   }
 
   .hero-portrait-wrapper {
-    width: min(320px, 40vw);
-  }
-
-  .hero-3d-canvas-container {
-    width: 115%;
-    height: 115%;
+    height: clamp(440px, 65vh, 600px);
   }
 }
 
-/* Dedicated Mobile Composition (< 768px)
-   Order:
-   1. ATIYA ALI (Header)
-   2. Portrait + 3D Object
-   3. Description (BCA Student • Developer & Tagline)
-   4. Buttons
-   5. Scroll Indicator
-*/
+/* Dedicated Mobile Composition (< 768px) */
 @media (max-width: 768px) {
   .hero-section {
-    padding-top: calc(var(--nav-height) + 1rem);
-    padding-bottom: 4.5rem;
+    padding-top: calc(var(--nav-height) + 1.25rem);
+    padding-bottom: 4rem;
     min-height: auto;
     justify-content: flex-start;
   }
@@ -530,7 +488,6 @@
     gap: 1.5rem;
   }
 
-  /* Reorder items for dedicated mobile flow */
   .hero-content-left {
     display: contents;
   }
@@ -558,28 +515,19 @@
 
   .hero-visual-right {
     order: 3;
-    min-height: 360px;
+    min-height: 380px;
+    height: auto;
     width: 100%;
     margin: 0.5rem 0;
   }
 
   .hero-portrait-wrapper {
-    width: min(340px, 88vw);
-    aspect-ratio: 1.16 / 1;
+    height: clamp(340px, 50vh, 440px);
+    width: 100%;
     background: transparent;
     border: none;
     box-shadow: none;
     overflow: visible;
-  }
-
-  .hero-portrait-inner {
-    background: transparent;
-    overflow: visible;
-  }
-
-  .hero-3d-canvas-container {
-    width: 125%;
-    height: 125%;
   }
 
   .hero-tagline {
@@ -589,15 +537,22 @@
     justify-content: center;
   }
 
-  .hero-description {
+  .hero-editorial-statement {
     order: 5;
-    font-size: 0.98rem;
+    font-size: 1.15rem;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .hero-description {
+    order: 6;
+    font-size: 0.96rem;
     max-width: 90%;
     margin: 0 auto;
   }
 
   .hero-cta-group {
-    order: 6;
+    order: 7;
     justify-content: center;
     width: 100%;
     gap: 0.85rem;
@@ -612,11 +567,13 @@
   }
 
   .hero-scroll-indicator {
-    position: relative;
-    bottom: auto;
-    margin-top: 2rem;
-    transform: none;
-    left: auto;
+    order: 8;
+    margin-top: 1.5rem;
+    align-items: center;
+  }
+
+  .hero-scroll-line-container {
+    margin-left: 0;
   }
 }
 
@@ -627,8 +584,5 @@
   }
   .hero-status-dot {
     animation: none;
-  }
-  .hero-portrait-wrapper:hover {
-    transform: none;
   }
 }

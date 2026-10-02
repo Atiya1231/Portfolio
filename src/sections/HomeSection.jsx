@@ -1,106 +1,43 @@
 import React, { useEffect, useRef } from 'react';
 import { ArrowUpRight, MessageCircle } from 'lucide-react';
 import { gsap, ScrollTrigger, scrollToSection } from '../animations/gsapUtils';
-import Hero3DCanvas from '../components/Hero3DCanvas';
 import MagneticButton from '../components/MagneticButton';
 import portraitNormal from '../assets/atiya-normal.png';
-import portraitFuturistic from '../assets/atiya-futuristic.png';
 
 /**
- * HomeSection: Full-screen Cinematic 3D Hero with Cursor-Following Image Reveal.
- * Features:
+ * HomeSection: Cinematic Editorial Hero for Atiya Ali Portfolio
+ * Visual Target: Reference Image 1
  * - Visually dominant editorial typography (ATIYA ALI)
- * - Authentic cinematic portrait with smooth cursor reveal (Base: Normal, Reveal: Futuristic)
- * - Real-time interactive 3D WebGL metallic sculpture with Three.js / R3F
- * - 8-step orchestrated GSAP cinematic entrance timeline
- * - Smooth mouse magnetic pull & scroll parallax transitions
+ * - Large seamless portrait (85-95vh) blended naturally into continuous sunset atmosphere
+ * - Rich layered gradients (#EADADA, #D59CC5, #BE5CA9, #4D3A4D)
+ * - Clean editorial hierarchy & smooth GSAP entrance
  */
 const HomeSection = () => {
   const sectionRef = useRef(null);
   const portraitRef = useRef(null);
-  const revealLayerRef = useRef(null);
-  const glowCrimsonRef = useRef(null);
+  const glowAtmosphereRef = useRef(null);
   const glowPinkRef = useRef(null);
-  const glowLeftRef = useRef(null);
+  const glowPlumRef = useRef(null);
   const nameAtiyaRef = useRef(null);
   const nameAliRef = useRef(null);
   const contentLeftRef = useRef(null);
-
-  // Smooth lerp coordinates for circular cursor reveal
-  const targetReveal = useRef({ x: 0, y: 0, r: 0 });
-  const currentReveal = useRef({ x: 0, y: 0, r: 0 });
-  const rafRef = useRef(null);
-
-  // 3D Card tilt effect & relative cursor position on portrait mouse hover (desktop only)
-  const handlePortraitMouseMove = (e) => {
-    if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
-    const card = portraitRef.current;
-    if (!card) return;
-
-    const rect = card.getBoundingClientRect();
-    const relX = e.clientX - rect.left;
-    const relY = e.clientY - rect.top;
-
-    targetReveal.current = { x: relX, y: relY, r: 150 };
-
-    const rotX = -((relY - rect.height / 2) / (rect.height / 2)) * 6; // max 6 deg
-    const rotY = ((relX - rect.width / 2) / (rect.width / 2)) * 6;
-
-    card.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-4px) scale(1.01)`;
-  };
-
-  const handlePortraitMouseLeave = () => {
-    targetReveal.current.r = 0;
-    const card = portraitRef.current;
-    if (!card) return;
-    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)';
-  };
-
-  // Smooth fluid animation loop with requestAnimationFrame
-  useEffect(() => {
-    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (isReducedMotion) return;
-
-    const animate = () => {
-      const target = targetReveal.current;
-      const current = currentReveal.current;
-
-      current.x += (target.x - current.x) * 0.12;
-      current.y += (target.y - current.y) * 0.12;
-      current.r += (target.r - current.r) * 0.1;
-
-      if (revealLayerRef.current) {
-        revealLayerRef.current.style.setProperty('--mouse-x', `${current.x.toFixed(1)}px`);
-        revealLayerRef.current.style.setProperty('--mouse-y', `${current.y.toFixed(1)}px`);
-        revealLayerRef.current.style.setProperty('--reveal-r', `${current.r.toFixed(1)}px`);
-      }
-
-      rafRef.current = requestAnimationFrame(animate);
-    };
-
-    rafRef.current = requestAnimationFrame(animate);
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, []);
 
   useEffect(() => {
     const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const ctx = gsap.context(() => {
       if (isReducedMotion) {
-        // Immediate show for reduced motion preference
         gsap.set(
           [
-            glowCrimsonRef.current,
+            glowAtmosphereRef.current,
             glowPinkRef.current,
-            glowLeftRef.current,
-            '.hero-3d-canvas-container',
+            glowPlumRef.current,
             portraitRef.current,
             nameAtiyaRef.current,
             nameAliRef.current,
             '.hero-status-pill',
             '.hero-tagline',
+            '.hero-editorial-statement',
             '.hero-description',
             '.magnetic-btn',
             '.hero-scroll-indicator'
@@ -110,63 +47,65 @@ const HomeSection = () => {
         return;
       }
 
-      // Initial state: dark / hidden
-      gsap.set([glowCrimsonRef.current, glowPinkRef.current, glowLeftRef.current], { opacity: 0 });
-      gsap.set('.hero-3d-canvas-container', { opacity: 0, scale: 0.88 });
-      gsap.set(portraitRef.current, { opacity: 0, y: 35, filter: 'blur(12px)' });
-      gsap.set('.hero-status-pill', { opacity: 0, y: 20 });
-      gsap.set(nameAtiyaRef.current, { opacity: 0, y: 45, filter: 'blur(10px)' });
-      gsap.set(nameAliRef.current, { opacity: 0, y: 45, filter: 'blur(10px)' });
-      gsap.set(['.hero-tagline', '.hero-description'], { opacity: 0, y: 25 });
-      gsap.set('.magnetic-btn', { opacity: 0, y: 20, scale: 0.96 });
+      // Initial state: hidden / blurred for cinematic entrance
+      gsap.set([glowAtmosphereRef.current, glowPinkRef.current, glowPlumRef.current], { opacity: 0 });
+      gsap.set('.hero-bg-waves', { opacity: 0, scale: 0.96 });
+      gsap.set(portraitRef.current, { opacity: 0, y: 30, scale: 1.04, filter: 'blur(10px)' });
+      gsap.set('.hero-status-pill', { opacity: 0, y: 16 });
+      gsap.set(nameAtiyaRef.current, { opacity: 0, y: 40, filter: 'blur(8px)' });
+      gsap.set(nameAliRef.current, { opacity: 0, y: 40, filter: 'blur(8px)' });
+      gsap.set('.hero-tagline', { opacity: 0, y: 20 });
+      gsap.set('.hero-editorial-statement', { opacity: 0, y: 20 });
+      gsap.set('.hero-description', { opacity: 0, y: 20 });
+      gsap.set('.magnetic-btn', { opacity: 0, y: 18, scale: 0.96 });
       gsap.set('.hero-scroll-indicator', { opacity: 0, y: 15 });
 
-      // Orchestrated 8-Step GSAP Cinematic Entrance Timeline
+      // Orchestrated Cinematic Entrance Timeline
       const entranceTl = gsap.timeline({
         defaults: { ease: 'power3.out' },
-        delay: 0.2
+        delay: 0.15
       });
 
       entranceTl
-        // Step 2: Atmospheric ambient glows fade in
-        .to([glowCrimsonRef.current, glowPinkRef.current, glowLeftRef.current], {
+        // 1. Background atmospheric glows & waves fade in smoothly
+        .to([glowAtmosphereRef.current, glowPinkRef.current, glowPlumRef.current], {
           opacity: 1,
-          duration: 1.4,
+          duration: 1.5,
           ease: 'power2.out'
         })
-        // Step 3: 3D sculpture scales & reveals smoothly
         .to(
-          '.hero-3d-canvas-container',
+          '.hero-bg-waves',
           {
             opacity: 1,
             scale: 1,
-            duration: 1.8,
+            duration: 1.6,
             ease: 'expo.out'
           },
-          '-=1.0'
+          '-=1.2'
         )
-        // Step 4: Authentic portrait smoothly reveals with blur-to-sharp transition
+        // 2. Large authentic portrait reveals with blur-to-sharp & subtle settle scale
         .to(
           portraitRef.current,
           {
             opacity: 1,
             y: 0,
+            scale: 1,
             filter: 'blur(0px)',
-            duration: 1.5,
+            duration: 1.4,
             ease: 'power3.out',
             clearProps: 'filter'
           },
-          '-=1.3'
+          '-=1.2'
         )
-        // Step 5: Status Pill & "ATIYA" editorial reveal
+        // 3. Status Pill & "ATIYA"
         .to(
           '.hero-status-pill',
           {
             opacity: 1,
             y: 0,
-            duration: 0.8
+            duration: 0.75
           },
-          '-=1.1'
+          '-=1.0'
         )
         .to(
           nameAtiyaRef.current,
@@ -174,65 +113,65 @@ const HomeSection = () => {
             opacity: 1,
             y: 0,
             filter: 'blur(0px)',
-            duration: 1.3,
+            duration: 1.2,
             ease: 'power3.out',
             clearProps: 'filter'
           },
-          '-=0.8'
+          '-=0.75'
         )
-        // Step 6: "ALI" reveals
+        // 4. "ALI"
         .to(
           nameAliRef.current,
           {
             opacity: 1,
             y: 0,
             filter: 'blur(0px)',
-            duration: 1.3,
+            duration: 1.2,
             ease: 'power3.out',
             clearProps: 'filter'
           },
-          '-=1.0'
+          '-=0.95'
         )
-        // Step 7: Subtitle & Description slide in
+        // 5. Tagline, Quote & Description
         .to(
-          ['.hero-tagline', '.hero-description'],
+          ['.hero-tagline', '.hero-editorial-statement', '.hero-description'],
           {
             opacity: 1,
             y: 0,
-            stagger: 0.16,
-            duration: 0.9
+            stagger: 0.14,
+            duration: 0.85
           },
-          '-=0.8'
+          '-=0.75'
         )
-        // Step 8: Action buttons appear with subtle stagger
+        // 6. Action buttons
         .to(
           '.magnetic-btn',
           {
             opacity: 1,
             y: 0,
             scale: 1,
-            stagger: 0.15,
-            duration: 0.8
+            stagger: 0.12,
+            duration: 0.75
           },
-          '-=0.6'
+          '-=0.55'
         )
-        // Step 9: Scroll indicator gently appears
+        // 7. Scroll indicator
         .to(
           '.hero-scroll-indicator',
           {
             opacity: 1,
             y: 0,
-            duration: 0.8,
+            duration: 0.75,
             ease: 'power2.out'
           },
           '-=0.4'
         );
 
-      // Parallax Scroll Animation into About section
+      // Subtle Parallax Scroll Animation into next section
       if (typeof ScrollTrigger !== 'undefined') {
         gsap.to('.hero-content-left', {
-          y: -50,
-          opacity: 0.65,
+          y: -40,
+          opacity: 0.7,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top top',
@@ -242,8 +181,8 @@ const HomeSection = () => {
         });
 
         gsap.to(portraitRef.current, {
-          y: -35,
-          scale: 0.97,
+          y: -25,
+          scale: 0.98,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top top',
@@ -252,25 +191,14 @@ const HomeSection = () => {
           }
         });
 
-        gsap.to('.hero-3d-canvas-container', {
-          y: -20,
-          rotation: 0.08,
+        gsap.to(['.hero-bg-waves', glowAtmosphereRef.current, glowPinkRef.current], {
+          y: 30,
+          opacity: 0.5,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top top',
             end: 'bottom top',
-            scrub: 1.2
-          }
-        });
-
-        gsap.to([glowCrimsonRef.current, glowPinkRef.current], {
-          y: 40,
-          opacity: 0.4,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1.5
+            scrub: 1.4
           }
         });
       }
@@ -284,17 +212,76 @@ const HomeSection = () => {
       id="home"
       ref={sectionRef}
       className="hero-section"
-      aria-label="Atiya Ali Hero Presentation"
+      aria-label="Atiya Ali Portfolio Presentation"
     >
-      {/* Atmospheric Ambient Lighting Glows (Vibrant Sunset Palette: #4D3A4D, #BE5CA9, #D59CC5, #EADADA) */}
-      <div ref={glowCrimsonRef} className="hero-glow-crimson" aria-hidden="true" />
+      {/* ==========================================================================
+          CONTINUOUS ATMOSPHERIC SUNSET GRADIENT & FLUID BACKDROP
+          Strictly locked colors: #EADADA (Base), #D59CC5 (Lavender), #BE5CA9 (Magenta), #4D3A4D (Deep Plum)
+          ========================================================================== */}
+      <div ref={glowAtmosphereRef} className="hero-glow-atmosphere" aria-hidden="true" />
       <div ref={glowPinkRef} className="hero-glow-pink" aria-hidden="true" />
-      <div ref={glowLeftRef} className="hero-glow-left" aria-hidden="true" />
+      <div ref={glowPlumRef} className="hero-glow-plum" aria-hidden="true" />
+
+      {/* Elegant Atmospheric Fluid Wave Shapes matching Reference Image */}
+      <div className="hero-bg-waves" aria-hidden="true">
+        <svg
+          viewBox="0 0 1440 900"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+          className="hero-waves-svg"
+        >
+          <defs>
+            {/* Primary soft lavender/pink wave gradient */}
+            <linearGradient id="waveGrad1" x1="45%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#EADADA" stopOpacity="0" />
+              <stop offset="35%" stopColor="#D59CC5" stopOpacity="0.42" />
+              <stop offset="70%" stopColor="#BE5CA9" stopOpacity="0.38" />
+              <stop offset="100%" stopColor="#4D3A4D" stopOpacity="0.25" />
+            </linearGradient>
+
+            {/* Deep atmospheric backdrop curve */}
+            <linearGradient id="waveGrad2" x1="20%" y1="20%" x2="95%" y2="90%">
+              <stop offset="0%" stopColor="#D59CC5" stopOpacity="0.15" />
+              <stop offset="50%" stopColor="#BE5CA9" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#4D3A4D" stopOpacity="0.45" />
+            </linearGradient>
+
+            {/* Soft highlight arc */}
+            <linearGradient id="waveGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.28" />
+              <stop offset="60%" stopColor="#D59CC5" stopOpacity="0.22" />
+              <stop offset="100%" stopColor="#BE5CA9" stopOpacity="0.05" />
+            </linearGradient>
+          </defs>
+
+          {/* Deep ambient background sweep */}
+          <path
+            d="M580 0 C780 120 920 320 1020 540 C1120 740 1260 840 1440 900 L1440 0 Z"
+            fill="url(#waveGrad2)"
+            opacity="0.85"
+          />
+
+          {/* Flowing mid-ground organic curve behind portrait */}
+          <path
+            d="M620 0 C760 180 880 360 1000 520 C1140 700 1280 820 1440 880 L1440 900 L680 900 C620 760 580 580 620 400 Z"
+            fill="url(#waveGrad1)"
+            opacity="0.9"
+          />
+
+          {/* Delicate luminous rim sweep */}
+          <path
+            d="M520 900 C620 720 780 540 960 400 C1140 260 1300 120 1440 60 L1440 0 C1280 80 1100 220 920 380 C740 520 580 700 480 900 Z"
+            fill="url(#waveGrad3)"
+            opacity="0.65"
+          />
+        </svg>
+      </div>
 
       {/* Main Responsive Grid Layout */}
       <div className="hero-layout-grid">
         {/* ==========================================================================
-            LEFT COLUMN / SECTION: EDITORIAL TYPOGRAPHY & INTERACTIVE CTAs
+            LEFT COLUMN: EDITORIAL TYPOGRAPHY & INTERACTIVE CTAs
             ========================================================================== */}
         <div ref={contentLeftRef} className="hero-content-left">
           {/* Status Badge */}
@@ -303,7 +290,7 @@ const HomeSection = () => {
             <span>AVAILABLE FOR OPPORTUNITIES</span>
           </div>
 
-          {/* Large Dominant Editorial Typography */}
+          {/* Massive Dominant Editorial Typography */}
           <div className="hero-name-container">
             <h1 className="hero-name-line name-atiya" ref={nameAtiyaRef}>
               ATIYA
@@ -351,73 +338,44 @@ const HomeSection = () => {
               <MessageCircle size={16} />
             </MagneticButton>
           </div>
+
+          {/* Bottom Scroll Indicator Aligned With Left Editorial Column */}
+          <button
+            type="button"
+            className="hero-scroll-indicator interactive"
+            onClick={() => scrollToSection('about')}
+            aria-label="Scroll to About section"
+          >
+            <span className="hero-scroll-text">SCROLL TO EXPLORE</span>
+            <div className="hero-scroll-line-container">
+              <div className="hero-scroll-line" />
+            </div>
+          </button>
         </div>
 
         {/* ==========================================================================
-            RIGHT COLUMN / SECTION: AUTHENTIC PORTRAIT + 3D PASTEL ENVIRONMENT
+            RIGHT COLUMN: LARGE SEAMLESS EDITORIAL PORTRAIT (85-95vh)
+            Strictly NO square, NO rectangle, NO card, NO frame, NO border
             ========================================================================== */}
         <div className="hero-visual-right">
-          {/* Atmospheric Pastel Glow Backdrop (#D59CC5 / #BE5CA9) */}
-          <div className="hero-portrait-glow-backdrop" aria-hidden="true" />
+          {/* Soft Radial Ambient Glow Behind Portrait */}
+          <div className="hero-portrait-ambient-glow" aria-hidden="true" />
 
-          {/* 3D WebGL Digital Sculpture Canvas (Flows softly behind portrait) */}
-          <Hero3DCanvas />
-
-          {/* Authentic Portrait (Integrated seamlessly into pastel environment) */}
-          <div
-            ref={portraitRef}
-            className="hero-portrait-wrapper interactive"
-            onMouseMove={handlePortraitMouseMove}
-            onMouseLeave={handlePortraitMouseLeave}
-          >
-            <div className="hero-portrait-inner">
-              {/* BASE NORMAL PORTRAIT */}
-              <img
-                src={portraitNormal}
-                alt="Atiya Ali — BCA student and aspiring developer"
-                className="hero-portrait-image hero-portrait-base"
-                loading="eager"
-                decoding="async"
-              />
-
-              {/* REVEAL FUTURISTIC PORTRAIT */}
-              <div
-                ref={revealLayerRef}
-                className="hero-portrait-reveal-layer"
-                aria-hidden="true"
-              >
-                <img
-                  src={portraitFuturistic}
-                  alt=""
-                  className="hero-portrait-image hero-portrait-futuristic"
-                  loading="eager"
-                  decoding="async"
-                />
-              </div>
-
-              {/* Soft Ambient Rim Light Overlay */}
-              <div className="hero-portrait-lighting-overlay" aria-hidden="true" />
-            </div>
+          {/* Authentic Portrait Container */}
+          <div ref={portraitRef} className="hero-portrait-wrapper">
+            <img
+              src={portraitNormal}
+              alt="Atiya Ali — BCA Student & Aspiring Developer"
+              className="hero-portrait-image"
+              loading="eager"
+              decoding="async"
+            />
           </div>
         </div>
       </div>
-
-      {/* ==========================================================================
-          BOTTOM SCROLL INDICATOR
-          ========================================================================== */}
-      <button
-        type="button"
-        className="hero-scroll-indicator interactive"
-        onClick={() => scrollToSection('about')}
-        aria-label="Scroll to About section"
-      >
-        <span className="hero-scroll-text">SCROLL TO EXPLORE</span>
-        <div className="hero-scroll-line-container">
-          <div className="hero-scroll-line" />
-        </div>
-      </button>
     </section>
   );
 };
 
 export default HomeSection;
+
