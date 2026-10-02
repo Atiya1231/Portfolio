@@ -37,7 +37,7 @@ const JOURNEY_MILESTONES = [
     icon: Database,
     category: 'APPLIED ENGINEERING',
     narrative:
-      'Engineered real-world software applications: developed the Student Attendance & Performance Management System and the Smart Waste Management platform, managing MySQL relational schemas and frontend-backend data flows.'
+      'Engineered real-world software applications: developed the Travel & Tourism platform and the Smart Waste Management system, managing relational databases, responsive web layouts, and frontend-backend data flows.'
   },
   {
     phase: 'PHASE 05',

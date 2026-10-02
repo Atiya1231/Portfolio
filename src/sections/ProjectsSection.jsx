@@ -5,21 +5,21 @@ import GithubIcon from '../components/GithubIcon';
 
 const PROJECTS = [
   {
-    id: 'student-management',
+    id: 'travel-tourism',
     num: '01',
-    title: 'Student Attendance & Performance Management System',
-    subtitle: 'Academic Tracking, Automated Scoring & Analytical Reporting',
-    category: 'FULL STACK / WEB APPLICATION',
+    title: 'Travel & Tourism',
+    subtitle: 'Destination Discovery & Tourism Web Platform',
+    category: 'WEB APPLICATION / FRONTEND DEVELOPMENT',
     description:
-      'A comprehensive institutional portal engineered to streamline daily student attendance recording, calculate cumulative GPA and semester scores, and generate automated performance reports. Built with relational MySQL database schemas for data integrity and an intuitive dashboard.',
+      'An interactive travel and tourism web platform designed to explore travel destinations, view curated tour packages, and streamline travel discovery through clean, responsive layouts and intuitive navigation.',
     features: [
-      'Daily attendance tracking with automated absentee summary reports',
-      'Automated aggregate grade scoring and GPA calculation engine',
-      'Relational student profiling linked to relational MySQL backend',
-      'Modular administrative control panel with role-based access'
+      'Interactive destination showcase and curated tourism packages',
+      'Responsive multi-page navigation with modern UI layouts',
+      'Destination details, package itineraries, and inquiry forms',
+      'Clean modular frontend architecture with cross-device compatibility'
     ],
-    tech: ['React.js', 'JavaScript', 'Node.js', 'MySQL', 'CSS Modules', 'REST API'],
-    mockupType: 'dashboard',
+    tech: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Responsive Design'],
+    mockupType: 'tourism',
     githubUrl: 'https://github.com/Atiya1231'
   },
   {
@@ -41,13 +41,13 @@ const PROJECTS = [
     githubUrl: 'https://github.com/Atiya1231'
   },
   {
-    id: 'portfolio-3d',
+    id: 'portfolio-website',
     num: '03',
-    title: 'Personal 3D Editorial Portfolio',
+    title: 'Portfolio Website',
     subtitle: 'Cinematic WebGL & Editorial Magazine Experience',
     category: 'CREATIVE DEVELOPMENT / 3D WEB',
     description:
-      'An immersive developer portfolio fusing high-contrast editorial serif typography with real-time 3D WebGL digital sculpture, GSAP entrance choreography, and the Vibrant Sunset design system. Crafted for peak visual distinction and responsive performance.',
+      'An immersive personal developer portfolio fusing high-contrast editorial serif typography with real-time 3D WebGL digital ribbon sculpture, GSAP entrance choreography, and the Vibrant Sunset design system. Crafted for peak visual distinction and responsive performance.',
     features: [
       'Interactive 3D WebGL digital ribbon sculpture with Three.js & R3F',
       '8-step orchestrated GSAP entrance choreography & scroll parallax',
