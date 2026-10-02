@@ -26,10 +26,10 @@
   top: 45%;
   right: 18%;
   transform: translate(50%, -50%);
-  width: min(650px, 80vw);
-  height: min(650px, 80vw);
+  width: min(600px, 75vw);
+  height: min(600px, 75vw);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(213, 156, 197, 0.45) 0%, rgba(190, 92, 169, 0.18) 50%, rgba(234, 218, 218, 0) 75%);
+  background: radial-gradient(circle, rgba(213, 156, 197, 0.4) 0%, rgba(190, 92, 169, 0.16) 50%, rgba(234, 218, 218, 0) 75%);
   filter: blur(65px);
   pointer-events: none;
   z-index: 0;
@@ -40,10 +40,10 @@
   top: 50%;
   right: 22%;
   transform: translate(50%, -50%);
-  width: min(380px, 50vw);
-  height: min(380px, 50vw);
+  width: min(360px, 48vw);
+  height: min(360px, 48vw);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(190, 92, 169, 0.22) 0%, rgba(213, 156, 197, 0.12) 60%, rgba(234, 218, 218, 0) 80%);
+  background: radial-gradient(circle, rgba(190, 92, 169, 0.2) 0%, rgba(213, 156, 197, 0.1) 60%, rgba(234, 218, 218, 0) 80%);
   filter: blur(45px);
   pointer-events: none;
   z-index: 0;
@@ -53,10 +53,10 @@
   position: absolute;
   top: 30%;
   left: 5%;
-  width: min(450px, 60vw);
-  height: min(450px, 60vw);
+  width: min(420px, 55vw);
+  height: min(420px, 55vw);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(213, 156, 197, 0.28) 0%, rgba(234, 218, 218, 0) 70%);
+  background: radial-gradient(circle, rgba(213, 156, 197, 0.25) 0%, rgba(234, 218, 218, 0) 70%);
   filter: blur(55px);
   pointer-events: none;
   z-index: 0;
@@ -264,50 +264,48 @@
   min-height: 520px;
 }
 
-/* 3D WebGL Canvas Layer (Behind & Around Portrait) */
+/* 3D WebGL Canvas Layer (Behind & wrapping around Portrait) */
 .hero-3d-canvas-container {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 140%;
-  height: 135%;
+  width: 120%;
+  height: 120%;
   z-index: 1;
   pointer-events: none;
 }
 
-/* Portrait Wrapper with Vibrant Sunset Rim Lighting & Depth */
+/* Portrait Wrapper with Organic Soft Rim & Depth */
 .hero-portrait-wrapper {
   position: relative;
   z-index: 2;
-  width: min(390px, 82vw);
+  width: min(370px, 80vw);
   aspect-ratio: 3 / 4.15;
-  border-radius: 26px;
+  border-radius: 30px;
   overflow: hidden;
   padding: 1px;
-  background: linear-gradient(135deg, rgba(190, 92, 169, 0.45) 0%, rgba(213, 156, 197, 0.35) 50%, rgba(77, 58, 77, 0.25) 100%);
+  background: linear-gradient(135deg, rgba(213, 156, 197, 0.4) 0%, rgba(190, 92, 169, 0.18) 50%, rgba(77, 58, 77, 0.12) 100%);
   box-shadow: 
-    0 0 45px rgba(213, 156, 197, 0.4),
-    0 0 25px rgba(190, 92, 169, 0.25),
-    0 20px 50px rgba(77, 58, 77, 0.16);
+    0 15px 40px rgba(77, 58, 77, 0.1),
+    0 0 35px rgba(213, 156, 197, 0.35);
   transition: transform 0.45s var(--ease-out-expo), box-shadow 0.45s var(--ease-out-expo);
 }
 
 .hero-portrait-wrapper:hover {
-  transform: translateY(-4px) scale(1.01);
+  transform: translateY(-3px) scale(1.008);
   box-shadow: 
-    0 0 60px rgba(190, 92, 169, 0.45),
-    0 0 35px rgba(213, 156, 197, 0.4),
-    0 25px 55px rgba(77, 58, 77, 0.22);
+    0 20px 50px rgba(77, 58, 77, 0.16),
+    0 0 45px rgba(190, 92, 169, 0.35);
 }
 
 .hero-portrait-inner {
   position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 25px;
+  border-radius: 29px;
   overflow: hidden;
-  background-color: #3D2E3D;
+  background: transparent;
 }
 
 /* The Genuine Personal Portrait Image */
@@ -318,55 +316,22 @@
   object-position: center top;
   display: block;
   filter: contrast(1.02) brightness(0.99);
-  /* Organic feathering at the bottom edge so it flows naturally into sunset environment */
-  mask-image: linear-gradient(to bottom, #000000 0%, #000000 85%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, #000000 0%, #000000 85%, transparent 100%);
+  /* Feathered bottom edge so it flows naturally into the sunset environment */
+  mask-image: linear-gradient(to bottom, #000000 0%, #000000 84%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000000 0%, #000000 84%, transparent 100%);
   transition: filter var(--transition-normal);
 }
 
-/* Soft Ambient Lighting Overlay on Portrait */
+/* Soft Ambient Lighting Overlay on Portrait matching 3D environment */
 .hero-portrait-lighting-overlay {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background: 
-    radial-gradient(ellipse at 85% 20%, rgba(213, 156, 197, 0.25) 0%, transparent 50%),
-    radial-gradient(ellipse at 15% 85%, rgba(190, 92, 169, 0.18) 0%, transparent 60%),
-    linear-gradient(to top, rgba(77, 58, 77, 0.28) 0%, transparent 25%);
+    radial-gradient(ellipse at 85% 20%, rgba(213, 156, 197, 0.22) 0%, transparent 50%),
+    radial-gradient(ellipse at 15% 85%, rgba(190, 92, 169, 0.15) 0%, transparent 60%),
+    linear-gradient(to top, rgba(77, 58, 77, 0.22) 0%, transparent 25%);
   z-index: 2;
-}
-
-/* Corner Accent Marks */
-.hero-portrait-wrapper::before,
-.hero-portrait-wrapper::after {
-  content: '';
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  pointer-events: none;
-  border-color: var(--color-secondary);
-  border-style: solid;
-  opacity: 0.7;
-  z-index: 3;
-  transition: opacity var(--transition-fast), border-color var(--transition-fast);
-}
-
-.hero-portrait-wrapper::before {
-  top: 12px;
-  left: 12px;
-  border-width: 2px 0 0 2px;
-}
-
-.hero-portrait-wrapper::after {
-  bottom: 12px;
-  right: 12px;
-  border-width: 0 2px 2px 0;
-}
-
-.hero-portrait-wrapper:hover::before,
-.hero-portrait-wrapper:hover::after {
-  opacity: 1;
-  border-color: var(--color-primary);
 }
 
 /* Floating Status Chip on Portrait */
@@ -378,17 +343,17 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.35rem 0.85rem;
-  background: rgba(77, 58, 77, 0.88);
-  border: 1px solid rgba(213, 156, 197, 0.4);
+  padding: 0.32rem 0.8rem;
+  background: rgba(77, 58, 77, 0.82);
+  border: 1px solid rgba(213, 156, 197, 0.35);
   border-radius: 9999px;
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.66rem;
   font-weight: 600;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.14em;
   color: var(--color-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .hero-portrait-chip-dot {
@@ -491,12 +456,12 @@
   }
 
   .hero-portrait-wrapper {
-    width: min(340px, 42vw);
+    width: min(320px, 40vw);
   }
 
   .hero-3d-canvas-container {
-    width: 130%;
-    height: 125%;
+    width: 115%;
+    height: 115%;
   }
 }
 
@@ -526,7 +491,7 @@
 
   /* Reorder items for dedicated mobile flow */
   .hero-content-left {
-    display: contents; /* Allows child reordering via flex order */
+    display: contents;
   }
 
   .hero-status-pill {
@@ -546,24 +511,24 @@
 
   .hero-visual-right {
     order: 3;
-    min-height: 380px;
+    min-height: 360px;
     width: 100%;
-    margin: 0.75rem 0;
+    margin: 0.5rem 0;
   }
 
   .hero-portrait-wrapper {
-    width: min(290px, 78vw);
+    width: min(280px, 75vw);
     aspect-ratio: 3 / 4.1;
-    border-radius: 20px;
+    border-radius: 24px;
   }
 
   .hero-portrait-inner {
-    border-radius: 19px;
+    border-radius: 23px;
   }
 
   .hero-3d-canvas-container {
-    width: 120%;
-    height: 120%;
+    width: 110%;
+    height: 110%;
   }
 
   .hero-tagline {
