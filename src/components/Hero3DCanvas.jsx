@@ -11,71 +11,73 @@ const pseudoRandom = (seed) => {
 };
 
 /**
- * Single Coherent 3D Flowing Ribbon Sculpture:
- * A continuous, elegant organic 3D loop that wraps smoothly behind and around the portrait.
+ * Organic Flowing 3D Ribbon Sculpture:
+ * An asymmetric, continuous fluid 3D ribbon with real sculptural thickness, smooth rounded contours,
+ * and warm metallic sunset sheen that frames and supports the portrait from behind.
+ * 
  * Palette:
- * - Base: #4D3A4D
- * - Highlights: #BE5CA9
- * - Soft Reflections: #D59CC5
+ * - Base: #4D3A4D (warm plum)
+ * - Highlights: #BE5CA9 (vibrant orchid)
+ * - Soft reflections: #D59CC5 (sunset rose)
  */
-const FlowingRibbonSculpture = ({ mouseRef, isReducedMotion }) => {
+const OrganicRibbonSculpture = ({ mouseRef, isReducedMotion }) => {
   const groupRef = useRef(null);
   const targetRotation = useRef({ x: 0, y: 0 });
 
-  // Generate a continuous, smooth 3D spline curve framing the portrait
+  // Generate an asymmetric, organic 3D ribbon curve framing the portrait
   const ribbonGeometry = useMemo(() => {
     const points = [];
-    const numPoints = 80;
+    const numPoints = 96;
 
     for (let i = 0; i < numPoints; i++) {
       const t = (i / numPoints) * Math.PI * 2;
 
-      // Smooth flowing ribbon path that frames the portrait perimeter
-      // Upper curve -> Right sweep -> Lower sweep -> Left return
-      const rX = 1.38 + 0.18 * Math.cos(2 * t);
-      const rY = 1.82 + 0.24 * Math.sin(2 * t);
+      // Asymmetric organic radii that flow dynamically around the portrait
+      const rX = 1.45 + 0.22 * Math.cos(2 * t) + 0.08 * Math.sin(3 * t);
+      const rY = 1.92 + 0.26 * Math.sin(2 * t) - 0.12 * Math.cos(t);
 
       const x = rX * Math.cos(t);
       const y = rY * Math.sin(t);
-      // Soft Z depth variation that remains behind the portrait plane (z: -0.35 to -0.85)
-      const z = -0.58 + 0.24 * Math.sin(3 * t) + 0.08 * Math.cos(t);
+      // Gentle undulating Z depth that stays strictly behind the portrait plane (z: -0.38 to -0.88)
+      const z = -0.62 + 0.22 * Math.sin(3 * t) + 0.08 * Math.cos(2 * t);
 
       points.push(new THREE.Vector3(x, y, z));
     }
 
     const curve = new THREE.CatmullRomCurve3(points, true, 'centripetal', 0.5);
-    return new THREE.TubeGeometry(curve, 220, 0.092, 28, true);
+    // Real 3D thickness with smooth tubular cross section
+    return new THREE.TubeGeometry(curve, 240, 0.115, 32, true);
   }, []);
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
 
     if (!isReducedMotion && groupRef.current) {
-      // Extremely gentle idle floating & very slow organic rotation as ONE connected piece
-      const idleFloatY = Math.sin(time * 0.6) * 0.05;
-      const idleFloatX = Math.cos(time * 0.45) * 0.03;
+      // Very slow, gentle floating & organic rotation as ONE connected sculpture
+      const idleFloatY = Math.sin(time * 0.5) * 0.045;
+      const idleFloatX = Math.cos(time * 0.4) * 0.025;
 
       const mouseX = mouseRef.current ? mouseRef.current.x : 0;
       const mouseY = mouseRef.current ? mouseRef.current.y : 0;
 
       // Subtle, controlled mouse parallax
-      targetRotation.current.x = mouseY * 0.22;
-      targetRotation.current.y = mouseX * 0.32;
+      targetRotation.current.x = mouseY * 0.2;
+      targetRotation.current.y = mouseX * 0.28;
 
       groupRef.current.rotation.x = THREE.MathUtils.lerp(
         groupRef.current.rotation.x,
-        targetRotation.current.x + Math.sin(time * 0.25) * 0.06,
-        0.04
+        targetRotation.current.x + Math.sin(time * 0.2) * 0.05,
+        0.035
       );
       groupRef.current.rotation.y = THREE.MathUtils.lerp(
         groupRef.current.rotation.y,
-        targetRotation.current.y + time * 0.06,
-        0.04
+        targetRotation.current.y + time * 0.05,
+        0.035
       );
       groupRef.current.rotation.z = THREE.MathUtils.lerp(
         groupRef.current.rotation.z,
-        Math.cos(time * 0.3) * 0.04,
-        0.04
+        Math.cos(time * 0.25) * 0.035,
+        0.035
       );
 
       groupRef.current.position.y = idleFloatY;
@@ -85,17 +87,17 @@ const FlowingRibbonSculpture = ({ mouseRef, isReducedMotion }) => {
 
   return (
     <group ref={groupRef} position={[0, 0, 0]}>
-      {/* Single Continuous 3D Flowing Ribbon Sculpture */}
+      {/* Single Organic 3D Ribbon Sculpture */}
       <mesh geometry={ribbonGeometry} castShadow receiveShadow>
         <meshPhysicalMaterial
-          color="#4D3A4D"
-          emissive="#6B325F"
-          emissiveIntensity={0.28}
-          roughness={0.22}
-          metalness={0.84}
-          clearcoat={0.88}
-          clearcoatRoughness={0.14}
-          reflectivity={0.88}
+          color="#523C52"
+          emissive="#6F3462"
+          emissiveIntensity={0.3}
+          roughness={0.21}
+          metalness={0.8}
+          clearcoat={0.9}
+          clearcoatRoughness={0.12}
+          reflectivity={0.9}
         />
       </mesh>
     </group>
@@ -105,7 +107,7 @@ const FlowingRibbonSculpture = ({ mouseRef, isReducedMotion }) => {
 /**
  * Faint Floating 3D Dust Particles in Vibrant Sunset Palette
  */
-const Ambient3DParticles = ({ count = 35 }) => {
+const Ambient3DParticles = ({ count = 30 }) => {
   const pointsRef = useRef(null);
 
   const [positions, colors] = useMemo(() => {
@@ -124,13 +126,13 @@ const Ambient3DParticles = ({ count = 35 }) => {
       const r3 = pseudoRandom(i * 3.14 + 7);
       const r4 = pseudoRandom(i * 4.92 + 11);
 
-      const radius = 1.8 + r1 * 1.8;
+      const radius = 1.7 + r1 * 1.7;
       const theta = r2 * Math.PI * 2;
       const phi = Math.acos(2 * r3 - 1);
 
       pos[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
       pos[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-      pos[i * 3 + 2] = radius * Math.cos(phi) * 0.6 - 0.4;
+      pos[i * 3 + 2] = radius * Math.cos(phi) * 0.5 - 0.45;
 
       const chosenColor = colorPalette[Math.floor(r4 * colorPalette.length)];
       col[i * 3] = chosenColor.r;
@@ -144,8 +146,8 @@ const Ambient3DParticles = ({ count = 35 }) => {
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
     if (pointsRef.current) {
-      pointsRef.current.rotation.y = time * 0.025;
-      pointsRef.current.rotation.x = Math.sin(time * 0.02) * 0.05;
+      pointsRef.current.rotation.y = time * 0.02;
+      pointsRef.current.rotation.x = Math.sin(time * 0.015) * 0.04;
     }
   });
 
@@ -162,10 +164,10 @@ const Ambient3DParticles = ({ count = 35 }) => {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.038}
+        size={0.036}
         vertexColors
         transparent
-        opacity={0.55}
+        opacity={0.5}
         blending={THREE.NormalBlending}
         depthWrite={false}
       />
@@ -174,8 +176,8 @@ const Ambient3DParticles = ({ count = 35 }) => {
 };
 
 /**
- * Hero3DCanvas: Renders the single coherent 3D flowing sculpture
- * positioned behind and wrapping gracefully around the portrait.
+ * Hero3DCanvas: Renders the organic 3D ribbon sculpture
+ * positioned behind and wrapping naturally around the portrait.
  */
 const Hero3DCanvas = ({ className = '', style = {} }) => {
   const mouseRef = useRef({ x: 0, y: 0 });
@@ -216,18 +218,18 @@ const Hero3DCanvas = ({ className = '', style = {} }) => {
         style={{ width: '100%', height: '100%', pointerEvents: 'none' }}
       >
         {/* Soft Ambient Fill: #EADADA */}
-        <ambientLight color="#EADADA" intensity={1.6} />
+        <ambientLight color="#EADADA" intensity={1.7} />
         
-        {/* Key Directional Light: #D59CC5 (Soft sunset illumination) */}
+        {/* Key Directional Light: #D59CC5 (Soft sunset illumination matching portrait highlight) */}
         <directionalLight
-          position={[3.5, 3.0, 3.0]}
+          position={[3.8, 3.2, 3.0]}
           color="#D59CC5"
           intensity={4.2}
         />
 
-        {/* Accent Point Light: #BE5CA9 (Warm orchid rim light matching portrait) */}
+        {/* Accent Point Light: #BE5CA9 (Warm orchid rim light) */}
         <pointLight
-          position={[-3.0, -1.5, 2.0]}
+          position={[-3.2, -1.2, 2.2]}
           color="#BE5CA9"
           intensity={4.8}
           distance={14}
@@ -235,7 +237,7 @@ const Hero3DCanvas = ({ className = '', style = {} }) => {
 
         {/* Specular Highlight: #D59CC5 */}
         <pointLight
-          position={[0.2, 3.2, 1.8]}
+          position={[0.4, 3.4, 2.0]}
           color="#D59CC5"
           intensity={2.6}
           distance={10}
@@ -243,17 +245,17 @@ const Hero3DCanvas = ({ className = '', style = {} }) => {
 
         {/* Depth Shadow Light: #4D3A4D */}
         <pointLight
-          position={[0, 0, -3.0]}
+          position={[0, 0, -3.2]}
           color="#4D3A4D"
-          intensity={3.8}
+          intensity={3.5}
           distance={10}
         />
 
-        {/* Single Coherent 3D Flowing Ribbon Sculpture */}
-        <FlowingRibbonSculpture mouseRef={mouseRef} isReducedMotion={isReducedMotion} />
+        {/* Organic 3D Ribbon Sculpture */}
+        <OrganicRibbonSculpture mouseRef={mouseRef} isReducedMotion={isReducedMotion} />
 
         {/* Subtle Ambient Dust Particles */}
-        <Ambient3DParticles count={35} />
+        <Ambient3DParticles count={30} />
       </Canvas>
     </div>
   );

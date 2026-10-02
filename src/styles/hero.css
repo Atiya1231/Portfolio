@@ -264,7 +264,7 @@
   min-height: 520px;
 }
 
-/* 3D WebGL Canvas Layer (Behind & wrapping around Portrait) */
+/* 3D WebGL Canvas Layer (Behind & wrapping organically around Portrait) */
 .hero-3d-canvas-container {
   position: absolute;
   top: 50%;
@@ -276,34 +276,38 @@
   pointer-events: none;
 }
 
-/* Portrait Wrapper with Organic Soft Rim & Depth */
+/* Portrait Glass/Cinematic Window with Soft Ambient Sunset Glow */
 .hero-portrait-wrapper {
   position: relative;
   z-index: 2;
   width: min(370px, 80vw);
   aspect-ratio: 3 / 4.15;
-  border-radius: 30px;
+  border-radius: 32px;
   overflow: hidden;
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(213, 156, 197, 0.4) 0%, rgba(190, 92, 169, 0.18) 50%, rgba(77, 58, 77, 0.12) 100%);
+  padding: 1.5px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(213, 156, 197, 0.35) 40%, rgba(190, 92, 169, 0.25) 80%, rgba(77, 58, 77, 0.1) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   box-shadow: 
-    0 15px 40px rgba(77, 58, 77, 0.1),
-    0 0 35px rgba(213, 156, 197, 0.35);
+    0 16px 40px rgba(77, 58, 77, 0.09),
+    0 0 40px rgba(213, 156, 197, 0.32),
+    0 0 20px rgba(190, 92, 169, 0.2);
   transition: transform 0.45s var(--ease-out-expo), box-shadow 0.45s var(--ease-out-expo);
 }
 
 .hero-portrait-wrapper:hover {
   transform: translateY(-3px) scale(1.008);
   box-shadow: 
-    0 20px 50px rgba(77, 58, 77, 0.16),
-    0 0 45px rgba(190, 92, 169, 0.35);
+    0 22px 50px rgba(77, 58, 77, 0.14),
+    0 0 50px rgba(190, 92, 169, 0.38),
+    0 0 25px rgba(213, 156, 197, 0.3);
 }
 
 .hero-portrait-inner {
   position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 29px;
+  border-radius: 31px;
   overflow: hidden;
   background: transparent;
 }
@@ -317,8 +321,8 @@
   display: block;
   filter: contrast(1.02) brightness(0.99);
   /* Feathered bottom edge so it flows naturally into the sunset environment */
-  mask-image: linear-gradient(to bottom, #000000 0%, #000000 84%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, #000000 0%, #000000 84%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000000 0%, #000000 86%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000000 0%, #000000 86%, transparent 100%);
   transition: filter var(--transition-normal);
 }
 
@@ -328,9 +332,9 @@
   inset: 0;
   pointer-events: none;
   background: 
-    radial-gradient(ellipse at 85% 20%, rgba(213, 156, 197, 0.22) 0%, transparent 50%),
-    radial-gradient(ellipse at 15% 85%, rgba(190, 92, 169, 0.15) 0%, transparent 60%),
-    linear-gradient(to top, rgba(77, 58, 77, 0.22) 0%, transparent 25%);
+    radial-gradient(ellipse at 85% 20%, rgba(213, 156, 197, 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at 15% 85%, rgba(190, 92, 169, 0.12) 0%, transparent 60%),
+    linear-gradient(to top, rgba(77, 58, 77, 0.18) 0%, transparent 22%);
   z-index: 2;
 }
 
@@ -343,17 +347,17 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.32rem 0.8rem;
-  background: rgba(77, 58, 77, 0.82);
-  border: 1px solid rgba(213, 156, 197, 0.35);
+  padding: 0.32rem 0.85rem;
+  background: rgba(77, 58, 77, 0.78);
+  border: 1px solid rgba(213, 156, 197, 0.38);
   border-radius: 9999px;
   font-family: var(--font-mono);
   font-size: 0.66rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   color: var(--color-bg);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .hero-portrait-chip-dot {
