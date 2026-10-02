@@ -95,13 +95,6 @@ const JourneySection = () => {
       <div className="section-container">
         {/* Editorial Section Header */}
         <div className="editorial-section-header">
-          <div className="editorial-header-top">
-            <span className="editorial-index-badge">05 // 06</span>
-            <span className="editorial-tag-chip">
-              <Milestone size={13} />
-              <span>TIMELINE & MILESTONES</span>
-            </span>
-          </div>
           <h2 className="editorial-main-title">
             MY <span className="heading-gradient-word">JOURNEY</span>
           </h2>

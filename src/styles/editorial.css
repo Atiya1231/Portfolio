@@ -13,40 +13,6 @@
   width: 100%;
 }
 
-.editorial-header-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid rgba(77, 58, 77, 0.12);
-}
-
-.editorial-index-badge {
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  color: var(--color-secondary);
-}
-
-.editorial-tag-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.3rem 0.9rem;
-  border-radius: 9999px;
-  background: rgba(213, 156, 197, 0.25);
-  border: 1px solid rgba(190, 92, 169, 0.35);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  color: var(--color-primary);
-  text-transform: uppercase;
-}
-
 .editorial-main-title {
   font-family: var(--font-display);
   font-size: clamp(2.6rem, 6.5vw, 5.2rem);
@@ -54,7 +20,7 @@
   line-height: 0.95;
   letter-spacing: -0.02em;
   color: var(--color-primary);
-  margin-top: 0.5rem;
+  margin-top: 0;
 }
 
 /* Selective Gradient Word Treatment: Dark Plum (#4D3A4D) -> Sunset Pink/Magenta (#BE5CA9 / #D59CC5) */

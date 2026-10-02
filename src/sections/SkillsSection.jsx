@@ -107,13 +107,6 @@ const SkillsSection = () => {
       <div className="section-container">
         {/* Editorial Section Header */}
         <div className="editorial-section-header">
-          <div className="editorial-header-top">
-            <span className="editorial-index-badge">03 // 06</span>
-            <span className="editorial-tag-chip">
-              <Layers size={13} />
-              <span>TECHNICAL CAPABILITIES</span>
-            </span>
-          </div>
           <h2 className="editorial-main-title">
             MY <span className="heading-gradient-word">SKILLS</span>
           </h2>

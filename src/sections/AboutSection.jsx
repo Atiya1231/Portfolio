@@ -39,13 +39,6 @@ const AboutSection = () => {
       <div className="section-container" ref={contentRef}>
         {/* Editorial Section Header */}
         <div className="editorial-section-header about-animate-item">
-          <div className="editorial-header-top">
-            <span className="editorial-index-badge">02 // 06</span>
-            <span className="editorial-tag-chip">
-              <Compass size={13} />
-              <span>PHILOSOPHY & SPECIALIZATION</span>
-            </span>
-          </div>
           <h2 className="editorial-main-title">
             ABOUT <span className="heading-gradient-word">ME</span>
           </h2>

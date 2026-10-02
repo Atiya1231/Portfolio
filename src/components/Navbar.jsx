@@ -117,7 +117,7 @@ const Navbar = () => {
               onClick={(e) => handleNavClick(e, item.id)}
             >
               <span>{item.label}</span>
-              <span className="index">{item.index} // 06</span>
+              <span className="index">{item.index}</span>
             </a>
           ))}
         </div>

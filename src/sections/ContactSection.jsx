@@ -135,17 +135,6 @@ const ContactSection = () => {
   return (
     <section id="contact" ref={sectionRef} className="section-wrapper" aria-label="Contact Atiya Ali">
       <div className="section-container">
-        {/* Editorial Section Header Index */}
-        <div className="editorial-section-header contact-animate-item">
-          <div className="editorial-header-top">
-            <span className="editorial-index-badge">06 // 06</span>
-            <span className="editorial-tag-chip">
-              <MessageSquare size={13} />
-              <span>COLLABORATION & CONTACT</span>
-            </span>
-          </div>
-        </div>
-
         {/* Editorial Contact Presentation Container */}
         <div className="contact-editorial-container">
           {/* Main Editorial Statement & Supporting Message */}

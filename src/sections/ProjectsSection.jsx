@@ -96,13 +96,6 @@ const ProjectsSection = () => {
       <div className="section-container">
         {/* Editorial Section Header */}
         <div className="editorial-section-header">
-          <div className="editorial-header-top">
-            <span className="editorial-index-badge">04 // 06</span>
-            <span className="editorial-tag-chip">
-              <Briefcase size={13} />
-              <span>PORTFOLIO SHOWCASE</span>
-            </span>
-          </div>
           <h2 className="editorial-main-title">
             SELECTED <span className="heading-gradient-word">WORK</span>
           </h2>
