@@ -1,0 +1,50 @@
+:root {
+  /* Color Palette */
+  --bg-primary: #050505;
+  --bg-secondary: #0D080B;
+  --bg-tertiary: #140C11;
+  --bg-surface: rgba(20, 12, 17, 0.6);
+  --bg-surface-hover: rgba(45, 12, 28, 0.4);
+
+  --color-burgundy: #5A0B24;
+  --color-crimson: #B11245;
+  --color-neon-pink: #FF4F87;
+  --color-soft-pink: #FF9DBA;
+  --color-text-primary: #F5F1F2;
+  --color-text-muted: #A79CA0;
+  --color-text-dim: #6E5E65;
+
+  /* Accent Borders & Glows */
+  --border-subtle: rgba(177, 18, 69, 0.18);
+  --border-hover: rgba(255, 79, 135, 0.45);
+  --border-active: rgba(255, 79, 135, 0.8);
+  --glow-burgundy: 0 0 40px rgba(90, 11, 36, 0.35);
+  --glow-crimson: 0 0 25px rgba(177, 18, 69, 0.4);
+  --glow-pink: 0 0 20px rgba(255, 79, 135, 0.5);
+
+  /* Typography */
+  --font-display: 'Syne', sans-serif;
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Layout & Spacing */
+  --nav-height: 80px;
+  --container-max-width: 1320px;
+  --section-padding-y: clamp(5rem, 10vh, 8rem);
+  --section-padding-x: clamp(1.25rem, 5vw, 4rem);
+
+  /* Transitions */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 0.2s var(--ease-out-expo);
+  --transition-normal: 0.35s var(--ease-out-expo);
+  --transition-slow: 0.6s var(--ease-out-expo);
+
+  /* Z-Index Hierarchy */
+  --z-bg: 0;
+  --z-canvas: 1;
+  --z-content: 10;
+  --z-nav: 100;
+  --z-overlay: 150;
+  --z-cursor: 999;
+}

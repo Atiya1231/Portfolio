@@ -1,0 +1,83 @@
+/* Typography System */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.heading-hero {
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.heading-section {
+  font-size: clamp(2rem, 5vw, 3.75rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.heading-card {
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.text-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-soft-pink);
+}
+
+.text-tag {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+}
+
+.text-body {
+  font-family: var(--font-sans);
+  font-size: clamp(0.95rem, 1.1vw, 1.125rem);
+  line-height: 1.7;
+  color: var(--color-text-muted);
+  font-weight: 300;
+}
+
+.text-lead {
+  font-family: var(--font-sans);
+  font-size: clamp(1.1rem, 1.4vw, 1.35rem);
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  font-weight: 400;
+}
+
+/* Color Accent Utilities */
+.text-burgundy { color: var(--color-burgundy); }
+.text-crimson { color: var(--color-crimson); }
+.text-neon-pink { color: var(--color-neon-pink); }
+.text-soft-pink { color: var(--color-soft-pink); }
+.text-primary { color: var(--color-text-primary); }
+.text-muted { color: var(--color-text-muted); }
+.text-dim { color: var(--color-text-dim); }
+
+.gradient-text-pink {
+  background: linear-gradient(135deg, var(--color-text-primary) 30%, var(--color-soft-pink) 70%, var(--color-neon-pink) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-crimson {
+  background: linear-gradient(135deg, #FFFFFF 0%, var(--color-soft-pink) 40%, var(--color-crimson) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
