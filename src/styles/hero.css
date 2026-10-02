@@ -379,7 +379,7 @@
   position: relative;
   display: flex;
   align-items: flex-end;
-  justify-content: center;
+  justify-content: flex-end;
   height: 100%;
   max-height: 100%;
   bottom: 0;
@@ -413,10 +413,10 @@
   height: calc(100dvh - 8px);
   max-height: calc(100dvh - 8px);
   width: auto;
-  max-width: 100%;
+  max-width: none;
   display: flex;
   align-items: flex-end;
-  justify-content: center;
+  justify-content: flex-end;
   bottom: 0;
   margin-bottom: 0;
   background: transparent;
@@ -430,10 +430,10 @@
 .hero-portrait-image {
   height: 100%;
   width: auto;
-  max-width: 100%;
+  max-width: none;
   max-height: calc(100dvh - 8px);
   object-fit: contain;
-  object-position: center bottom;
+  object-position: right bottom;
   display: block;
   filter: drop-shadow(0 20px 50px rgba(77, 58, 77, 0.2)) drop-shadow(0 0 35px rgba(190, 92, 169, 0.22));
   transition: transform 0.4s var(--ease-out-expo);
@@ -452,6 +452,8 @@
   left: 0;
   width: 100%;
   height: 100%;
+  object-fit: contain;
+  object-position: right bottom;
   z-index: 2;
   pointer-events: none;
   opacity: 0;
