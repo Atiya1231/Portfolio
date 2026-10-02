@@ -243,8 +243,8 @@ const HomeSection = () => {
           current.y = lerp(current.y, targetY, 0.14);
         }
 
-        const radius = 240;
-        const maskGradient = `radial-gradient(circle ${radius}px at ${current.x.toFixed(2)}px ${current.y.toFixed(2)}px, black 0%, black 42%, rgba(0, 0, 0, 0.6) 65%, transparent 100%)`;
+        const radius = 320;
+        const maskGradient = `radial-gradient(circle ${radius}px at ${current.x.toFixed(2)}px ${current.y.toFixed(2)}px, black 0%, black 40%, rgba(0, 0, 0, 0.58) 65%, transparent 100%)`;
 
         revealEl.style.maskImage = maskGradient;
         revealEl.style.webkitMaskImage = maskGradient;

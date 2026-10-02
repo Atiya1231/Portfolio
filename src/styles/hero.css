@@ -406,17 +406,17 @@
   z-index: 1;
 }
 
-/* Seamless Portrait Container: Anchored and Lifted 42px Upward for Ideal Vertical Balance */
+/* Seamless Portrait Container: Large & Immersive (95vh), Anchored Directly to Bottom Edge */
 .hero-portrait-wrapper {
   position: relative;
   z-index: 2;
-  height: min(92vh, 800px);
+  height: min(95vh, 920px);
   width: auto;
   max-width: 100%;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  bottom: 42px;
+  bottom: 0;
   margin-bottom: 0;
   background: transparent;
   border: none;
@@ -425,12 +425,12 @@
   transition: transform 0.5s var(--ease-out-expo);
 }
 
-/* Genuine Authentic Cutout Image: Complete Natural Silhouette (No Cutoff Masks) */
+/* Genuine Authentic Cutout Image: Complete Natural Silhouette Touching Bottom Edge */
 .hero-portrait-image {
   height: 100%;
   width: auto;
   max-width: 100%;
-  max-height: min(92vh, 800px);
+  max-height: min(95vh, 920px);
   object-fit: contain;
   object-position: center bottom;
   display: block;
