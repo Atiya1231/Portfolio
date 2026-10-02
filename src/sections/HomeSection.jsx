@@ -1,299 +1,368 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Menu } from 'lucide-react';
-import { scrollToSection } from '../animations/gsapUtils';
-
-const SPOTLIGHT_R = 260;
-
-/**
- * RevealLayer: Renders a dynamic canvas radial gradient mask
- * that smoothly reveals the second image inside a soft glowing spotlight.
- */
-const RevealLayer = ({ image, cursorX, cursorY, radius = SPOTLIGHT_R }) => {
-  const canvasRef = useRef(null);
-  const revealDivRef = useRef(null);
-
-  useEffect(() => {
-    const updateMask = () => {
-      const canvas = canvasRef.current;
-      const revealDiv = revealDivRef.current;
-      if (!canvas || !revealDiv) return;
-
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      canvas.width = w;
-      canvas.height = h;
-
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-
-      ctx.clearRect(0, 0, w, h);
-
-      // Only draw when cursor is on screen
-      if (cursorX > -500 && cursorY > -500) {
-        const grad = ctx.createRadialGradient(
-          cursorX,
-          cursorY,
-          0,
-          cursorX,
-          cursorY,
-          radius
-        );
-        grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
-        grad.addColorStop(0.4, 'rgba(255, 255, 255, 1)');
-        grad.addColorStop(0.6, 'rgba(255, 255, 255, 0.75)');
-        grad.addColorStop(0.75, 'rgba(255, 255, 255, 0.4)');
-        grad.addColorStop(0.88, 'rgba(255, 255, 255, 0.12)');
-        grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(cursorX, cursorY, radius, 0, Math.PI * 2);
-        ctx.fill();
-
-        try {
-          const dataUrl = canvas.toDataURL();
-          revealDiv.style.maskImage = `url(${dataUrl})`;
-          revealDiv.style.webkitMaskImage = `url(${dataUrl})`;
-          revealDiv.style.maskSize = '100% 100%';
-          revealDiv.style.webkitMaskSize = '100% 100%';
-          revealDiv.style.maskRepeat = 'no-repeat';
-          revealDiv.style.webkitMaskRepeat = 'no-repeat';
-        } catch {
-          // Fallback CSS radial-gradient if canvas export fails
-          const maskVal = `radial-gradient(circle ${radius}px at ${cursorX}px ${cursorY}px, black 0%, black 40%, rgba(0,0,0,0.75) 60%, rgba(0,0,0,0.4) 75%, rgba(0,0,0,0.12) 88%, transparent 100%)`;
-          revealDiv.style.maskImage = maskVal;
-          revealDiv.style.webkitMaskImage = maskVal;
-        }
-      } else {
-        revealDiv.style.maskImage = 'none';
-        revealDiv.style.webkitMaskImage = 'none';
-      }
-    };
-
-    updateMask();
-  }, [cursorX, cursorY, radius]);
-
-  return (
-    <>
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 pointer-events-none"
-        style={{ display: 'none' }}
-      />
-      <div
-        ref={revealDivRef}
-        className="absolute inset-0 bg-center bg-cover bg-no-repeat z-30 pointer-events-none"
-        style={{
-          backgroundImage: `url(${image})`,
-        }}
-      />
-    </>
-  );
-};
+import React, { useEffect, useRef } from 'react';
+import { ArrowUpRight, MessageCircle } from 'lucide-react';
+import { gsap, ScrollTrigger, scrollToSection } from '../animations/gsapUtils';
+import Hero3DCanvas from '../components/Hero3DCanvas';
+import MagneticButton from '../components/MagneticButton';
+import portraitImg from '../assets/atiya-cutout.png';
 
 /**
- * HomeSection: Full-screen, dark-themed hero section with cursor-following spotlight reveal.
+ * HomeSection (Phase 2): Full-screen Cinematic 3D Hero.
+ * Features:
+ * - Visually dominant editorial typography (ATIYA ALI)
+ * - Authentic cinematic portrait with feathered ambient rim lighting & glow
+ * - Real-time interactive 3D WebGL metallic sculpture with Three.js / R3F
+ * - 8-step orchestrated GSAP cinematic entrance timeline
+ * - Smooth mouse magnetic pull & scroll parallax transitions
  */
 const HomeSection = () => {
-  const mouseRef = useRef({ x: -999, y: -999 });
-  const smoothRef = useRef({ x: -999, y: -999 });
-  const rafRef = useRef(null);
-  const [cursorPos, setCursorPos] = useState({ x: -999, y: -999 });
+  const sectionRef = useRef(null);
+  const portraitRef = useRef(null);
+  const glowCrimsonRef = useRef(null);
+  const glowPinkRef = useRef(null);
+  const glowLeftRef = useRef(null);
+  const nameAtiyaRef = useRef(null);
+  const nameAliRef = useRef(null);
+  const contentLeftRef = useRef(null);
+
+  // 3D Card tilt effect on portrait mouse hover (desktop only)
+  const handlePortraitMouseMove = (e) => {
+    if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
+    const card = portraitRef.current;
+    if (!card) return;
+
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+
+    const rotX = -(y / (rect.height / 2)) * 6; // max 6 deg
+    const rotY = (x / (rect.width / 2)) * 6;
+
+    card.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-4px) scale(1.01)`;
+  };
+
+  const handlePortraitMouseLeave = () => {
+    const card = portraitRef.current;
+    if (!card) return;
+    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)';
+  };
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      mouseRef.current = { x: e.clientX, y: e.clientY };
-    };
+    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const handleTouchMove = (e) => {
-      if (e.touches && e.touches[0]) {
-        mouseRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-      }
-    };
-
-    const handleMouseLeave = () => {
-      mouseRef.current = { x: -999, y: -999 };
-    };
-
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { passive: true });
-    document.addEventListener('mouseleave', handleMouseLeave);
-
-    // Continuous requestAnimationFrame lerp loop
-    const animate = () => {
-      const mouse = mouseRef.current;
-      const smooth = smoothRef.current;
-
-      if (mouse.x === -999 && mouse.y === -999) {
-        smooth.x = -999;
-        smooth.y = -999;
-      } else {
-        if (smooth.x === -999) {
-          smooth.x = mouse.x;
-          smooth.y = mouse.y;
-        } else {
-          smooth.x += (mouse.x - smooth.x) * 0.1;
-          smooth.y += (mouse.y - smooth.y) * 0.1;
-        }
+    const ctx = gsap.context(() => {
+      if (isReducedMotion) {
+        // Immediate show for reduced motion preference
+        gsap.set(
+          [
+            glowCrimsonRef.current,
+            glowPinkRef.current,
+            glowLeftRef.current,
+            '.hero-3d-canvas-container',
+            portraitRef.current,
+            nameAtiyaRef.current,
+            nameAliRef.current,
+            '.hero-status-pill',
+            '.hero-tagline',
+            '.hero-description',
+            '.magnetic-btn',
+            '.hero-scroll-indicator'
+          ],
+          { opacity: 1, visibility: 'visible', clearProps: 'transform,filter' }
+        );
+        return;
       }
 
-      setCursorPos({ x: smooth.x, y: smooth.y });
-      rafRef.current = requestAnimationFrame(animate);
-    };
+      // Initial state: dark / hidden
+      gsap.set([glowCrimsonRef.current, glowPinkRef.current, glowLeftRef.current], { opacity: 0 });
+      gsap.set('.hero-3d-canvas-container', { opacity: 0, scale: 0.88 });
+      gsap.set(portraitRef.current, { opacity: 0, y: 35, filter: 'blur(12px)' });
+      gsap.set('.hero-status-pill', { opacity: 0, y: 20 });
+      gsap.set(nameAtiyaRef.current, { opacity: 0, y: 45, filter: 'blur(10px)' });
+      gsap.set(nameAliRef.current, { opacity: 0, y: 45, filter: 'blur(10px)' });
+      gsap.set(['.hero-tagline', '.hero-description'], { opacity: 0, y: 25 });
+      gsap.set('.magnetic-btn', { opacity: 0, y: 20, scale: 0.96 });
+      gsap.set('.hero-scroll-indicator', { opacity: 0, y: 15 });
 
-    rafRef.current = requestAnimationFrame(animate);
+      // Orchestrated 8-Step GSAP Cinematic Entrance Timeline
+      const entranceTl = gsap.timeline({
+        defaults: { ease: 'power3.out' },
+        delay: 0.2
+      });
 
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('touchmove', handleTouchMove);
-      document.removeEventListener('mouseleave', handleMouseLeave);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
+      entranceTl
+        // Step 2: Atmospheric ambient glows fade in
+        .to([glowCrimsonRef.current, glowPinkRef.current, glowLeftRef.current], {
+          opacity: 1,
+          duration: 1.4,
+          ease: 'power2.out'
+        })
+        // Step 3: 3D sculpture scales & reveals smoothly
+        .to(
+          '.hero-3d-canvas-container',
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 1.8,
+            ease: 'expo.out'
+          },
+          '-=1.0'
+        )
+        // Step 4: Authentic portrait smoothly reveals with blur-to-sharp transition
+        .to(
+          portraitRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            duration: 1.5,
+            ease: 'power3.out',
+            clearProps: 'filter'
+          },
+          '-=1.3'
+        )
+        // Step 5: Status Pill & "ATIYA" editorial reveal
+        .to(
+          '.hero-status-pill',
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8
+          },
+          '-=1.1'
+        )
+        .to(
+          nameAtiyaRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            duration: 1.3,
+            ease: 'power3.out',
+            clearProps: 'filter'
+          },
+          '-=0.8'
+        )
+        // Step 6: "ALI" reveals
+        .to(
+          nameAliRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            duration: 1.3,
+            ease: 'power3.out',
+            clearProps: 'filter'
+          },
+          '-=1.0'
+        )
+        // Step 7: Subtitle & Description slide in
+        .to(
+          ['.hero-tagline', '.hero-description'],
+          {
+            opacity: 1,
+            y: 0,
+            stagger: 0.16,
+            duration: 0.9
+          },
+          '-=0.8'
+        )
+        // Step 8: Action buttons appear with subtle stagger
+        .to(
+          '.magnetic-btn',
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            stagger: 0.15,
+            duration: 0.8
+          },
+          '-=0.6'
+        )
+        // Step 9: Scroll indicator gently appears
+        .to(
+          '.hero-scroll-indicator',
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out'
+          },
+          '-=0.4'
+        );
+
+      // Parallax Scroll Animation into About section
+      if (typeof ScrollTrigger !== 'undefined') {
+        gsap.to('.hero-content-left', {
+          y: -50,
+          opacity: 0.65,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1
+          }
+        });
+
+        gsap.to(portraitRef.current, {
+          y: -35,
+          scale: 0.97,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1
+          }
+        });
+
+        gsap.to('.hero-3d-canvas-container', {
+          y: -20,
+          rotation: 0.08,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1.2
+          }
+        });
+
+        gsap.to([glowCrimsonRef.current, glowPinkRef.current], {
+          y: 40,
+          opacity: 0.4,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1.5
+          }
+        });
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (
-    <div
-      className="min-h-screen bg-white tracking-[-0.02em]"
-      style={{ fontFamily: "'Inter', sans-serif" }}
+    <section
+      id="home"
+      ref={sectionRef}
+      className="hero-section"
+      aria-label="Atiya Ali Hero Presentation"
     >
-      {/* Navigation (Fixed, over hero) */}
-      <nav className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between p-4 sm:p-5">
-        {/* Left: SVG Logo + Wordmark */}
-        <div className="flex items-center gap-2.5 z-10">
-          <svg
-            className="w-[26px] h-[26px]"
-            viewBox="0 0 256 256"
-            fill="#ffffff"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M 256 256 L 128 256 L 0 128 L 128 128 Z M 256 128 L 128 128 L 0 0 L 128 0 Z" />
-          </svg>
-          <span className="text-white font-medium text-base tracking-tight select-none">
-            Nasha.co
-          </span>
+      {/* Atmospheric Ambient Lighting Glows (Vibrant Sunset Palette: #4D3A4D, #BE5CA9, #D59CC5, #EADADA) */}
+      <div ref={glowCrimsonRef} className="hero-glow-crimson" aria-hidden="true" />
+      <div ref={glowPinkRef} className="hero-glow-pink" aria-hidden="true" />
+      <div ref={glowLeftRef} className="hero-glow-left" aria-hidden="true" />
+
+      {/* Main Responsive Grid Layout */}
+      <div className="hero-layout-grid">
+        {/* ==========================================================================
+            LEFT COLUMN / SECTION: EDITORIAL TYPOGRAPHY & INTERACTIVE CTAs
+            ========================================================================== */}
+        <div ref={contentLeftRef} className="hero-content-left">
+          {/* Status Badge */}
+          <div className="hero-status-pill">
+            <span className="hero-status-dot" />
+            <span>AVAILABLE FOR OPPORTUNITIES</span>
+          </div>
+
+          {/* Large Dominant Editorial Typography */}
+          <div className="hero-name-container">
+            <h1 className="hero-name-line name-atiya" ref={nameAtiyaRef}>
+              ATIYA
+            </h1>
+            <span className="hero-name-line name-ali" ref={nameAliRef}>
+              ALI
+            </span>
+          </div>
+
+          {/* Tagline Subtitle */}
+          <div className="hero-tagline">
+            <span>BCA STUDENT</span>
+            <span className="hero-tagline-bullet">•</span>
+            <span>DEVELOPER</span>
+          </div>
+
+          {/* Supporting Statement & Description */}
+          <p className="hero-editorial-statement">
+            "Building digital experiences where technology meets creativity."
+          </p>
+
+          <p className="hero-description">
+            Crafting immersive web applications with modern engineering, precision aesthetics, and interactive 3D environments.
+          </p>
+
+          {/* Magnetic CTA Buttons */}
+          <div className="hero-cta-group">
+            <MagneticButton
+              id="hero-btn-explore"
+              variant="primary"
+              onClick={() => scrollToSection('projects')}
+              ariaLabel="Explore my projects and work"
+            >
+              <span>EXPLORE MY WORK</span>
+              <ArrowUpRight size={17} />
+            </MagneticButton>
+
+            <MagneticButton
+              id="hero-btn-contact"
+              variant="secondary"
+              onClick={() => scrollToSection('contact')}
+              ariaLabel="Contact Atiya Ali"
+            >
+              <span>CONTACT ME</span>
+              <MessageCircle size={16} />
+            </MagneticButton>
+          </div>
         </div>
 
-        {/* Center Pill Navigation */}
-        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 bg-white/20 backdrop-blur-md border border-white/30 rounded-full px-2 py-2 items-center gap-1 z-10">
-          <button
-            type="button"
-            onClick={() => scrollToSection('about')}
-            className="text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors hover:bg-white/20"
+        {/* ==========================================================================
+            RIGHT COLUMN / SECTION: AUTHENTIC PORTRAIT + 3D PASTEL ENVIRONMENT
+            ========================================================================== */}
+        <div className="hero-visual-right">
+          {/* Atmospheric Pastel Glow Backdrop (#D59CC5 / #BE5CA9) */}
+          <div className="hero-portrait-glow-backdrop" aria-hidden="true" />
+
+          {/* 3D WebGL Digital Sculpture Canvas (Flows softly behind portrait) */}
+          <Hero3DCanvas />
+
+          {/* Authentic Portrait (Integrated seamlessly into pastel environment) */}
+          <div
+            ref={portraitRef}
+            className="hero-portrait-wrapper interactive"
+            onMouseMove={handlePortraitMouseMove}
+            onMouseLeave={handlePortraitMouseLeave}
           >
-            About
-          </button>
-          <button
-            type="button"
-            onClick={() => scrollToSection('projects')}
-            className="text-white/80 hover:bg-white/20 hover:text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors"
-          >
-            Projects
-          </button>
-          <button
-            type="button"
-            onClick={() => scrollToSection('contact')}
-            className="text-white/80 hover:bg-white/20 hover:text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors"
-          >
-            Contact
-          </button>
+            <div className="hero-portrait-inner">
+              <img
+                src={portraitImg}
+                alt="Atiya Ali — BCA student and aspiring developer"
+                className="hero-portrait-image"
+                loading="eager"
+                decoding="async"
+              />
+              {/* Soft Ambient Rim Light Overlay */}
+              <div className="hero-portrait-lighting-overlay" aria-hidden="true" />
+            </div>
+          </div>
         </div>
+      </div>
 
-        {/* Right: Desktop CTA Button */}
-        <div className="hidden md:block z-10">
-          <button
-            type="button"
-            onClick={() => scrollToSection('contact')}
-            className="bg-white text-gray-900 text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-gray-100 transition-colors shadow-sm"
-          >
-            Let's talk
-          </button>
-        </div>
-
-        {/* Right: Mobile Hamburger */}
-        <button
-          type="button"
-          onClick={() => scrollToSection('contact')}
-          className="md:hidden text-white p-2 rounded-full bg-white/15 backdrop-blur-md border border-white/25 z-10"
-          aria-label="Open menu"
-        >
-          <Menu size={20} />
-        </button>
-      </nav>
-
-      {/* Main Full-Screen Hero Section */}
-      <section
-        id="home"
-        className="relative w-full overflow-hidden h-screen bg-black"
-        style={{ height: '100dvh' }}
+      {/* ==========================================================================
+          BOTTOM SCROLL INDICATOR
+          ========================================================================== */}
+      <button
+        type="button"
+        className="hero-scroll-indicator interactive"
+        onClick={() => scrollToSection('about')}
+        aria-label="Scroll to About section"
       >
-        {/* Layer 1: Base Image (z-10) with slow Ken Burns zoom */}
-        <div
-          className="absolute inset-0 bg-center bg-cover bg-no-repeat z-10 hero-zoom pointer-events-none"
-          style={{
-            backgroundImage: "url('./images/Base_image.png')",
-          }}
-        />
-
-        {/* Layer 2: Reveal Layer (z-30) showing Reveal_image through cursor mask */}
-        <RevealLayer
-          image="./images/Reveal_image.png"
-          cursorX={cursorPos.x}
-          cursorY={cursorPos.y}
-          radius={SPOTLIGHT_R}
-        />
-
-        {/* Layer 3: Heading (z-50) */}
-        <div
-          className="absolute top-1/2 -translate-y-1/2 flex flex-col items-start text-left px-5 pointer-events-none z-50"
-          style={{ left: '80px' }}
-        >
-          <h1 className="text-white leading-[0.95]">
-            <span
-              className="block font-playfair italic font-normal text-5xl sm:text-7xl md:text-8xl hero-anim hero-reveal"
-              style={{ letterSpacing: '-0.05em', animationDelay: '0.25s' }}
-            >
-              I'm
-            </span>
-            <span
-              className="block font-normal text-5xl sm:text-7xl md:text-8xl -mt-1 hero-anim hero-reveal"
-              style={{ letterSpacing: '-0.08em', animationDelay: '0.42s' }}
-            >
-              NASHA
-            </span>
-            <span
-              className="block font-playfair italic text-white/90 text-base sm:text-lg md:text-xl mt-3 sm:mt-4 hero-anim hero-reveal"
-              style={{ letterSpacing: '-0.02em', animationDelay: '0.58s' }}
-            >
-              UXUI Designer
-            </span>
-          </h1>
+        <span className="hero-scroll-text">SCROLL TO EXPLORE</span>
+        <div className="hero-scroll-line-container">
+          <div className="hero-scroll-line" />
         </div>
-
-        {/* Layer 4: Bottom-Left Paragraph (z-50) */}
-        <div
-          className="hidden sm:block absolute bottom-14 max-w-[260px] hero-anim hero-fade z-50 pointer-events-none"
-          style={{ left: '100px', animationDelay: '0.7s' }}
-        >
-          <p className="text-sm text-white/80 leading-relaxed">
-            I design with curiosity and build with code. Obsessed with AI tools, live coding, and finding new ways to make digital experiences feel alive.
-          </p>
-        </div>
-
-        {/* Layer 5: Bottom-Right Block (z-50) */}
-        <div
-          className="absolute bottom-10 sm:bottom-24 left-5 right-5 sm:left-auto sm:right-10 md:right-14 max-w-full sm:max-w-[260px] flex flex-col items-start gap-4 sm:gap-5 z-50 hero-anim hero-fade pointer-events-none"
-          style={{ animationDelay: '0.85s' }}
-        >
-          <p className="text-xs sm:text-sm text-white/80 leading-relaxed">
-            UX/UI designer who codes. I use AI to design faster, build smarter, and create digital experiences that actually work.
-          </p>
-        </div>
-      </section>
-    </div>
+      </button>
+    </section>
   );
 };
 
 export default HomeSection;
-
-
-
