@@ -406,12 +406,12 @@
   z-index: 1;
 }
 
-/* Seamless Portrait Container: Exact 5-10px Top Breathing Space & Anchored to Bottom: 0px */
+/* Seamless Portrait Container: 25-40px Navbar Clearance & Anchored to Bottom: 0px */
 .hero-portrait-wrapper {
   position: relative;
   z-index: 2;
-  height: calc(100dvh - 8px);
-  max-height: calc(100dvh - 8px);
+  height: calc(100dvh - var(--nav-height) - 1.8rem);
+  max-height: calc(100dvh - var(--nav-height) - 1.8rem);
   width: auto;
   max-width: none;
   display: flex;
@@ -431,7 +431,7 @@
   height: 100%;
   width: auto;
   max-width: none;
-  max-height: calc(100dvh - 8px);
+  max-height: calc(100dvh - var(--nav-height) - 1.8rem);
   object-fit: contain;
   object-position: right bottom;
   display: block;
