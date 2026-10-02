@@ -1,16 +1,112 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Send, Mail, MapPin, CheckCircle2, ArrowUpRight, MessageSquare } from 'lucide-react';
+import React, { useRef, useEffect } from 'react';
+import { ArrowRight, MessageSquare } from 'lucide-react';
 import { gsap, ScrollTrigger } from '../animations/gsapUtils';
-import MagneticButton from '../components/MagneticButton';
-import GithubIcon from '../components/GithubIcon';
+
+// Clean, minimal SVG icons matching the purple/pink aesthetic
+const WhatsappIcon = ({ size = 22 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+  </svg>
+);
+
+const InstagramIcon = ({ size = 22 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+  </svg>
+);
+
+const LinkedinIcon = ({ size = 22 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect x="2" y="9" width="4" height="12" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+);
+
+const GithubSocialIcon = ({ size = 22 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+  </svg>
+);
+
+const SOCIAL_LINKS = [
+  {
+    id: 'whatsapp',
+    label: 'WHATSAPP',
+    tagline: "Let's connect directly",
+    url: 'https://wa.me/917439656079',
+    icon: <WhatsappIcon size={22} />
+  },
+  {
+    id: 'instagram',
+    label: 'INSTAGRAM',
+    tagline: 'Follow my creative journey',
+    url: 'https://www.instagram.com/atiya__alii/',
+    icon: <InstagramIcon size={22} />
+  },
+  {
+    id: 'linkedin',
+    label: 'LINKEDIN',
+    tagline: 'Connect professionally',
+    url: 'https://www.linkedin.com/in/atiya-ali-591a89325/',
+    icon: <LinkedinIcon size={22} />
+  },
+  {
+    id: 'github',
+    label: 'GITHUB',
+    tagline: 'Explore my projects',
+    url: 'https://github.com/Atiya1231',
+    icon: <GithubSocialIcon size={22} />
+  }
+];
 
 /**
- * ContactSection (Phase 3): Dramatic Editorial CTA & Direct Message Interface
+ * ContactSection: Premium Editorial Social Showcase
  */
 const ContactSection = () => {
   const sectionRef = useRef(null);
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
     const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -19,10 +115,10 @@ const ContactSection = () => {
     const ctx = gsap.context(() => {
       if (typeof ScrollTrigger !== 'undefined') {
         gsap.from('.contact-animate-item', {
-          y: 40,
+          y: 35,
           opacity: 0,
-          duration: 0.9,
-          stagger: 0.15,
+          duration: 0.85,
+          stagger: 0.12,
           ease: 'power3.out',
           scrollTrigger: {
             trigger: sectionRef.current,
@@ -36,21 +132,11 @@ const ContactSection = () => {
     return () => ctx.revert();
   }, []);
 
-  const handleChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) return;
-    setIsSubmitted(true);
-  };
-
   return (
     <section id="contact" ref={sectionRef} className="section-wrapper" aria-label="Contact Atiya Ali">
       <div className="section-container">
-        {/* Editorial Section Header */}
-        <div className="editorial-section-header">
+        {/* Editorial Section Header Index */}
+        <div className="editorial-section-header contact-animate-item">
           <div className="editorial-header-top">
             <span className="editorial-index-badge">06 // 06</span>
             <span className="editorial-tag-chip">
@@ -60,158 +146,49 @@ const ContactSection = () => {
           </div>
         </div>
 
-        {/* Dramatic 2-Column Editorial Contact Grid */}
-        <div className="contact-editorial-grid">
-          {/* Left Column: Big Editorial Statement & Channels */}
-          <div className="contact-info-left contact-animate-item">
-            <div>
-              <h2 className="contact-editorial-statement">
-                LET'S<br />
-                <span className="heading-gradient-word">BUILD</span><br />
-                SOMETHING
-              </h2>
-            </div>
+        {/* Editorial Contact Presentation Container */}
+        <div className="contact-editorial-container">
+          {/* Main Editorial Statement & Supporting Message */}
+          <div className="contact-statement-header contact-animate-item">
+            <h2 className="contact-editorial-statement">
+              LET'S<br />
+              <span className="heading-gradient-word">BUILD</span><br />
+              SOMETHING
+            </h2>
 
             <p className="contact-supporting-text">
-              "Have an idea, project, or opportunity? Let's create something meaningful together."
+              Have an idea, project, or opportunity? Let's create something meaningful together.
             </p>
-
-            {/* Contact Channels */}
-            <div className="contact-channels-list">
-              <a
-                href="https://github.com/Atiya1231"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="contact-channel-item interactive"
-                aria-label="Visit Atiya Ali GitHub profile"
-              >
-                <div className="contact-channel-icon">
-                  <GithubIcon size={20} />
-                </div>
-                <div className="contact-channel-details">
-                  <span className="contact-channel-label">GITHUB PROFILE</span>
-                  <span className="contact-channel-value">github.com/Atiya1231</span>
-                </div>
-                <ArrowUpRight size={18} style={{ marginLeft: 'auto', color: 'var(--color-secondary)' }} />
-              </a>
-
-              <div className="contact-channel-item">
-                <div className="contact-channel-icon">
-                  <MapPin size={20} />
-                </div>
-                <div className="contact-channel-details">
-                  <span className="contact-channel-label">AVAILABILITY & LOCATION</span>
-                  <span className="contact-channel-value">Open for Developer Roles & Remote Projects</span>
-                </div>
-              </div>
-
-              <div className="contact-channel-item">
-                <div className="contact-channel-icon">
-                  <Mail size={20} />
-                </div>
-                <div className="contact-channel-details">
-                  <span className="contact-channel-label">PROFESSIONAL FOCUS</span>
-                  <span className="contact-channel-value">BCA Student • Frontend Web Developer</span>
-                </div>
-              </div>
-            </div>
           </div>
 
-          {/* Right Column: Interactive Direct Message Form Card */}
-          <div className="contact-form-card contact-animate-item">
-            {isSubmitted ? (
-              <div style={{ textAlign: 'center', padding: '2.5rem 1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                <CheckCircle2 size={48} color="var(--color-secondary)" />
-                <h3 className="heading-card" style={{ color: 'var(--color-primary)' }}>
-                  MESSAGE RECEIVED
-                </h3>
-                <p className="text-body">
-                  Thank you, <strong>{formData.name}</strong>. Your message has been sent successfully. I will get back to you promptly!
-                </p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsSubmitted(false);
-                    setFormData({ name: '', email: '', message: '' });
-                  }}
-                  className="btn-cinematic"
-                  style={{ marginTop: '1rem' }}
-                >
-                  <span>SEND ANOTHER MESSAGE</span>
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                <div className="contact-form-group">
-                  <label htmlFor="contact-name" className="contact-form-label">
-                    YOUR NAME
-                  </label>
-                  <input
-                    id="contact-name"
-                    name="name"
-                    type="text"
-                    required
-                    placeholder="e.g. Alex Johnson"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="contact-form-input"
-                  />
+          {/* Premium Editorial Horizontal Social Rows */}
+          <div className="contact-social-rows-list contact-animate-item" role="list">
+            {SOCIAL_LINKS.map((item) => (
+              <a
+                key={item.id}
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="contact-social-row interactive"
+                aria-label={`${item.label} — ${item.tagline}`}
+                role="listitem"
+              >
+                <div className="contact-row-left">
+                  <span className="contact-row-icon">{item.icon}</span>
+                  <span className="contact-row-label">{item.label}</span>
                 </div>
 
-                <div className="contact-form-group">
-                  <label htmlFor="contact-email" className="contact-form-label">
-                    EMAIL ADDRESS
-                  </label>
-                  <input
-                    id="contact-email"
-                    name="email"
-                    type="email"
-                    required
-                    placeholder="e.g. alex@example.com"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="contact-form-input"
-                  />
+                <div className="contact-row-center">
+                  <span className="contact-row-tagline">{item.tagline}</span>
                 </div>
 
-                <div className="contact-form-group">
-                  <label htmlFor="contact-message" className="contact-form-label">
-                    PROJECT INQUIRY / MESSAGE
-                  </label>
-                  <textarea
-                    id="contact-message"
-                    name="message"
-                    required
-                    placeholder="Describe your project, timeline, or opportunity..."
-                    value={formData.message}
-                    onChange={handleChange}
-                    className="contact-form-textarea"
-                  />
+                <div className="contact-row-right">
+                  <span className="contact-row-arrow" aria-hidden="true">
+                    <ArrowRight size={20} />
+                  </span>
                 </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
-                  <MagneticButton
-                    variant="primary"
-                    ariaLabel="Submit Message to Atiya Ali"
-                    style={{ flex: 1, minWidth: '180px' }}
-                  >
-                    <Send size={15} />
-                    <span>SEND MESSAGE</span>
-                  </MagneticButton>
-
-                  <a
-                    href="https://github.com/Atiya1231"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="magnetic-btn magnetic-btn-secondary"
-                    style={{ textDecoration: 'none' }}
-                  >
-                    <GithubIcon size={15} />
-                    <span>VIEW GITHUB</span>
-                  </a>
-                </div>
-              </form>
-            )}
+              </a>
+            ))}
           </div>
         </div>
       </div>
