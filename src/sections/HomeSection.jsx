@@ -3,22 +3,23 @@ import { ArrowUpRight, MessageCircle } from 'lucide-react';
 import { gsap, ScrollTrigger, scrollToSection } from '../animations/gsapUtils';
 import Hero3DCanvas from '../components/Hero3DCanvas';
 import MagneticButton from '../components/MagneticButton';
-import portraitBase from '../assets/atiya-base.png';
+import portraitNormal from '../assets/atiya-normal.png';
 import portraitFuturistic from '../assets/atiya-futuristic.png';
 
 /**
- * HomeSection: Full-screen Cinematic Hero with Two-Layer Cursor Reveal.
+ * HomeSection: Full-screen Cinematic Editorial Hero with Centered Portrait & Two-Layer Cursor Reveal.
  *
  * Concepts:
- * - Base Layer: Authentic portrait with natural styling (pink dress, chic glasses).
- * - Reveal Layer: Futuristic portrait with chrome visor and metallic silver outfit.
- * - Interaction: Smooth, fluid cursor-driven circular mask reveal with smooth lerp easing.
- * - Aesthetics: High-fashion editorial serif typography (ATIYA ALI), vibrant sunset palette (#4D3A4D, #BE5CA9, #D59CC5, #EADADA).
- * - Zero decorative 3D clutter (no spheres, rings, orbits, boxes, or cards).
+ * - Centered Stage: Authentic portrait centered prominently in the Hero environment.
+ * - Top / Center: Oversized Editorial Typography (ATIYA ALI) with high-contrast Dark Plum & Magenta accents.
+ * - Layer 1: Normal authentic portrait (atiya-normal.png).
+ * - Layer 2: Futuristic portrait (atiya-futuristic.png with chrome visor and metallic outfit).
+ * - Interaction: Smooth fluid cursor-driven circular mask reveal with lerp easing.
+ * - Bottom Row: Left-aligned editorial statement & description, Right-aligned magnetic CTA buttons.
+ * - Palette: Strictly #EADADA (Background), #4D3A4D (Dark Plum), #BE5CA9 (Magenta), #D59CC5 (Soft Pink).
  */
 const HomeSection = () => {
   const sectionRef = useRef(null);
-  const visualRightRef = useRef(null);
   const portraitWrapperRef = useRef(null);
   const futuristicLayerRef = useRef(null);
   const glowCrimsonRef = useRef(null);
@@ -26,26 +27,26 @@ const HomeSection = () => {
   const glowLeftRef = useRef(null);
   const nameAtiyaRef = useRef(null);
   const nameAliRef = useRef(null);
-  const contentLeftRef = useRef(null);
+  const bottomBarRef = useRef(null);
 
   // Smooth lerp coordinates for the circular cursor reveal
-  const targetReveal = useRef({ x: 230, y: 220, radius: 0, active: false });
-  const currentReveal = useRef({ x: 230, y: 220, radius: 0 });
+  const targetReveal = useRef({ x: 240, y: 240, radius: 0, active: false });
+  const currentReveal = useRef({ x: 240, y: 240, radius: 0 });
   const rafRef = useRef(null);
 
   // Parallax subtle tilt offsets
   const [, setMouseOffset] = useState({ x: 0, y: 0 });
 
-  // Update reveal target based on pointer position relative to portrait
+  // Update reveal target based on pointer position relative to centered portrait
   const updateRevealPosition = useCallback((clientX, clientY) => {
     if (!portraitWrapperRef.current) return;
     const rect = portraitWrapperRef.current.getBoundingClientRect();
     const x = clientX - rect.left;
     const y = clientY - rect.top;
 
-    // Check if cursor is reasonably near or over the portrait
+    // Check if cursor is over or near the portrait
     const isInside =
-      x >= -50 && x <= rect.width + 50 && y >= -50 && y <= rect.height + 50;
+      x >= -60 && x <= rect.width + 60 && y >= -60 && y <= rect.height + 60;
 
     targetReveal.current.x = x;
     targetReveal.current.y = y;
@@ -58,8 +59,8 @@ const HomeSection = () => {
     setMouseOffset({ x: normX, y: normY });
 
     if (portraitWrapperRef.current) {
-      const rotX = -normY * 3.5;
-      const rotY = normX * 3.5;
+      const rotX = -normY * 3;
+      const rotY = normX * 3;
       portraitWrapperRef.current.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translate3d(${normX * 4}px, ${normY * 4}px, 0)`;
     }
   }, []);
@@ -77,7 +78,7 @@ const HomeSection = () => {
     }
   };
 
-  // Touch support for mobile & tablet
+  // Touch support for mobile & tablet devices
   const handleTouchMove = (e) => {
     if (e.touches && e.touches[0]) {
       updateRevealPosition(e.touches[0].clientX, e.touches[0].clientY);
@@ -173,7 +174,8 @@ const HomeSection = () => {
       gsap.set('.hero-status-pill', { opacity: 0, y: 15 });
       gsap.set(nameAtiyaRef.current, { opacity: 0, y: 40, filter: 'blur(8px)' });
       gsap.set(nameAliRef.current, { opacity: 0, y: 40, filter: 'blur(8px)' });
-      gsap.set(['.hero-tagline', '.hero-editorial-statement', '.hero-description'], { opacity: 0, y: 20 });
+      gsap.set('.hero-tagline', { opacity: 0, y: 20 });
+      gsap.set(['.hero-editorial-statement', '.hero-description'], { opacity: 0, y: 20 });
       gsap.set('.magnetic-btn', { opacity: 0, y: 18, scale: 0.96 });
       gsap.set('.hero-scroll-indicator', { opacity: 0, y: 12 });
 
@@ -249,9 +251,18 @@ const HomeSection = () => {
           },
           '-=0.8'
         )
-        // 5. Subtitle & Description slide up
         .to(
-          ['.hero-tagline', '.hero-editorial-statement', '.hero-description'],
+          '.hero-tagline',
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.7
+          },
+          '-=0.7'
+        )
+        // 5. Bottom left statement & description
+        .to(
+          ['.hero-editorial-statement', '.hero-description'],
           {
             opacity: 1,
             y: 0,
@@ -286,9 +297,9 @@ const HomeSection = () => {
 
       // Parallax Scroll Animation into About section
       if (typeof ScrollTrigger !== 'undefined') {
-        gsap.to('.hero-content-left', {
-          y: -40,
-          opacity: 0.7,
+        gsap.to(portraitWrapperRef.current, {
+          y: -35,
+          scale: 0.98,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top top',
@@ -297,9 +308,9 @@ const HomeSection = () => {
           }
         });
 
-        gsap.to(portraitWrapperRef.current, {
-          y: -30,
-          scale: 0.98,
+        gsap.to('.hero-bottom-bar', {
+          y: -25,
+          opacity: 0.75,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top top',
@@ -317,7 +328,7 @@ const HomeSection = () => {
     <section
       id="home"
       ref={sectionRef}
-      className="hero-section"
+      className="hero-section hero-center-composition"
       aria-label="Atiya Ali Hero Presentation"
       onMouseMove={handlePointerMove}
       onMouseLeave={handlePointerLeave}
@@ -330,45 +341,95 @@ const HomeSection = () => {
       <div ref={glowPinkRef} className="hero-glow-pink" aria-hidden="true" />
       <div ref={glowLeftRef} className="hero-glow-left" aria-hidden="true" />
 
-      {/* Main Responsive Grid Layout */}
-      <div className="hero-layout-grid">
-        {/* ==========================================================================
-            LEFT COLUMN / SECTION: EDITORIAL TYPOGRAPHY & INTERACTIVE CTAs
-            ========================================================================== */}
-        <div ref={contentLeftRef} className="hero-content-left">
-          {/* Status Badge */}
-          <div className="hero-status-pill">
-            <span className="hero-status-dot" />
-            <span>AVAILABLE FOR OPPORTUNITIES</span>
+      {/* 3D WebGL Ambient Lighting & Depth Canvas */}
+      <Hero3DCanvas />
+
+      {/* ==========================================================================
+          TOP / CENTER EDITORIAL MASTHEAD: STATUS, HEADING & SUBTITLE
+          ========================================================================== */}
+      <div className="hero-top-masthead">
+        {/* Status Badge */}
+        <div className="hero-status-pill">
+          <span className="hero-status-dot" />
+          <span>AVAILABLE FOR OPPORTUNITIES</span>
+        </div>
+
+        {/* Large Dominant Editorial Typography */}
+        <div className="hero-name-container">
+          <h1 className="hero-name-line name-atiya" ref={nameAtiyaRef}>
+            ATIYA
+          </h1>
+          <span className="hero-name-line name-ali" ref={nameAliRef}>
+            ALI
+          </span>
+        </div>
+
+        {/* Tagline Subtitle */}
+        <div className="hero-tagline">
+          <span>BCA STUDENT</span>
+          <span className="hero-tagline-bullet">•</span>
+          <span>DEVELOPER</span>
+        </div>
+      </div>
+
+      {/* ==========================================================================
+          CENTER PORTRAIT STAGE: TWO-LAYER CURSOR REVEAL
+          ========================================================================== */}
+      <div
+        ref={portraitWrapperRef}
+        className="hero-center-portrait-wrapper interactive"
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        {/* Atmospheric Pastel Glow Backdrop */}
+        <div className="hero-portrait-glow-backdrop" aria-hidden="true" />
+
+        <div className="hero-portrait-inner">
+          {/* LAYER 1: BASE AUTHENTIC PORTRAIT (Natural styling, pink dress) */}
+          <img
+            src={portraitNormal}
+            alt="Atiya Ali — Developer & BCA Student"
+            className="hero-portrait-image hero-portrait-base"
+            loading="eager"
+            decoding="async"
+          />
+
+          {/* LAYER 2: FUTURISTIC PORTRAIT (Chrome visor, silver outfit — revealed via cursor mask) */}
+          <div
+            ref={futuristicLayerRef}
+            className="hero-portrait-futuristic-layer"
+            aria-hidden="true"
+          >
+            <img
+              src={portraitFuturistic}
+              alt=""
+              className="hero-portrait-image hero-portrait-futuristic-img"
+              loading="eager"
+              decoding="async"
+            />
           </div>
 
-          {/* Large Dominant Editorial Typography */}
-          <div className="hero-name-container">
-            <h1 className="hero-name-line name-atiya" ref={nameAtiyaRef}>
-              ATIYA
-            </h1>
-            <span className="hero-name-line name-ali" ref={nameAliRef}>
-              ALI
-            </span>
-          </div>
+          {/* Soft Ambient Light Catch & Bottom Gradient Blend */}
+          <div className="hero-portrait-blend-overlay" aria-hidden="true" />
+        </div>
+      </div>
 
-          {/* Tagline Subtitle */}
-          <div className="hero-tagline">
-            <span>BCA STUDENT</span>
-            <span className="hero-tagline-bullet">•</span>
-            <span>DEVELOPER</span>
-          </div>
-
-          {/* Supporting Statement & Description */}
+      {/* ==========================================================================
+          BOTTOM ROW: LEFT STATEMENT/DESCRIPTION & RIGHT ACTION CTAs
+          ========================================================================== */}
+      <div className="hero-bottom-bar" ref={bottomBarRef}>
+        {/* Bottom Left: Editorial Statement & Description */}
+        <div className="hero-bottom-left">
           <p className="hero-editorial-statement">
             "Building digital experiences where technology meets creativity."
           </p>
-
           <p className="hero-description">
             Crafting immersive web applications with modern engineering, precision aesthetics, and interactive 3D environments.
           </p>
+        </div>
 
-          {/* Magnetic CTA Buttons */}
+        {/* Bottom Right: Magnetic CTA Buttons */}
+        <div className="hero-bottom-right">
           <div className="hero-cta-group">
             <MagneticButton
               id="hero-btn-explore"
@@ -389,54 +450,6 @@ const HomeSection = () => {
               <span>CONTACT ME</span>
               <MessageCircle size={16} />
             </MagneticButton>
-          </div>
-        </div>
-
-        {/* ==========================================================================
-            RIGHT COLUMN / SECTION: TWO-LAYER CURSOR REVEAL PORTRAIT
-            ========================================================================== */}
-        <div ref={visualRightRef} className="hero-visual-right">
-          {/* Atmospheric Pastel Glow Backdrop (#D59CC5 / #BE5CA9) */}
-          <div className="hero-portrait-glow-backdrop" aria-hidden="true" />
-
-          {/* 3D WebGL Ambient Lighting & Depth Canvas (Pure volumetric atmosphere) */}
-          <Hero3DCanvas />
-
-          {/* Two-Layer Stacked Portrait Container */}
-          <div
-            ref={portraitWrapperRef}
-            className="hero-portrait-wrapper interactive"
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-          >
-            <div className="hero-portrait-inner">
-              {/* LAYER 1: BASE AUTHENTIC PORTRAIT (Natural styling, pink dress) */}
-              <img
-                src={portraitBase}
-                alt="Atiya Ali — Developer & BCA Student"
-                className="hero-portrait-image hero-portrait-base"
-                loading="eager"
-                decoding="async"
-              />
-
-              {/* LAYER 2: FUTURISTIC PORTRAIT (Chrome visor, silver outfit — revealed via cursor mask) */}
-              <div
-                ref={futuristicLayerRef}
-                className="hero-portrait-futuristic-layer"
-                aria-hidden="true"
-              >
-                <img
-                  src={portraitFuturistic}
-                  alt=""
-                  className="hero-portrait-image hero-portrait-futuristic-img"
-                  loading="eager"
-                  decoding="async"
-                />
-              </div>
-
-              {/* Soft Ambient Light Catch & Bottom Gradient Blend */}
-              <div className="hero-portrait-blend-overlay" aria-hidden="true" />
-            </div>
           </div>
         </div>
       </div>
@@ -460,4 +473,5 @@ const HomeSection = () => {
 };
 
 export default HomeSection;
+
 

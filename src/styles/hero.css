@@ -1,5 +1,5 @@
 /* ==========================================================================
-   CINEMATIC 3D HERO SECTION STYLES (PHASE 2) — VIBRANT SUNSET
+   CINEMATIC 3D HERO SECTION STYLES — CENTERED EDITORIAL COMPOSITION
    Palette: Primary (#4D3A4D), Secondary (#BE5CA9), 
             Tertiary (#D59CC5), Background (#EADADA)
    ========================================================================== */
@@ -12,12 +12,24 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  padding: calc(var(--nav-height) + 1.5rem) var(--section-padding-x) 3rem;
+  padding: calc(var(--nav-height) + 1rem) var(--section-padding-x) 2.5rem;
   overflow: hidden;
   background-color: var(--bg-primary);
   border-bottom: 1px solid rgba(77, 58, 77, 0.1);
+}
+
+/* Subtle Film-Grain / Noise Overlay */
+.hero-grain-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.035;
+  pointer-events: none;
+  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
 /* Atmospheric Ambient Sunset Glows behind Portrait & Hero */
@@ -62,28 +74,30 @@
   z-index: 0;
 }
 
-/* Grid Layout: Typography Left, Portrait + 3D Right */
-.hero-layout-grid {
-  width: 100%;
-  max-width: var(--container-max-width);
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  align-items: center;
-  gap: clamp(2rem, 5vw, 4.5rem);
-  position: relative;
-  z-index: 2;
+/* 3D WebGL Canvas Layer (Subtle volumetric lighting & depth particles) */
+.hero-3d-canvas-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 130%;
+  height: 130%;
+  z-index: 1;
+  pointer-events: none;
 }
 
 /* ==========================================================================
-   LEFT COLUMN: EDITORIAL TYPOGRAPHY & CTA
+   TOP / CENTER EDITORIAL MASTHEAD
    ========================================================================== */
-.hero-content-left {
+.hero-top-masthead {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: clamp(1.25rem, 2.5vh, 2rem);
+  align-items: center;
+  text-align: center;
+  gap: 0.65rem;
   z-index: 3;
+  max-width: 900px;
+  width: 100%;
 }
 
 /* Role / Status Badge */
@@ -91,7 +105,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.65rem;
-  padding: 0.4rem 1.1rem;
+  padding: 0.38rem 1.1rem;
   background: rgba(213, 156, 197, 0.28);
   border: 1px solid rgba(190, 92, 169, 0.38);
   border-radius: 9999px;
@@ -118,15 +132,18 @@
 /* Massive Dominant Editorial Name Typography */
 .hero-name-container {
   display: flex;
-  flex-direction: column;
-  line-height: 0.94;
+  flex-direction: row;
+  justify-content: center;
+  align-items: baseline;
+  gap: clamp(1rem, 2.5vw, 2.8rem);
+  line-height: 0.92;
   user-select: none;
-  margin-bottom: 0.25rem;
+  margin-top: 0.25rem;
 }
 
 .hero-name-line {
   font-family: var(--font-display);
-  font-size: clamp(3.8rem, 8.8vw, 8rem);
+  font-size: clamp(3.8rem, 8.5vw, 7.5rem);
   font-weight: 800;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -147,17 +164,17 @@
   background: linear-gradient(135deg, #4D3A4D 10%, #7E386F 45%, #BE5CA9 80%, #D59CC5 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  letter-spacing: 0.04em;
-  margin-left: clamp(0.75rem, 2.5vw, 2.5rem);
+  letter-spacing: 0.035em;
 }
 
 /* Tagline Subtitle */
 .hero-tagline {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.65rem;
   font-family: var(--font-mono);
-  font-size: clamp(0.9rem, 1.35vw, 1.15rem);
+  font-size: clamp(0.85rem, 1.15vw, 1.05rem);
   font-weight: 600;
   letter-spacing: 0.22em;
   color: var(--color-primary);
@@ -169,136 +186,33 @@
   font-size: 0.8em;
 }
 
-.hero-editorial-statement {
-  font-family: var(--font-display);
-  font-size: clamp(1.2rem, 1.8vw, 1.55rem);
-  line-height: 1.35;
-  color: var(--color-primary);
-  font-style: italic;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  max-width: 540px;
-}
-
-/* Hero Description */
-.hero-description {
-  font-family: var(--font-sans);
-  font-size: clamp(1rem, 1.2vw, 1.15rem);
-  font-weight: 400;
-  line-height: 1.65;
-  color: var(--color-text-muted);
-  max-width: 520px;
-}
-
-/* Action Buttons */
-.hero-cta-group {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1.15rem;
-  margin-top: 0.5rem;
-}
-
-/* Magnetic Button Styles */
-.magnetic-btn {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.95rem 2rem;
-  border-radius: 10px;
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  cursor: pointer;
-  outline: none;
-  overflow: hidden;
-  user-select: none;
-  text-decoration: none;
-}
-
-/* Primary Button: Background #4D3A4D, Text #EADADA, Hover #BE5CA9 */
-.magnetic-btn-primary {
-  background: var(--color-primary);
-  border: 1px solid var(--color-primary);
-  color: var(--color-bg);
-  box-shadow: 0 4px 18px rgba(77, 58, 77, 0.18);
-  transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
-}
-
-.magnetic-btn-primary:hover {
-  background: var(--color-secondary);
-  border-color: var(--color-secondary);
-  box-shadow: 0 0 30px rgba(190, 92, 169, 0.4), 0 6px 20px rgba(77, 58, 77, 0.2);
-}
-
-/* Secondary Button: Transparent/#EADADA background, Border #4D3A4D, Text #4D3A4D, Hover #D59CC5 */
-.magnetic-btn-secondary {
-  background: rgba(255, 255, 255, 0.55);
-  border: 1.5px solid var(--color-primary);
-  color: var(--color-primary);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
-}
-
-.magnetic-btn-secondary:hover {
-  border-color: var(--color-tertiary);
-  background: rgba(213, 156, 197, 0.28);
-  box-shadow: 0 0 25px rgba(213, 156, 197, 0.4);
-}
-
-.magnetic-btn-content {
+/* ==========================================================================
+   CENTER PORTRAIT STAGE: TWO-LAYER CURSOR REVEAL
+   ========================================================================== */
+.hero-center-portrait-wrapper {
   position: relative;
   z-index: 2;
+  width: min(480px, 90vw);
+  max-height: 56vh;
+  aspect-ratio: 1.168 / 1;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
   display: flex;
-  align-items: center;
-  gap: 0.65rem;
-}
-
-.magnetic-btn-glow {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(213, 156, 197, 0.4), transparent 70%);
-  opacity: 0;
-  transition: opacity var(--transition-fast);
-  z-index: 1;
-}
-
-.magnetic-btn:hover .magnetic-btn-glow {
-  opacity: 1;
-}
-
-/* Subtle Film-Grain / Noise Overlay */
-.hero-grain-overlay {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.035;
-  pointer-events: none;
-  z-index: 1;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-}
-
-/* ==========================================================================
-   RIGHT COLUMN: TWO-LAYER CURSOR REVEAL PORTRAIT
-   ========================================================================== */
-.hero-visual-right {
-  position: relative;
-  display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  min-height: 540px;
+  margin: auto 0;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.4, 1);
+  will-change: transform;
+  cursor: crosshair;
 }
 
-/* Atmospheric Pastel Glow Backdrop Behind Portrait */
+/* Atmospheric Pastel Glow Backdrop Behind Center Portrait */
 .hero-portrait-glow-backdrop {
   position: absolute;
-  width: 135%;
-  height: 135%;
+  width: 140%;
+  height: 140%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -308,36 +222,6 @@
   z-index: 1;
 }
 
-/* 3D WebGL Canvas Layer (Subtle volumetric lighting & depth particles) */
-.hero-3d-canvas-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 130%;
-  height: 130%;
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* Seamless Portrait Silhouette Container (No rectangular card, frame, or ring) */
-.hero-portrait-wrapper {
-  position: relative;
-  z-index: 2;
-  width: min(480px, 92vw);
-  aspect-ratio: 1.168 / 1;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  overflow: visible;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.4, 1);
-  will-change: transform;
-  cursor: crosshair;
-}
-
 .hero-portrait-inner {
   position: relative;
   width: 100%;
@@ -345,14 +229,14 @@
   background: transparent;
   overflow: visible;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   /* Soft bottom fade so the portrait merges seamlessly into #EADADA */
-  mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000000 0%, #000000 86%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000000 0%, #000000 86%, transparent 100%);
 }
 
-/* Base Authentic Portrait (Pink dress, natural glasses) */
+/* Base Authentic Portrait (Normal pink dress, natural glasses) */
 .hero-portrait-base {
   width: 100%;
   height: 100%;
@@ -414,23 +298,145 @@
 }
 
 /* ==========================================================================
+   BOTTOM ROW: LEFT STATEMENT/DESCRIPTION & RIGHT ACTION CTAs
+   ========================================================================== */
+.hero-bottom-bar {
+  width: 100%;
+  max-width: var(--container-max-width);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+  z-index: 3;
+  padding-bottom: 1.5rem;
+}
+
+.hero-bottom-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  max-width: 440px;
+}
+
+.hero-editorial-statement {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.35vw, 1.25rem);
+  line-height: 1.35;
+  color: var(--color-primary);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.hero-description {
+  font-family: var(--font-sans);
+  font-size: clamp(0.88rem, 1.05vw, 0.98rem);
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+.hero-bottom-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.hero-cta-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Magnetic Button Styles */
+.magnetic-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.85rem;
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  outline: none;
+  overflow: hidden;
+  user-select: none;
+  text-decoration: none;
+}
+
+.magnetic-btn-primary {
+  background: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  color: var(--color-bg);
+  box-shadow: 0 4px 18px rgba(77, 58, 77, 0.18);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.magnetic-btn-primary:hover {
+  background: var(--color-secondary);
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 30px rgba(190, 92, 169, 0.4), 0 6px 20px rgba(77, 58, 77, 0.2);
+}
+
+.magnetic-btn-secondary {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1.5px solid var(--color-primary);
+  color: var(--color-primary);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.magnetic-btn-secondary:hover {
+  border-color: var(--color-tertiary);
+  background: rgba(213, 156, 197, 0.28);
+  box-shadow: 0 0 25px rgba(213, 156, 197, 0.4);
+}
+
+.magnetic-btn-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.magnetic-btn-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(213, 156, 197, 0.4), transparent 70%);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  z-index: 1;
+}
+
+.magnetic-btn:hover .magnetic-btn-glow {
+  opacity: 1;
+}
+
+/* ==========================================================================
    BOTTOM SCROLL INDICATOR
    ========================================================================== */
 .hero-scroll-indicator {
   position: absolute;
-  bottom: 1.5rem;
+  bottom: 0.65rem;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.45rem;
   z-index: 3;
   cursor: pointer;
   background: none;
   border: none;
   outline: none;
-  padding: 0.5rem;
+  padding: 0.35rem;
   transition: opacity var(--transition-fast);
 }
 
@@ -445,7 +451,7 @@
 
 .hero-scroll-text {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.25em;
   color: var(--color-text-dim);
@@ -456,7 +462,7 @@
 
 .hero-scroll-line-container {
   width: 1px;
-  height: 38px;
+  height: 32px;
   background: rgba(77, 58, 77, 0.18);
   position: relative;
   overflow: hidden;
@@ -495,136 +501,100 @@
 
 /* Tablet Optimization */
 @media (max-width: 1024px) {
-  .hero-layout-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-  }
-
   .hero-name-line {
-    font-size: clamp(3.2rem, 7vw, 5.5rem);
+    font-size: clamp(3.2rem, 7.5vw, 5.5rem);
     letter-spacing: 0.02em;
-    line-height: 0.96;
+    line-height: 0.94;
   }
 
-  .hero-portrait-wrapper {
-    width: min(320px, 40vw);
+  .hero-center-portrait-wrapper {
+    width: min(400px, 80vw);
+    max-height: 48vh;
   }
 
-  .hero-3d-canvas-container {
-    width: 115%;
-    height: 115%;
+  .hero-bottom-bar {
+    gap: 1.5rem;
   }
 }
 
-/* Dedicated Mobile Composition (< 768px)
-   Order:
-   1. ATIYA ALI (Header)
-   2. Portrait + 3D Object
-   3. Description (BCA Student • Developer & Tagline)
-   4. Buttons
-   5. Scroll Indicator
-*/
+/* Dedicated Mobile Composition (< 768px) */
 @media (max-width: 768px) {
   .hero-section {
-    padding-top: calc(var(--nav-height) + 1rem);
-    padding-bottom: 4.5rem;
+    padding-top: calc(var(--nav-height) + 0.75rem);
+    padding-bottom: 3.5rem;
     min-height: auto;
     justify-content: flex-start;
+    gap: 1.25rem;
   }
 
-  .hero-layout-grid {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 1.5rem;
-  }
-
-  /* Reorder items for dedicated mobile flow */
-  .hero-content-left {
-    display: contents;
-  }
-
-  .hero-status-pill {
-    order: 1;
-    margin-bottom: 0.25rem;
+  .hero-top-masthead {
+    gap: 0.5rem;
   }
 
   .hero-name-container {
-    order: 2;
+    flex-direction: column;
     align-items: center;
     text-align: center;
+    gap: 0;
   }
 
   .hero-name-line {
-    font-size: clamp(3.2rem, 13vw, 4.8rem);
-    line-height: 0.96;
+    font-size: clamp(3rem, 12vw, 4.5rem);
+    line-height: 0.95;
     letter-spacing: 0.025em;
   }
 
-  .hero-name-line.name-ali {
-    margin-left: 0;
-  }
-
-  .hero-visual-right {
-    order: 3;
-    min-height: 360px;
-    width: 100%;
-    margin: 0.5rem 0;
-  }
-
-  .hero-portrait-wrapper {
+  .hero-center-portrait-wrapper {
     width: min(340px, 88vw);
-    aspect-ratio: 1.16 / 1;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    overflow: visible;
+    max-height: 42vh;
+    margin: 0.25rem auto;
   }
 
-  .hero-portrait-inner {
-    background: transparent;
-    overflow: visible;
+  .hero-bottom-bar {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    padding-bottom: 2rem;
   }
 
-  .hero-3d-canvas-container {
-    width: 125%;
-    height: 125%;
+  .hero-bottom-left {
+    align-items: center;
+    text-align: center;
+    max-width: 100%;
   }
 
-  .hero-tagline {
-    order: 4;
-    font-size: 0.85rem;
-    letter-spacing: 0.16em;
-    justify-content: center;
+  .hero-editorial-statement {
+    font-size: 1.05rem;
   }
 
   .hero-description {
-    order: 5;
-    font-size: 0.98rem;
+    font-size: 0.9rem;
     max-width: 90%;
-    margin: 0 auto;
+  }
+
+  .hero-bottom-right {
+    width: 100%;
+    justify-content: center;
   }
 
   .hero-cta-group {
-    order: 6;
     justify-content: center;
     width: 100%;
-    gap: 0.85rem;
-    margin-top: 0.5rem;
+    gap: 0.75rem;
   }
 
   .magnetic-btn {
     width: 100%;
-    max-width: 280px;
-    padding: 0.85rem 1.5rem;
-    font-size: 0.78rem;
+    max-width: 260px;
+    padding: 0.8rem 1.4rem;
+    font-size: 0.76rem;
   }
 
   .hero-scroll-indicator {
     position: relative;
     bottom: auto;
-    margin-top: 2rem;
+    margin-top: 1rem;
     transform: none;
     left: auto;
   }
@@ -638,7 +608,8 @@
   .hero-status-dot {
     animation: none;
   }
-  .hero-portrait-wrapper:hover {
+  .hero-center-portrait-wrapper:hover {
     transform: none;
   }
 }
+
