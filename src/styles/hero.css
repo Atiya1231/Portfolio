@@ -271,8 +271,20 @@
   opacity: 1;
 }
 
+/* Subtle Film-Grain / Noise Overlay */
+.hero-grain-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.035;
+  pointer-events: none;
+  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
 /* ==========================================================================
-   RIGHT COLUMN: AUTHENTIC PORTRAIT + 3D PASTEL ENVIRONMENT
+   RIGHT COLUMN: TWO-LAYER CURSOR REVEAL PORTRAIT
    ========================================================================== */
 .hero-visual-right {
   position: relative;
@@ -296,7 +308,7 @@
   z-index: 1;
 }
 
-/* 3D WebGL Canvas Layer (Translucent ribbons, floating spheres, ambient particles) */
+/* 3D WebGL Canvas Layer (Subtle volumetric lighting & depth particles) */
 .hero-3d-canvas-container {
   position: absolute;
   top: 50%;
@@ -312,8 +324,8 @@
 .hero-portrait-wrapper {
   position: relative;
   z-index: 2;
-  width: min(460px, 90vw);
-  aspect-ratio: 1.16 / 1;
+  width: min(480px, 92vw);
+  aspect-ratio: 1.168 / 1;
   background: transparent;
   border: none;
   box-shadow: none;
@@ -321,7 +333,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.5s var(--ease-out-expo);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.4, 1);
+  will-change: transform;
+  cursor: crosshair;
 }
 
 .hero-portrait-inner {
@@ -333,85 +347,70 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Soft bottom fade so the portrait merges seamlessly into #EADADA */
+  mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
 }
 
-/* The Genuine Authentic Transparent Portrait Cutout */
-.hero-portrait-image {
+/* Base Authentic Portrait (Pink dress, natural glasses) */
+.hero-portrait-base {
   width: 100%;
   height: 100%;
   object-fit: contain;
   object-position: center bottom;
   display: block;
-  filter: drop-shadow(0 18px 45px rgba(77, 58, 77, 0.16)) drop-shadow(0 0 32px rgba(190, 92, 169, 0.24));
-  /* Soft bottom fade so the dress merges seamlessly into the background */
-  mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
-  transition: transform 0.4s var(--ease-out-expo), filter var(--transition-normal);
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 18px 45px rgba(77, 58, 77, 0.16)) drop-shadow(0 0 32px rgba(190, 92, 169, 0.22));
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Layer 2: Futuristic Portrait (Chrome visor, silver outfit) — Circular Cursor Mask Reveal */
+.hero-portrait-futuristic-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  mask-image: radial-gradient(
+    circle var(--reveal-r, 0px) at var(--reveal-x, 50%) var(--reveal-y, 50%),
+    #000000 0%,
+    rgba(0, 0, 0, 0.95) 45%,
+    rgba(0, 0, 0, 0.35) 75%,
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle var(--reveal-r, 0px) at var(--reveal-x, 50%) var(--reveal-y, 50%),
+    #000000 0%,
+    rgba(0, 0, 0, 0.95) 45%,
+    rgba(0, 0, 0, 0.35) 75%,
+    transparent 100%
+  );
+  will-change: mask-image, -webkit-mask-image;
+}
+
+.hero-portrait-futuristic-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  display: block;
+  filter: drop-shadow(0 0 28px rgba(190, 92, 169, 0.35)) brightness(1.03);
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 /* Soft Ambient Rim Light Glow on Portrait Silhouette */
-.hero-portrait-lighting-overlay {
+.hero-portrait-blend-overlay {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background: 
-    radial-gradient(ellipse at 85% 20%, rgba(213, 156, 197, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse at 15% 85%, rgba(190, 92, 169, 0.1) 0%, transparent 60%);
+    radial-gradient(ellipse at 85% 20%, rgba(213, 156, 197, 0.14) 0%, transparent 50%),
+    radial-gradient(ellipse at 15% 85%, rgba(190, 92, 169, 0.08) 0%, transparent 60%);
   z-index: 3;
-  mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
-}
-
-/* ==========================================================================
-   FUTURISTIC TRANSLUCENT FASHION EDITORIAL VISOR / GLASSES
-   Palette: Dark Plum (#4D3A4D), Magenta (#BE5CA9), Soft Pink (#D59CC5)
-   ========================================================================== */
-.editorial-visor-container {
-  position: absolute;
-  top: 36.3%;
-  left: 41.8%;
-  width: 29.5%;
-  aspect-ratio: 320 / 95;
-  transform: translate(-50%, -50%) rotate(-19.3deg);
-  transform-origin: center center;
-  z-index: 4;
-  pointer-events: none;
-  filter: drop-shadow(0 4px 14px rgba(77, 58, 77, 0.22)) drop-shadow(0 0 16px rgba(190, 92, 169, 0.32));
-  will-change: transform, opacity, filter;
-}
-
-/* Optical Refraction Behind Lens */
-.visor-backdrop-refraction {
-  position: absolute;
-  inset: 6% 4% 8% 4%;
-  border-radius: 36px;
-  backdrop-filter: blur(2.2px) contrast(1.08) brightness(1.04);
-  -webkit-backdrop-filter: blur(2.2px) contrast(1.08) brightness(1.04);
-  z-index: 1;
-}
-
-/* SVG Vector Visor Shield */
-.visor-svg-shield {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
-  overflow: visible;
-}
-
-.visor-lens-path {
-  transition: filter 0.3s ease;
-}
-
-.visor-glare-group {
-  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.4, 1);
-  will-change: transform;
-}
-
-.visor-brow-bar {
-  filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.6));
 }
 
 /* ==========================================================================

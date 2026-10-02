@@ -1,85 +1,163 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { ArrowUpRight, MessageCircle } from 'lucide-react';
 import { gsap, ScrollTrigger, scrollToSection } from '../animations/gsapUtils';
 import Hero3DCanvas from '../components/Hero3DCanvas';
-import EditorialVisor from '../components/EditorialVisor';
 import MagneticButton from '../components/MagneticButton';
-import portraitImg from '../assets/atiya-cutout.png';
+import portraitBase from '../assets/atiya-base.png';
+import portraitFuturistic from '../assets/atiya-futuristic.png';
 
 /**
- * HomeSection (Phase 2 & 3): Full-screen Cinematic 3D Hero.
- * Features:
- * - Visually dominant editorial typography (ATIYA ALI)
- * - Authentic cinematic portrait with high-fashion translucent visor
- * - Cinematic volumetric sunset lighting & depth
- * - Orchestrated GSAP cinematic entrance timeline
- * - Smooth mouse magnetic pull & scroll parallax transitions
+ * HomeSection: Full-screen Cinematic Hero with Two-Layer Cursor Reveal.
+ *
+ * Concepts:
+ * - Base Layer: Authentic portrait with natural styling (pink dress, chic glasses).
+ * - Reveal Layer: Futuristic portrait with chrome visor and metallic silver outfit.
+ * - Interaction: Smooth, fluid cursor-driven circular mask reveal with smooth lerp easing.
+ * - Aesthetics: High-fashion editorial serif typography (ATIYA ALI), vibrant sunset palette (#4D3A4D, #BE5CA9, #D59CC5, #EADADA).
+ * - Zero decorative 3D clutter (no spheres, rings, orbits, boxes, or cards).
  */
 const HomeSection = () => {
   const sectionRef = useRef(null);
-  const portraitRef = useRef(null);
+  const visualRightRef = useRef(null);
+  const portraitWrapperRef = useRef(null);
+  const futuristicLayerRef = useRef(null);
   const glowCrimsonRef = useRef(null);
   const glowPinkRef = useRef(null);
   const glowLeftRef = useRef(null);
   const nameAtiyaRef = useRef(null);
   const nameAliRef = useRef(null);
   const contentLeftRef = useRef(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
-  // 3D Tilt effect on portrait mouse hover (desktop only)
-  const handlePortraitMouseMove = (e) => {
-    if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
-    const card = portraitRef.current;
-    if (!card) return;
+  // Smooth lerp coordinates for the circular cursor reveal
+  const targetReveal = useRef({ x: 230, y: 220, radius: 0, active: false });
+  const currentReveal = useRef({ x: 230, y: 220, radius: 0 });
+  const rafRef = useRef(null);
 
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
+  // Parallax subtle tilt offsets
+  const [, setMouseOffset] = useState({ x: 0, y: 0 });
 
-    const rotX = -(y / (rect.height / 2)) * 5; // subtle 5 deg
-    const rotY = (x / (rect.width / 2)) * 5;
+  // Update reveal target based on pointer position relative to portrait
+  const updateRevealPosition = useCallback((clientX, clientY) => {
+    if (!portraitWrapperRef.current) return;
+    const rect = portraitWrapperRef.current.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
 
-    card.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-4px) scale(1.01)`;
-  };
+    // Check if cursor is reasonably near or over the portrait
+    const isInside =
+      x >= -50 && x <= rect.width + 50 && y >= -50 && y <= rect.height + 50;
 
-  const handlePortraitMouseLeave = () => {
-    const card = portraitRef.current;
-    if (!card) return;
-    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)';
-  };
+    targetReveal.current.x = x;
+    targetReveal.current.y = y;
+    targetReveal.current.radius = isInside ? 165 : 0;
+    targetReveal.current.active = isInside;
 
-  // Mouse tracking for parallax lighting & visor specular reflection
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      const { innerWidth, innerHeight } = window;
-      const x = (e.clientX / innerWidth) * 2 - 1;
-      const y = (e.clientY / innerHeight) * 2 - 1;
-      setMousePos({ x, y });
-    };
+    // Subtle 3D portrait parallax shift (max 8px)
+    const normX = (x / rect.width - 0.5) * 2;
+    const normY = (y / rect.height - 0.5) * 2;
+    setMouseOffset({ x: normX, y: normY });
 
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    if (portraitWrapperRef.current) {
+      const rotX = -normY * 3.5;
+      const rotY = normX * 3.5;
+      portraitWrapperRef.current.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translate3d(${normX * 4}px, ${normY * 4}px, 0)`;
+    }
   }, []);
 
+  const handlePointerMove = (e) => {
+    updateRevealPosition(e.clientX, e.clientY);
+  };
+
+  const handlePointerLeave = () => {
+    targetReveal.current.radius = 0;
+    targetReveal.current.active = false;
+    if (portraitWrapperRef.current) {
+      portraitWrapperRef.current.style.transform =
+        'perspective(1000px) rotateX(0deg) rotateY(0deg) translate3d(0, 0, 0)';
+    }
+  };
+
+  // Touch support for mobile & tablet
+  const handleTouchMove = (e) => {
+    if (e.touches && e.touches[0]) {
+      updateRevealPosition(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    targetReveal.current.radius = 0;
+    targetReveal.current.active = false;
+  };
+
+  // Continuous Fluid RequestAnimationFrame Lerp Loop
   useEffect(() => {
-    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+    if (isReducedMotion) return;
+
+    const lerp = (start, end, factor) => start + (end - start) * factor;
+
+    const animateReveal = () => {
+      const target = targetReveal.current;
+      const current = currentReveal.current;
+
+      current.x = lerp(current.x, target.x, 0.12);
+      current.y = lerp(current.y, target.y, 0.12);
+      current.radius = lerp(current.radius, target.radius, 0.1);
+
+      if (futuristicLayerRef.current) {
+        futuristicLayerRef.current.style.setProperty('--reveal-x', `${current.x.toFixed(1)}px`);
+        futuristicLayerRef.current.style.setProperty('--reveal-y', `${current.y.toFixed(1)}px`);
+        futuristicLayerRef.current.style.setProperty('--reveal-r', `${current.radius.toFixed(1)}px`);
+      }
+
+      rafRef.current = requestAnimationFrame(animateReveal);
+    };
+
+    rafRef.current = requestAnimationFrame(animateReveal);
+
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  // Global mousemove for hero depth tracking
+  useEffect(() => {
+    const onGlobalMouseMove = (e) => {
+      if (sectionRef.current) {
+        const rect = sectionRef.current.getBoundingClientRect();
+        if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
+          updateRevealPosition(e.clientX, e.clientY);
+        }
+      }
+    };
+
+    window.addEventListener('mousemove', onGlobalMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', onGlobalMouseMove);
+  }, [updateRevealPosition]);
+
+  // GSAP Cinematic Entrance Timeline
+  useEffect(() => {
+    const isReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
 
     const ctx = gsap.context(() => {
       if (isReducedMotion) {
-        // Immediate show for reduced motion preference
         gsap.set(
           [
             glowCrimsonRef.current,
             glowPinkRef.current,
             glowLeftRef.current,
             '.hero-3d-canvas-container',
-            portraitRef.current,
-            '.editorial-visor-container',
+            portraitWrapperRef.current,
             nameAtiyaRef.current,
             nameAliRef.current,
             '.hero-status-pill',
             '.hero-tagline',
             '.hero-description',
+            '.hero-editorial-statement',
             '.magnetic-btn',
             '.hero-scroll-indicator'
           ],
@@ -88,84 +166,64 @@ const HomeSection = () => {
         return;
       }
 
-      // Initial state: clean #EADADA background, elements hidden
+      // Initial clean state
       gsap.set([glowCrimsonRef.current, glowPinkRef.current, glowLeftRef.current], { opacity: 0 });
-      gsap.set('.hero-3d-canvas-container', { opacity: 0, scale: 0.88 });
-      gsap.set(portraitRef.current, { opacity: 0, y: 35, filter: 'blur(12px)' });
-      gsap.set('.editorial-visor-container', { opacity: 0, scale: 0.92, filter: 'blur(8px)' });
-      gsap.set('.hero-status-pill', { opacity: 0, y: 20 });
-      gsap.set(nameAtiyaRef.current, { opacity: 0, y: 45, filter: 'blur(10px)' });
-      gsap.set(nameAliRef.current, { opacity: 0, y: 45, filter: 'blur(10px)' });
-      gsap.set(['.hero-tagline', '.hero-description'], { opacity: 0, y: 25 });
-      gsap.set('.magnetic-btn', { opacity: 0, y: 20, scale: 0.96 });
-      gsap.set('.hero-scroll-indicator', { opacity: 0, y: 15 });
+      gsap.set('.hero-3d-canvas-container', { opacity: 0, scale: 0.9 });
+      gsap.set(portraitWrapperRef.current, { opacity: 0, y: 40, scale: 1.05, filter: 'blur(10px)' });
+      gsap.set('.hero-status-pill', { opacity: 0, y: 15 });
+      gsap.set(nameAtiyaRef.current, { opacity: 0, y: 40, filter: 'blur(8px)' });
+      gsap.set(nameAliRef.current, { opacity: 0, y: 40, filter: 'blur(8px)' });
+      gsap.set(['.hero-tagline', '.hero-editorial-statement', '.hero-description'], { opacity: 0, y: 20 });
+      gsap.set('.magnetic-btn', { opacity: 0, y: 18, scale: 0.96 });
+      gsap.set('.hero-scroll-indicator', { opacity: 0, y: 12 });
 
-      // Orchestrated GSAP Cinematic Editorial Entrance Timeline
+      // Orchestrated Cinematic Timeline (< 1.4s total entrance)
       const entranceTl = gsap.timeline({
         defaults: { ease: 'power3.out' },
-        delay: 0.2
+        delay: 0.15
       });
 
       entranceTl
         // 1. Atmospheric ambient light glows appear
         .to([glowCrimsonRef.current, glowPinkRef.current, glowLeftRef.current], {
           opacity: 1,
-          duration: 1.4,
+          duration: 1.1,
           ease: 'power2.out'
         })
-        // 2. 3D depth canvas scales & reveals smoothly behind
+        // 2. 3D ambient depth canvas scales in softly
         .to(
           '.hero-3d-canvas-container',
           {
             opacity: 1,
             scale: 1,
-            duration: 1.8,
+            duration: 1.3,
             ease: 'expo.out'
           },
-          '-=1.0'
+          '-=0.8'
         )
-        // 3. Authentic portrait gradually reveals with subtle depth and blur-to-sharp focus
+        // 3. Portrait reveals smoothly with subtle settling scale (1.05 -> 1.0)
         .to(
-          portraitRef.current,
+          portraitWrapperRef.current,
           {
             opacity: 1,
             y: 0,
+            scale: 1.0,
             filter: 'blur(0px)',
-            duration: 1.5,
+            duration: 1.3,
             ease: 'power3.out',
             clearProps: 'filter'
           },
-          '-=1.3'
+          '-=1.0'
         )
-        // 4. Futuristic visor/glasses appears naturally over the eyes
-        .to(
-          '.editorial-visor-container',
-          {
-            opacity: 1,
-            scale: 1,
-            filter: 'blur(0px)',
-            duration: 1.4,
-            ease: 'power2.out',
-            clearProps: 'filter'
-          },
-          '-=0.9'
-        )
-        // 5. Soft specular reflection glides across the visor lens
-        .fromTo(
-          '.visor-glare-group',
-          { x: -50, opacity: 0 },
-          { x: 30, opacity: 1, duration: 1.6, ease: 'power2.inOut' },
-          '-=0.9'
-        )
-        // 6. Editorial typography reveals smoothly
+        // 4. Status Pill & Editorial Typography reveal
         .to(
           '.hero-status-pill',
           {
             opacity: 1,
             y: 0,
-            duration: 0.8
+            duration: 0.6
           },
-          '-=1.1'
+          '-=0.9'
         )
         .to(
           nameAtiyaRef.current,
@@ -173,11 +231,11 @@ const HomeSection = () => {
             opacity: 1,
             y: 0,
             filter: 'blur(0px)',
-            duration: 1.3,
+            duration: 1.0,
             ease: 'power3.out',
             clearProps: 'filter'
           },
-          '-=0.8'
+          '-=0.7'
         )
         .to(
           nameAliRef.current,
@@ -185,42 +243,42 @@ const HomeSection = () => {
             opacity: 1,
             y: 0,
             filter: 'blur(0px)',
-            duration: 1.3,
+            duration: 1.0,
             ease: 'power3.out',
             clearProps: 'filter'
           },
-          '-=1.0'
+          '-=0.8'
         )
-        // 7. Subtitle & Description slide in
+        // 5. Subtitle & Description slide up
         .to(
-          ['.hero-tagline', '.hero-description', '.hero-editorial-statement'],
+          ['.hero-tagline', '.hero-editorial-statement', '.hero-description'],
           {
             opacity: 1,
             y: 0,
-            stagger: 0.14,
-            duration: 0.9
+            stagger: 0.12,
+            duration: 0.75
           },
-          '-=0.8'
+          '-=0.7'
         )
-        // 8. Action buttons appear
+        // 6. Action buttons fade in
         .to(
           '.magnetic-btn',
           {
             opacity: 1,
             y: 0,
             scale: 1,
-            stagger: 0.15,
-            duration: 0.8
+            stagger: 0.12,
+            duration: 0.7
           },
-          '-=0.6'
+          '-=0.5'
         )
-        // 9. Scroll indicator gently appears
+        // 7. Scroll indicator gently appears
         .to(
           '.hero-scroll-indicator',
           {
             opacity: 1,
             y: 0,
-            duration: 0.8,
+            duration: 0.6,
             ease: 'power2.out'
           },
           '-=0.4'
@@ -229,8 +287,8 @@ const HomeSection = () => {
       // Parallax Scroll Animation into About section
       if (typeof ScrollTrigger !== 'undefined') {
         gsap.to('.hero-content-left', {
-          y: -50,
-          opacity: 0.65,
+          y: -40,
+          opacity: 0.7,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top top',
@@ -239,36 +297,14 @@ const HomeSection = () => {
           }
         });
 
-        gsap.to(portraitRef.current, {
-          y: -35,
-          scale: 0.97,
+        gsap.to(portraitWrapperRef.current, {
+          y: -30,
+          scale: 0.98,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top top',
             end: 'bottom top',
             scrub: 1
-          }
-        });
-
-        gsap.to('.hero-3d-canvas-container', {
-          y: -20,
-          rotation: 0.08,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1.2
-          }
-        });
-
-        gsap.to([glowCrimsonRef.current, glowPinkRef.current], {
-          y: 40,
-          opacity: 0.4,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1.5
           }
         });
       }
@@ -283,7 +319,12 @@ const HomeSection = () => {
       ref={sectionRef}
       className="hero-section"
       aria-label="Atiya Ali Hero Presentation"
+      onMouseMove={handlePointerMove}
+      onMouseLeave={handlePointerLeave}
     >
+      {/* Subtle Noise / Film-Grain Texture Layer */}
+      <div className="hero-grain-overlay" aria-hidden="true" />
+
       {/* Atmospheric Ambient Lighting Glows (Vibrant Sunset Palette: #4D3A4D, #BE5CA9, #D59CC5, #EADADA) */}
       <div ref={glowCrimsonRef} className="hero-glow-crimson" aria-hidden="true" />
       <div ref={glowPinkRef} className="hero-glow-pink" aria-hidden="true" />
@@ -352,34 +393,49 @@ const HomeSection = () => {
         </div>
 
         {/* ==========================================================================
-            RIGHT COLUMN / SECTION: AUTHENTIC PORTRAIT + 3D PASTEL ENVIRONMENT
+            RIGHT COLUMN / SECTION: TWO-LAYER CURSOR REVEAL PORTRAIT
             ========================================================================== */}
-        <div className="hero-visual-right">
+        <div ref={visualRightRef} className="hero-visual-right">
           {/* Atmospheric Pastel Glow Backdrop (#D59CC5 / #BE5CA9) */}
           <div className="hero-portrait-glow-backdrop" aria-hidden="true" />
 
-          {/* 3D WebGL Digital Sculpture Canvas (Flows softly behind portrait) */}
+          {/* 3D WebGL Ambient Lighting & Depth Canvas (Pure volumetric atmosphere) */}
           <Hero3DCanvas />
 
-          {/* Authentic Portrait (Integrated seamlessly into pastel environment) */}
+          {/* Two-Layer Stacked Portrait Container */}
           <div
-            ref={portraitRef}
+            ref={portraitWrapperRef}
             className="hero-portrait-wrapper interactive"
-            onMouseMove={handlePortraitMouseMove}
-            onMouseLeave={handlePortraitMouseLeave}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
             <div className="hero-portrait-inner">
+              {/* LAYER 1: BASE AUTHENTIC PORTRAIT (Natural styling, pink dress) */}
               <img
-                src={portraitImg}
-                alt="Atiya Ali — BCA student and aspiring developer"
-                className="hero-portrait-image"
+                src={portraitBase}
+                alt="Atiya Ali — Developer & BCA Student"
+                className="hero-portrait-image hero-portrait-base"
                 loading="eager"
                 decoding="async"
               />
-              {/* Futuristic Translucent Fashion Editorial Visor */}
-              <EditorialVisor mousePos={mousePos} />
-              {/* Soft Ambient Rim Light Overlay */}
-              <div className="hero-portrait-lighting-overlay" aria-hidden="true" />
+
+              {/* LAYER 2: FUTURISTIC PORTRAIT (Chrome visor, silver outfit — revealed via cursor mask) */}
+              <div
+                ref={futuristicLayerRef}
+                className="hero-portrait-futuristic-layer"
+                aria-hidden="true"
+              >
+                <img
+                  src={portraitFuturistic}
+                  alt=""
+                  className="hero-portrait-image hero-portrait-futuristic-img"
+                  loading="eager"
+                  decoding="async"
+                />
+              </div>
+
+              {/* Soft Ambient Light Catch & Bottom Gradient Blend */}
+              <div className="hero-portrait-blend-overlay" aria-hidden="true" />
             </div>
           </div>
         </div>
@@ -404,3 +460,4 @@ const HomeSection = () => {
 };
 
 export default HomeSection;
+
