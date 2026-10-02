@@ -11,190 +11,70 @@ const pseudoRandom = (seed) => {
 };
 
 /**
- * Translucent 3D Flowing Ribbon Sculpture:
- * Soft organic curves flowing gently behind the portrait with translucent pastel gloss.
+ * Soft Ambient Depth Spheres & Pastel Blobs:
+ * Subtle, soft translucent spheres drifting far behind the portrait.
+ * NOT forming rings, loops, or frames.
  * Palette:
- * - Primary: #4D3A4D (Deep Plum base)
- * - Secondary: #BE5CA9 (Vibrant Sunset Magenta)
- * - Tertiary: #D59CC5 (Soft Sunset Rose)
+ * - #D59CC5 (Soft Sunset Rose)
+ * - #BE5CA9 (Vibrant Magenta accent)
+ * - #4D3A4D (Deep Plum depth)
+ * - #EADADA (Pastel Stone)
  */
-const TranslucentFlowingRibbon = ({ mouseRef, isReducedMotion }) => {
+const AtmosphericPastelOrbs = ({ mouseRef, isReducedMotion }) => {
   const groupRef = useRef(null);
-  const targetRotation = useRef({ x: 0, y: 0 });
 
-  // Main flowing organic ribbon curve
-  const primaryRibbonGeometry = useMemo(() => {
-    const points = [];
-    const numPoints = 120;
-
-    for (let i = 0; i < numPoints; i++) {
-      const t = (i / numPoints) * Math.PI * 2;
-
-      // Asymmetric organic curves that expand softly behind the portrait
-      const rX = 1.65 + 0.35 * Math.cos(2 * t) + 0.15 * Math.sin(3 * t);
-      const rY = 2.15 + 0.4 * Math.sin(2 * t) - 0.2 * Math.cos(t);
-
-      const x = rX * Math.cos(t);
-      const y = rY * Math.sin(t);
-      // Gentle depth strictly behind the portrait plane (z: -0.6 to -1.4)
-      const z = -0.85 + 0.3 * Math.sin(3 * t) + 0.15 * Math.cos(2 * t);
-
-      points.push(new THREE.Vector3(x, y, z));
-    }
-
-    const curve = new THREE.CatmullRomCurve3(points, true, 'centripetal', 0.5);
-    return new THREE.TubeGeometry(curve, 260, 0.13, 32, true);
-  }, []);
-
-  // Secondary delicate accent ribbon loop
-  const accentRibbonGeometry = useMemo(() => {
-    const points = [];
-    const numPoints = 80;
-
-    for (let i = 0; i < numPoints; i++) {
-      const t = (i / numPoints) * Math.PI * 2;
-
-      const rX = 1.25 + 0.25 * Math.sin(2 * t);
-      const rY = 1.75 + 0.3 * Math.cos(2 * t);
-
-      const x = rX * Math.cos(t + 0.6);
-      const y = rY * Math.sin(t + 0.6);
-      const z = -1.15 + 0.25 * Math.cos(3 * t);
-
-      points.push(new THREE.Vector3(x, y, z));
-    }
-
-    const curve = new THREE.CatmullRomCurve3(points, true, 'centripetal', 0.5);
-    return new THREE.TubeGeometry(curve, 180, 0.075, 24, true);
-  }, []);
-
-  useFrame((state) => {
-    const time = state.clock.getElapsedTime();
-
-    if (!isReducedMotion && groupRef.current) {
-      const idleFloatY = Math.sin(time * 0.45) * 0.05;
-      const idleFloatX = Math.cos(time * 0.35) * 0.03;
-
-      const mouseX = mouseRef.current ? mouseRef.current.x : 0;
-      const mouseY = mouseRef.current ? mouseRef.current.y : 0;
-
-      targetRotation.current.x = mouseY * 0.18;
-      targetRotation.current.y = mouseX * 0.24;
-
-      groupRef.current.rotation.x = THREE.MathUtils.lerp(
-        groupRef.current.rotation.x,
-        targetRotation.current.x + Math.sin(time * 0.18) * 0.04,
-        0.03
-      );
-      groupRef.current.rotation.y = THREE.MathUtils.lerp(
-        groupRef.current.rotation.y,
-        targetRotation.current.y + time * 0.04,
-        0.03
-      );
-      groupRef.current.rotation.z = THREE.MathUtils.lerp(
-        groupRef.current.rotation.z,
-        Math.cos(time * 0.22) * 0.03,
-        0.03
-      );
-
-      groupRef.current.position.y = idleFloatY;
-      groupRef.current.position.x = idleFloatX;
-    }
-  });
-
-  return (
-    <group ref={groupRef} position={[0, 0, 0]}>
-      {/* Primary Translucent Pastel Ribbon */}
-      <mesh geometry={primaryRibbonGeometry}>
-        <meshPhysicalMaterial
-          color="#BE5CA9"
-          emissive="#4D3A4D"
-          emissiveIntensity={0.25}
-          roughness={0.16}
-          metalness={0.3}
-          clearcoat={1.0}
-          clearcoatRoughness={0.08}
-          transmission={0.42}
-          thickness={0.75}
-          ior={1.42}
-          transparent
-          opacity={0.88}
-        />
-      </mesh>
-
-      {/* Secondary Soft Rose Ribbon */}
-      <mesh geometry={accentRibbonGeometry}>
-        <meshPhysicalMaterial
-          color="#D59CC5"
-          emissive="#6E355E"
-          emissiveIntensity={0.2}
-          roughness={0.22}
-          metalness={0.2}
-          clearcoat={0.9}
-          clearcoatRoughness={0.12}
-          transmission={0.5}
-          thickness={0.6}
-          transparent
-          opacity={0.82}
-        />
-      </mesh>
-    </group>
-  );
-};
-
-/**
- * Floating Glossy Pastel Spheres:
- * Multiple subtle glossy 3D spheres floating at varying depths behind the portrait.
- */
-const FloatingPastelSpheres = ({ mouseRef, isReducedMotion }) => {
-  const spheresGroupRef = useRef(null);
-
-  const sphereData = useMemo(() => [
-    { pos: [-1.8, 1.4, -0.9], radius: 0.24, color: '#D59CC5', emissive: '#4D3A4D', speed: 0.7, phase: 0 },
-    { pos: [1.9, 1.2, -1.2], radius: 0.28, color: '#BE5CA9', emissive: '#4D3A4D', speed: 0.55, phase: 1.8 },
-    { pos: [-1.9, -1.3, -1.0], radius: 0.22, color: '#BE5CA9', emissive: '#4D3A4D', speed: 0.8, phase: 3.2 },
-    { pos: [1.8, -1.4, -0.8], radius: 0.26, color: '#D59CC5', emissive: '#4D3A4D', speed: 0.65, phase: 4.5 },
-    { pos: [0.3, 2.2, -1.4], radius: 0.18, color: '#EADADA', emissive: '#BE5CA9', speed: 0.5, phase: 2.1 },
-    { pos: [-0.4, -2.2, -1.3], radius: 0.2, color: '#4D3A4D', emissive: '#BE5CA9', speed: 0.6, phase: 5.4 },
-    { pos: [2.3, 0.2, -1.5], radius: 0.16, color: '#D59CC5', emissive: '#4D3A4D', speed: 0.75, phase: 0.9 },
-    { pos: [-2.2, 0.1, -1.3], radius: 0.15, color: '#BE5CA9', emissive: '#4D3A4D', speed: 0.85, phase: 2.7 }
+  // Soft scattered spheres at deep background Z positions (z: -1.4 to -3.2)
+  const orbsData = useMemo(() => [
+    { pos: [-2.2, 1.6, -2.0], radius: 0.45, color: '#D59CC5', emissive: '#4D3A4D', opacity: 0.65, speed: 0.4, phase: 0 },
+    { pos: [2.4, 1.4, -2.5], radius: 0.55, color: '#BE5CA9', emissive: '#4D3A4D', opacity: 0.55, speed: 0.35, phase: 1.5 },
+    { pos: [-2.6, -1.2, -2.2], radius: 0.4, color: '#BE5CA9', emissive: '#4D3A4D', opacity: 0.6, speed: 0.45, phase: 3.0 },
+    { pos: [2.5, -1.5, -1.8], radius: 0.5, color: '#D59CC5', emissive: '#4D3A4D', opacity: 0.65, speed: 0.38, phase: 4.2 },
+    { pos: [0.6, 2.4, -2.8], radius: 0.35, color: '#EADADA', emissive: '#BE5CA9', opacity: 0.7, speed: 0.3, phase: 2.1 },
+    { pos: [-0.8, -2.2, -2.6], radius: 0.42, color: '#4D3A4D', emissive: '#BE5CA9', opacity: 0.5, speed: 0.42, phase: 5.1 },
+    { pos: [2.8, 0.2, -3.0], radius: 0.38, color: '#D59CC5', emissive: '#4D3A4D', opacity: 0.6, speed: 0.32, phase: 0.8 },
+    { pos: [-2.9, 0.4, -2.7], radius: 0.32, color: '#BE5CA9', emissive: '#4D3A4D', opacity: 0.55, speed: 0.48, phase: 2.6 }
   ], []);
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
 
-    if (!isReducedMotion && spheresGroupRef.current) {
+    if (!isReducedMotion && groupRef.current) {
       const mouseX = mouseRef.current ? mouseRef.current.x : 0;
       const mouseY = mouseRef.current ? mouseRef.current.y : 0;
 
-      spheresGroupRef.current.children.forEach((mesh, idx) => {
-        const item = sphereData[idx];
+      // Slow, subtle parallax tilt
+      groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, mouseX * 0.15, 0.03);
+      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, mouseY * 0.12, 0.03);
+
+      groupRef.current.children.forEach((mesh, idx) => {
+        const item = orbsData[idx];
         if (!item) return;
 
-        // Subtle organic floating bobbing
-        mesh.position.y = item.pos[1] + Math.sin(time * item.speed + item.phase) * 0.12;
-        mesh.position.x = item.pos[0] + Math.cos(time * item.speed * 0.8 + item.phase) * 0.08 + mouseX * 0.06;
-        mesh.position.z = item.pos[2] + Math.sin(time * item.speed * 0.5 + item.phase) * 0.06 + mouseY * 0.06;
+        // Very slow organic floating
+        mesh.position.y = item.pos[1] + Math.sin(time * item.speed + item.phase) * 0.14;
+        mesh.position.x = item.pos[0] + Math.cos(time * item.speed * 0.8 + item.phase) * 0.1;
       });
     }
   });
 
   return (
-    <group ref={spheresGroupRef}>
-      {sphereData.map((item, idx) => (
+    <group ref={groupRef}>
+      {orbsData.map((item, idx) => (
         <mesh key={idx} position={item.pos}>
           <sphereGeometry args={[item.radius, 32, 32]} />
           <meshPhysicalMaterial
             color={item.color}
             emissive={item.emissive}
-            emissiveIntensity={0.25}
-            roughness={0.12}
-            metalness={0.25}
+            emissiveIntensity={0.2}
+            roughness={0.25}
+            metalness={0.15}
             clearcoat={1.0}
-            clearcoatRoughness={0.06}
-            reflectivity={0.9}
+            clearcoatRoughness={0.12}
+            transmission={0.6}
+            thickness={0.8}
             transparent
-            opacity={0.92}
+            opacity={item.opacity}
+            depthWrite={false}
           />
         </mesh>
       ))}
@@ -203,9 +83,9 @@ const FloatingPastelSpheres = ({ mouseRef, isReducedMotion }) => {
 };
 
 /**
- * Soft Ambient Particles in Vibrant Sunset Palette
+ * Soft Ambient Depth Particles in Pastel Palette
  */
-const AmbientPastelParticles = ({ count = 40 }) => {
+const AmbientPastelDust = ({ count = 35 }) => {
   const pointsRef = useRef(null);
 
   const [positions, colors] = useMemo(() => {
@@ -213,9 +93,9 @@ const AmbientPastelParticles = ({ count = 40 }) => {
     const col = new Float32Array(count * 3);
 
     const colorPalette = [
-      new THREE.Color('#D59CC5'), // Soft Sunset Rose
-      new THREE.Color('#BE5CA9'), // Vibrant Sunset Magenta
-      new THREE.Color('#4D3A4D')  // Deep Plum
+      new THREE.Color('#D59CC5'),
+      new THREE.Color('#BE5CA9'),
+      new THREE.Color('#4D3A4D')
     ];
 
     for (let i = 0; i < count; i++) {
@@ -224,13 +104,13 @@ const AmbientPastelParticles = ({ count = 40 }) => {
       const r3 = pseudoRandom(i * 3.14 + 7);
       const r4 = pseudoRandom(i * 4.92 + 11);
 
-      const radius = 1.6 + r1 * 2.2;
+      const radius = 2.0 + r1 * 2.5;
       const theta = r2 * Math.PI * 2;
       const phi = Math.acos(2 * r3 - 1);
 
       pos[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
       pos[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-      pos[i * 3 + 2] = radius * Math.cos(phi) * 0.6 - 0.9;
+      pos[i * 3 + 2] = -1.5 - r3 * 1.8; // Strictly deep behind portrait
 
       const chosenColor = colorPalette[Math.floor(r4 * colorPalette.length)];
       col[i * 3] = chosenColor.r;
@@ -244,8 +124,8 @@ const AmbientPastelParticles = ({ count = 40 }) => {
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
     if (pointsRef.current) {
-      pointsRef.current.rotation.y = time * 0.025;
-      pointsRef.current.rotation.x = Math.sin(time * 0.015) * 0.03;
+      pointsRef.current.rotation.y = time * 0.018;
+      pointsRef.current.rotation.x = Math.sin(time * 0.012) * 0.02;
     }
   });
 
@@ -262,10 +142,10 @@ const AmbientPastelParticles = ({ count = 40 }) => {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.042}
+        size={0.045}
         vertexColors
         transparent
-        opacity={0.55}
+        opacity={0.5}
         blending={THREE.NormalBlending}
         depthWrite={false}
       />
@@ -274,7 +154,9 @@ const AmbientPastelParticles = ({ count = 40 }) => {
 };
 
 /**
- * Hero3DCanvas: Renders the 3D pastel environment behind the authentic portrait.
+ * Hero3DCanvas: Soft Atmospheric 3D Environment
+ * NO rings, NO loops, NO tubes, NO toruses, NO cages.
+ * Pure atmospheric depth layers and soft volumetric pastel light.
  */
 const Hero3DCanvas = ({ className = '', style = {} }) => {
   const mouseRef = useRef({ x: 0, y: 0 });
@@ -305,7 +187,7 @@ const Hero3DCanvas = ({ className = '', style = {} }) => {
   return (
     <div className={`hero-3d-canvas-container ${className}`} style={style} aria-hidden="true">
       <Canvas
-        camera={{ position: [0, 0, 5.2], fov: 44 }}
+        camera={{ position: [0, 0, 5.5], fov: 45 }}
         dpr={[1, Math.min(typeof window !== 'undefined' ? window.devicePixelRatio : 1, 2)]}
         gl={{
           antialias: true,
@@ -315,47 +197,44 @@ const Hero3DCanvas = ({ className = '', style = {} }) => {
         style={{ width: '100%', height: '100%', pointerEvents: 'none' }}
       >
         {/* Soft Ambient Fill: #EADADA */}
-        <ambientLight color="#EADADA" intensity={2.2} />
+        <ambientLight color="#EADADA" intensity={2.4} />
         
-        {/* Key Directional Light: #D59CC5 (Soft sunset illumination) */}
+        {/* Key Directional Light: #D59CC5 */}
         <directionalLight
-          position={[3.5, 3.2, 3.2]}
+          position={[3.2, 3.0, 2.5]}
           color="#D59CC5"
-          intensity={4.5}
+          intensity={4.0}
         />
 
-        {/* Accent Point Light: #BE5CA9 (Warm magenta orchid rim) */}
+        {/* Accent Point Light: #BE5CA9 */}
         <pointLight
-          position={[-3.5, -1.2, 2.5]}
+          position={[-3.2, -1.0, 2.0]}
           color="#BE5CA9"
-          intensity={5.2}
-          distance={16}
+          intensity={4.5}
+          distance={15}
         />
 
         {/* Soft Top Glow: #D59CC5 */}
         <pointLight
-          position={[0, 3.5, 1.8]}
+          position={[0, 3.2, 1.5]}
           color="#D59CC5"
-          intensity={3.2}
+          intensity={3.0}
           distance={12}
         />
 
-        {/* Deep Plum Depth Light: #4D3A4D */}
+        {/* Deep Plum Backlight: #4D3A4D */}
         <pointLight
           position={[0, 0, -3.5]}
           color="#4D3A4D"
-          intensity={4.0}
+          intensity={3.8}
           distance={12}
         />
 
-        {/* Translucent 3D Flowing Ribbons */}
-        <TranslucentFlowingRibbon mouseRef={mouseRef} isReducedMotion={isReducedMotion} />
+        {/* Atmospheric Floating Pastel Orbs */}
+        <AtmosphericPastelOrbs mouseRef={mouseRef} isReducedMotion={isReducedMotion} />
 
-        {/* Floating Glossy Pastel Spheres */}
-        <FloatingPastelSpheres mouseRef={mouseRef} isReducedMotion={isReducedMotion} />
-
-        {/* Ambient Pastel Dust Particles */}
-        <AmbientPastelParticles count={40} />
+        {/* Subtle Ambient Dust Particles */}
+        <AmbientPastelDust count={35} />
       </Canvas>
     </div>
   );

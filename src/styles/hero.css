@@ -312,8 +312,8 @@
 .hero-portrait-wrapper {
   position: relative;
   z-index: 2;
-  width: min(390px, 82vw);
-  aspect-ratio: 3 / 4.15;
+  width: min(460px, 90vw);
+  aspect-ratio: 1.16 / 1;
   background: transparent;
   border: none;
   box-shadow: none;
@@ -342,7 +342,7 @@
   object-fit: contain;
   object-position: center bottom;
   display: block;
-  filter: drop-shadow(0 18px 40px rgba(77, 58, 77, 0.14)) drop-shadow(0 0 30px rgba(190, 92, 169, 0.22));
+  filter: drop-shadow(0 18px 45px rgba(77, 58, 77, 0.16)) drop-shadow(0 0 32px rgba(190, 92, 169, 0.24));
   /* Soft bottom fade so the dress merges seamlessly into the background */
   mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, #000000 0%, #000000 88%, transparent 100%);
@@ -523,8 +523,8 @@
   }
 
   .hero-portrait-wrapper {
-    width: min(290px, 78vw);
-    aspect-ratio: 3 / 4.15;
+    width: min(340px, 88vw);
+    aspect-ratio: 1.16 / 1;
     background: transparent;
     border: none;
     box-shadow: none;

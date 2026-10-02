@@ -3,7 +3,7 @@ import { ArrowUpRight, MessageCircle } from 'lucide-react';
 import { gsap, ScrollTrigger, scrollToSection } from '../animations/gsapUtils';
 import Hero3DCanvas from '../components/Hero3DCanvas';
 import MagneticButton from '../components/MagneticButton';
-import portraitImg from '../assets/atiya-portrait.png';
+import portraitImg from '../assets/atiya-cutout.png';
 
 /**
  * HomeSection (Phase 2): Full-screen Cinematic 3D Hero.
