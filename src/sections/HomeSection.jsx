@@ -6,11 +6,11 @@ import portraitNormal from '../assets/atiya-normal.png';
 
 /**
  * HomeSection: Cinematic Editorial Hero for Atiya Ali Portfolio
- * Visual Target: Reference Image 1
- * - Visually dominant editorial typography (ATIYA ALI)
- * - Large seamless portrait (85-95vh) blended naturally into continuous sunset atmosphere
- * - Rich layered gradients (#EADADA, #D59CC5, #BE5CA9, #4D3A4D)
- * - Clean editorial hierarchy & smooth GSAP entrance
+ * Strict Requirements:
+ * - Exactly 100dvh viewport height (no overflow, no extra scroll)
+ * - Vertically centered large portrait (85-90vh) positioned center-right
+ * - Rich Light (#EADADA) -> Pink (#D59CC5) -> Magenta (#BE5CA9) -> Dark Plum (#4D3A4D) gradient
+ * - Typography 100% visible below navbar with balanced editorial spacing
  */
 const HomeSection = () => {
   const sectionRef = useRef(null);
@@ -50,27 +50,27 @@ const HomeSection = () => {
       // Initial state: hidden / blurred for cinematic entrance
       gsap.set([glowAtmosphereRef.current, glowPinkRef.current, glowPlumRef.current], { opacity: 0 });
       gsap.set('.hero-bg-waves', { opacity: 0, scale: 0.96 });
-      gsap.set(portraitRef.current, { opacity: 0, y: 30, scale: 1.04, filter: 'blur(10px)' });
-      gsap.set('.hero-status-pill', { opacity: 0, y: 16 });
-      gsap.set(nameAtiyaRef.current, { opacity: 0, y: 40, filter: 'blur(8px)' });
-      gsap.set(nameAliRef.current, { opacity: 0, y: 40, filter: 'blur(8px)' });
-      gsap.set('.hero-tagline', { opacity: 0, y: 20 });
-      gsap.set('.hero-editorial-statement', { opacity: 0, y: 20 });
-      gsap.set('.hero-description', { opacity: 0, y: 20 });
-      gsap.set('.magnetic-btn', { opacity: 0, y: 18, scale: 0.96 });
-      gsap.set('.hero-scroll-indicator', { opacity: 0, y: 15 });
+      gsap.set(portraitRef.current, { opacity: 0, y: 25, scale: 1.03, filter: 'blur(10px)' });
+      gsap.set('.hero-status-pill', { opacity: 0, y: 14 });
+      gsap.set(nameAtiyaRef.current, { opacity: 0, y: 35, filter: 'blur(8px)' });
+      gsap.set(nameAliRef.current, { opacity: 0, y: 35, filter: 'blur(8px)' });
+      gsap.set('.hero-tagline', { opacity: 0, y: 18 });
+      gsap.set('.hero-editorial-statement', { opacity: 0, y: 18 });
+      gsap.set('.hero-description', { opacity: 0, y: 18 });
+      gsap.set('.magnetic-btn', { opacity: 0, y: 16, scale: 0.96 });
+      gsap.set('.hero-scroll-indicator', { opacity: 0, y: 12 });
 
       // Orchestrated Cinematic Entrance Timeline
       const entranceTl = gsap.timeline({
         defaults: { ease: 'power3.out' },
-        delay: 0.15
+        delay: 0.1
       });
 
       entranceTl
-        // 1. Background atmospheric glows & waves fade in smoothly
+        // 1. Atmospheric glows & wave shapes fade in
         .to([glowAtmosphereRef.current, glowPinkRef.current, glowPlumRef.current], {
           opacity: 1,
-          duration: 1.5,
+          duration: 1.4,
           ease: 'power2.out'
         })
         .to(
@@ -78,12 +78,12 @@ const HomeSection = () => {
           {
             opacity: 1,
             scale: 1,
-            duration: 1.6,
+            duration: 1.5,
             ease: 'expo.out'
           },
           '-=1.2'
         )
-        // 2. Large authentic portrait reveals with blur-to-sharp & subtle settle scale
+        // 2. Vertically centered authentic portrait reveals
         .to(
           portraitRef.current,
           {
@@ -91,7 +91,7 @@ const HomeSection = () => {
             y: 0,
             scale: 1,
             filter: 'blur(0px)',
-            duration: 1.4,
+            duration: 1.3,
             ease: 'power3.out',
             clearProps: 'filter'
           },
@@ -103,7 +103,7 @@ const HomeSection = () => {
           {
             opacity: 1,
             y: 0,
-            duration: 0.75
+            duration: 0.7
           },
           '-=1.0'
         )
@@ -113,7 +113,7 @@ const HomeSection = () => {
             opacity: 1,
             y: 0,
             filter: 'blur(0px)',
-            duration: 1.2,
+            duration: 1.1,
             ease: 'power3.out',
             clearProps: 'filter'
           },
@@ -126,11 +126,11 @@ const HomeSection = () => {
             opacity: 1,
             y: 0,
             filter: 'blur(0px)',
-            duration: 1.2,
+            duration: 1.1,
             ease: 'power3.out',
             clearProps: 'filter'
           },
-          '-=0.95'
+          '-=0.9'
         )
         // 5. Tagline, Quote & Description
         .to(
@@ -138,20 +138,20 @@ const HomeSection = () => {
           {
             opacity: 1,
             y: 0,
-            stagger: 0.14,
-            duration: 0.85
+            stagger: 0.12,
+            duration: 0.8
           },
           '-=0.75'
         )
-        // 6. Action buttons
+        // 6. Buttons
         .to(
           '.magnetic-btn',
           {
             opacity: 1,
             y: 0,
             scale: 1,
-            stagger: 0.12,
-            duration: 0.75
+            stagger: 0.1,
+            duration: 0.7
           },
           '-=0.55'
         )
@@ -161,17 +161,17 @@ const HomeSection = () => {
           {
             opacity: 1,
             y: 0,
-            duration: 0.75,
+            duration: 0.7,
             ease: 'power2.out'
           },
           '-=0.4'
         );
 
-      // Subtle Parallax Scroll Animation into next section
+      // Subtle Parallax on scroll
       if (typeof ScrollTrigger !== 'undefined') {
         gsap.to('.hero-content-left', {
-          y: -40,
-          opacity: 0.7,
+          y: -35,
+          opacity: 0.6,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top top',
@@ -181,24 +181,13 @@ const HomeSection = () => {
         });
 
         gsap.to(portraitRef.current, {
-          y: -25,
+          y: -20,
           scale: 0.98,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top top',
             end: 'bottom top',
             scrub: 1
-          }
-        });
-
-        gsap.to(['.hero-bg-waves', glowAtmosphereRef.current, glowPinkRef.current], {
-          y: 30,
-          opacity: 0.5,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1.4
           }
         });
       }
@@ -215,14 +204,14 @@ const HomeSection = () => {
       aria-label="Atiya Ali Portfolio Presentation"
     >
       {/* ==========================================================================
-          CONTINUOUS ATMOSPHERIC SUNSET GRADIENT & FLUID BACKDROP
-          Strictly locked colors: #EADADA (Base), #D59CC5 (Lavender), #BE5CA9 (Magenta), #4D3A4D (Deep Plum)
+          FULL-SCREEN CONTINUOUS SUNSET ATMOSPHERE
+          Light (#EADADA) -> Soft Pink (#D59CC5) -> Magenta (#BE5CA9) -> Deep Plum (#4D3A4D)
           ========================================================================== */}
       <div ref={glowAtmosphereRef} className="hero-glow-atmosphere" aria-hidden="true" />
       <div ref={glowPinkRef} className="hero-glow-pink" aria-hidden="true" />
       <div ref={glowPlumRef} className="hero-glow-plum" aria-hidden="true" />
 
-      {/* Elegant Atmospheric Fluid Wave Shapes matching Reference Image */}
+      {/* Atmospheric Fluid Wave Curves */}
       <div className="hero-bg-waves" aria-hidden="true">
         <svg
           viewBox="0 0 1440 900"
@@ -232,48 +221,45 @@ const HomeSection = () => {
           className="hero-waves-svg"
         >
           <defs>
-            {/* Primary soft lavender/pink wave gradient */}
-            <linearGradient id="waveGrad1" x1="45%" y1="0%" x2="100%" y2="100%">
+            <linearGradient id="waveGradDeep" x1="15%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#EADADA" stopOpacity="0" />
-              <stop offset="35%" stopColor="#D59CC5" stopOpacity="0.42" />
-              <stop offset="70%" stopColor="#BE5CA9" stopOpacity="0.38" />
-              <stop offset="100%" stopColor="#4D3A4D" stopOpacity="0.25" />
+              <stop offset="30%" stopColor="#D59CC5" stopOpacity="0.35" />
+              <stop offset="65%" stopColor="#BE5CA9" stopOpacity="0.55" />
+              <stop offset="100%" stopColor="#4D3A4D" stopOpacity="0.75" />
             </linearGradient>
 
-            {/* Deep atmospheric backdrop curve */}
-            <linearGradient id="waveGrad2" x1="20%" y1="20%" x2="95%" y2="90%">
-              <stop offset="0%" stopColor="#D59CC5" stopOpacity="0.15" />
-              <stop offset="50%" stopColor="#BE5CA9" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#4D3A4D" stopOpacity="0.45" />
+            <linearGradient id="waveGradMid" x1="30%" y1="20%" x2="95%" y2="90%">
+              <stop offset="0%" stopColor="#D59CC5" stopOpacity="0.2" />
+              <stop offset="50%" stopColor="#BE5CA9" stopOpacity="0.45" />
+              <stop offset="100%" stopColor="#4D3A4D" stopOpacity="0.65" />
             </linearGradient>
 
-            {/* Soft highlight arc */}
-            <linearGradient id="waveGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.28" />
-              <stop offset="60%" stopColor="#D59CC5" stopOpacity="0.22" />
+            <linearGradient id="waveGradHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.25" />
+              <stop offset="55%" stopColor="#D59CC5" stopOpacity="0.2" />
               <stop offset="100%" stopColor="#BE5CA9" stopOpacity="0.05" />
             </linearGradient>
           </defs>
 
-          {/* Deep ambient background sweep */}
+          {/* Deep plum backdrop wave */}
           <path
-            d="M580 0 C780 120 920 320 1020 540 C1120 740 1260 840 1440 900 L1440 0 Z"
-            fill="url(#waveGrad2)"
-            opacity="0.85"
-          />
-
-          {/* Flowing mid-ground organic curve behind portrait */}
-          <path
-            d="M620 0 C760 180 880 360 1000 520 C1140 700 1280 820 1440 880 L1440 900 L680 900 C620 760 580 580 620 400 Z"
-            fill="url(#waveGrad1)"
+            d="M600 0 C780 140 910 320 1020 540 C1120 740 1260 840 1440 900 L1440 0 Z"
+            fill="url(#waveGradDeep)"
             opacity="0.9"
           />
 
-          {/* Delicate luminous rim sweep */}
+          {/* Mid-tone magenta/plum wave */}
+          <path
+            d="M640 0 C760 180 870 360 990 520 C1130 700 1270 820 1440 880 L1440 900 L680 900 C620 760 590 580 630 400 Z"
+            fill="url(#waveGradMid)"
+            opacity="0.85"
+          />
+
+          {/* Delicate luminous arc */}
           <path
             d="M520 900 C620 720 780 540 960 400 C1140 260 1300 120 1440 60 L1440 0 C1280 80 1100 220 920 380 C740 520 580 700 480 900 Z"
-            fill="url(#waveGrad3)"
-            opacity="0.65"
+            fill="url(#waveGradHighlight)"
+            opacity="0.6"
           />
         </svg>
       </div>
@@ -325,7 +311,7 @@ const HomeSection = () => {
               ariaLabel="Explore my projects and work"
             >
               <span>EXPLORE MY WORK</span>
-              <ArrowUpRight size={17} />
+              <ArrowUpRight size={16} />
             </MagneticButton>
 
             <MagneticButton
@@ -335,7 +321,7 @@ const HomeSection = () => {
               ariaLabel="Contact Atiya Ali"
             >
               <span>CONTACT ME</span>
-              <MessageCircle size={16} />
+              <MessageCircle size={15} />
             </MagneticButton>
           </div>
 
@@ -354,14 +340,14 @@ const HomeSection = () => {
         </div>
 
         {/* ==========================================================================
-            RIGHT COLUMN: LARGE SEAMLESS EDITORIAL PORTRAIT (85-95vh)
+            RIGHT COLUMN: LARGE VERTICALLY CENTERED EDITORIAL PORTRAIT (85-90vh)
             Strictly NO square, NO rectangle, NO card, NO frame, NO border
             ========================================================================== */}
         <div className="hero-visual-right">
           {/* Soft Radial Ambient Glow Behind Portrait */}
           <div className="hero-portrait-ambient-glow" aria-hidden="true" />
 
-          {/* Authentic Portrait Container */}
+          {/* Vertically Centered Authentic Portrait Container */}
           <div ref={portraitRef} className="hero-portrait-wrapper">
             <img
               src={portraitNormal}
