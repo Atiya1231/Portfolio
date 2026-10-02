@@ -282,10 +282,13 @@ const HomeSection = () => {
             <span>DEVELOPER</span>
           </div>
 
-          {/* Description */}
+          {/* Supporting Statement & Description */}
+          <p className="hero-editorial-statement">
+            "Building digital experiences where technology meets creativity."
+          </p>
+
           <p className="hero-description">
-            Building ideas into digital experiences. Crafting immersive web applications with 
-            modern engineering, precision aesthetics, and interactive 3D environments.
+            Crafting immersive web applications with modern engineering, precision aesthetics, and interactive 3D environments.
           </p>
 
           {/* Magnetic CTA Buttons */}

@@ -3,12 +3,12 @@ import { Menu, X } from 'lucide-react';
 import { scrollToSection } from '../animations/gsapUtils';
 
 const NAV_ITEMS = [
-  { id: 'home', label: 'HOME', phase: '02' },
-  { id: 'about', label: 'ABOUT', phase: '03' },
-  { id: 'skills', label: 'SKILLS', phase: '04' },
-  { id: 'projects', label: 'PROJECTS', phase: '05' },
-  { id: 'journey', label: 'JOURNEY', phase: '06' },
-  { id: 'contact', label: 'CONTACT', phase: '07' },
+  { id: 'home', label: 'HOME', index: '01' },
+  { id: 'about', label: 'ABOUT', index: '02' },
+  { id: 'skills', label: 'SKILLS', index: '03' },
+  { id: 'projects', label: 'PROJECTS', index: '04' },
+  { id: 'journey', label: 'JOURNEY', index: '05' },
+  { id: 'contact', label: 'CONTACT', index: '06' },
 ];
 
 const Navbar = () => {
@@ -117,7 +117,7 @@ const Navbar = () => {
               onClick={(e) => handleNavClick(e, item.id)}
             >
               <span>{item.label}</span>
-              <span className="index">PHASE {item.phase}</span>
+              <span className="index">{item.index} // 06</span>
             </a>
           ))}
         </div>

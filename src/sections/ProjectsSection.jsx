@@ -1,22 +1,202 @@
-import React from 'react';
-import SectionPlaceholder from '../components/SectionPlaceholder';
+import React, { useRef, useEffect } from 'react';
+import { Briefcase, ArrowUpRight, CheckCircle2, Sparkles } from 'lucide-react';
+import { gsap, ScrollTrigger } from '../animations/gsapUtils';
+import GithubIcon from '../components/GithubIcon';
 
+const PROJECTS = [
+  {
+    id: 'student-management',
+    num: '01',
+    title: 'Student Attendance & Performance Management System',
+    subtitle: 'Academic Tracking, Automated Scoring & Analytical Reporting',
+    category: 'FULL STACK / WEB APPLICATION',
+    description:
+      'A comprehensive institutional portal engineered to streamline daily student attendance recording, calculate cumulative GPA and semester scores, and generate automated performance reports. Built with relational MySQL database schemas for data integrity and an intuitive dashboard.',
+    features: [
+      'Daily attendance tracking with automated absentee summary reports',
+      'Automated aggregate grade scoring and GPA calculation engine',
+      'Relational student profiling linked to relational MySQL backend',
+      'Modular administrative control panel with role-based access'
+    ],
+    tech: ['React.js', 'JavaScript', 'Node.js', 'MySQL', 'CSS Modules', 'REST API'],
+    mockupType: 'dashboard',
+    githubUrl: 'https://github.com/Atiya1231'
+  },
+  {
+    id: 'smart-waste',
+    num: '02',
+    title: 'Smart Waste Management System',
+    subtitle: 'Urban Sustainability & Waste Logistics Platform',
+    category: 'IOT & DATA SYSTEMS / WEB APPLICATION',
+    description:
+      'An intelligent urban resource management platform designed to monitor disposal cycles, classify categorized waste streams (organic, recyclable, hazardous), and optimize collection logistics across urban sectors to reduce municipal carbon footprints.',
+    features: [
+      'Categorical waste sorting analytics and volume throughput metrics',
+      'Collection schedule optimization and route efficiency planning',
+      'Interactive municipal dashboard with categorical data breakdown',
+      'Real-time status tracking for bin capacity thresholds'
+    ],
+    tech: ['JavaScript', 'Python', 'MySQL', 'CSS Grid', 'Data Visualizers', 'REST API'],
+    mockupType: 'analytics',
+    githubUrl: 'https://github.com/Atiya1231'
+  },
+  {
+    id: 'portfolio-3d',
+    num: '03',
+    title: 'Personal 3D Editorial Portfolio',
+    subtitle: 'Cinematic WebGL & Editorial Magazine Experience',
+    category: 'CREATIVE DEVELOPMENT / 3D WEB',
+    description:
+      'An immersive developer portfolio fusing high-contrast editorial serif typography with real-time 3D WebGL digital sculpture, GSAP entrance choreography, and the Vibrant Sunset design system. Crafted for peak visual distinction and responsive performance.',
+    features: [
+      'Interactive 3D WebGL digital ribbon sculpture with Three.js & R3F',
+      '8-step orchestrated GSAP entrance choreography & scroll parallax',
+      'Bespoke Vibrant Sunset color system with high-contrast readability',
+      'Seamless mobile composition and responsive performance optimization'
+    ],
+    tech: ['React 19', 'Three.js', 'React Three Fiber', 'GSAP', 'Vite', 'Vanilla CSS'],
+    mockupType: 'creative',
+    githubUrl: 'https://github.com/Atiya1231/Portfolio'
+  }
+];
+
+/**
+ * ProjectsSection (Phase 3): Large Editorial Project Showcase
+ * Presents real projects with rich metadata, feature breakdowns, and tech stacks.
+ */
 const ProjectsSection = () => {
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isReducedMotion) return;
+
+    const ctx = gsap.context(() => {
+      if (typeof ScrollTrigger !== 'undefined') {
+        gsap.from('.project-showcase-animate', {
+          y: 45,
+          opacity: 0,
+          duration: 0.95,
+          stagger: 0.2,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 75%',
+            toggleActions: 'play none none none'
+          }
+        });
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <SectionPlaceholder
-      id="projects"
-      indexNumber="04 // 06"
-      phaseLabel="PHASE 5 MODULE"
-      title="PROJECTS — PHASE 5"
-      subtitle="FEATURED CASE STUDIES & LIVE DEPLOYMENTS"
-      description="In Phase 5, this section will highlight selected projects, applications, and web experiences with interactive preview cards, live deployment links, GitHub repositories, and tech breakdowns."
-      blueprintItems={[
-        { label: 'DELIVERABLE 01', value: 'Interactive Project Showcase Cards' },
-        { label: 'DELIVERABLE 02', value: 'Live Demo & Repository Links' },
-        { label: 'DELIVERABLE 03', value: 'Architecture & Tech Stack Badges' },
-        { label: 'DELIVERABLE 04', value: 'Hover Previews & Motion Transitions' }
-      ]}
-    />
+    <section id="projects" ref={sectionRef} className="section-wrapper" aria-label="Selected Projects">
+      <div className="section-container">
+        {/* Editorial Section Header */}
+        <div className="editorial-section-header">
+          <div className="editorial-header-top">
+            <span className="editorial-index-badge">04 // 06</span>
+            <span className="editorial-tag-chip">
+              <Briefcase size={13} />
+              <span>PORTFOLIO SHOWCASE</span>
+            </span>
+          </div>
+          <h2 className="editorial-main-title">SELECTED WORK</h2>
+          <span className="editorial-subtitle">ACADEMIC, WEB APPLICATION & CREATIVE COMPUTING PROJECTS</span>
+        </div>
+
+        {/* Large Editorial Projects List */}
+        <div className="projects-showcase-list">
+          {PROJECTS.map((proj) => (
+            <article key={proj.id} className="project-showcase-card project-showcase-animate interactive">
+              {/* Left Column: Project Details & Tech Stack */}
+              <div className="project-content-left">
+                <div className="project-meta-header">
+                  <span className="project-num-badge">{proj.num} // 03</span>
+                  <span className="project-category-pill">{proj.category}</span>
+                </div>
+
+                <div>
+                  <h3 className="project-title">{proj.title}</h3>
+                  <div className="project-subtitle">{proj.subtitle}</div>
+                </div>
+
+                <p className="project-desc">{proj.description}</p>
+
+                {/* Key Feature Highlights */}
+                <div className="project-features-list">
+                  {proj.features.map((feat, fIdx) => (
+                    <div key={fIdx} className="project-feature-item">
+                      <CheckCircle2 size={14} color="var(--color-secondary)" style={{ flexShrink: 0 }} />
+                      <span>{feat}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Tech Chips */}
+                <div className="project-tech-stack">
+                  {proj.tech.map((t, tIdx) => (
+                    <span key={tIdx} className="project-tech-chip">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Actions */}
+                <div className="project-actions-group">
+                  <a
+                    href={proj.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="magnetic-btn magnetic-btn-primary"
+                    style={{ textDecoration: 'none' }}
+                    aria-label={`View ${proj.title} on GitHub`}
+                  >
+                    <span className="magnetic-btn-content">
+                      <GithubIcon size={15} />
+                      <span>SOURCE CODE</span>
+                      <ArrowUpRight size={15} />
+                    </span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Right Column: Visual Mockup Showcase Container */}
+              <div className="project-visual-right" aria-hidden="true">
+                <div className="project-mockup-frame">
+                  <div className="mockup-header-bar">
+                    <div className="mockup-dots">
+                      <span className="mockup-dot" />
+                      <span className="mockup-dot" />
+                      <span className="mockup-dot" />
+                    </div>
+                    <span className="mockup-badge">
+                      <Sparkles size={11} style={{ display: 'inline', marginRight: '3px' }} />
+                      {proj.category.split('/')[0].trim()}
+                    </span>
+                  </div>
+
+                  <div className="mockup-body-preview">
+                    <div className="mockup-body-title">{proj.title}</div>
+                    <div className="mockup-body-sub">{proj.subtitle}</div>
+                  </div>
+
+                  <div className="mockup-footer-tags">
+                    {proj.tech.slice(0, 3).map((techItem, techIdx) => (
+                      <span key={techIdx} className="mockup-footer-tag">
+                        {techItem}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 };
 

@@ -27,10 +27,12 @@
   --glow-tertiary: 0 0 25px rgba(213, 156, 197, 0.35);
   --glow-plum: 0 0 30px rgba(77, 58, 77, 0.18);
 
-  /* Typography */
-  --font-display: 'Syne', sans-serif;
+  /* Typography System (Editorial Serif Display + Clean Modern Sans UI) */
+  --font-display: 'Bodoni Moda', 'Playfair Display', 'Italiana', Georgia, serif;
+  --font-serif: 'Playfair Display', 'Bodoni Moda', Georgia, serif;
   --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+  --font-accent: 'Syne', sans-serif;
 
   /* Layout & Spacing */
   --nav-height: 80px;
