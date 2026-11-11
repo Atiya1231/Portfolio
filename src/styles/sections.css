@@ -10,6 +10,7 @@
   border-bottom: 1px solid rgba(77, 58, 77, 0.1);
   overflow: hidden;
   background-color: var(--bg-primary);
+  contain: layout style;
 }
 
 .section-wrapper:first-of-type {
@@ -284,5 +285,11 @@
   .footer-inner {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-wrapper {
+    padding: clamp(3.2rem, 6vh, 4rem) 1rem;
   }
 }

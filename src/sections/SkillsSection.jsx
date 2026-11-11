@@ -1,83 +1,83 @@
-import React, { useRef, useEffect } from 'react';
-import { Layers, Layout, Terminal, Database, Wrench, Palette } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Pause, Play } from 'lucide-react';
 import { gsap, ScrollTrigger } from '../animations/gsapUtils';
 
+/**
+ * Atiya's Technical Toolkit Dataset
+ * Exactly 5 distinct skill categories in a continuous horizontal strip.
+ */
 const SKILL_CATEGORIES = [
   {
     id: 'frontend',
-    title: 'FRONTEND ENGINEERING',
-    icon: Layout,
-    skills: [
-      { name: 'HTML5', highlight: true },
-      { name: 'CSS3 / Vanilla CSS', highlight: true },
-      { name: 'JavaScript (ES6+)', highlight: true },
-      { name: 'React.js', highlight: true },
-      { name: 'Responsive Web Design', highlight: false },
-      { name: 'CSS Grid & Flexbox', highlight: false },
-      { name: 'DOM Manipulation', highlight: false },
-      { name: 'Component Architecture', highlight: false }
+    number: '01',
+    name: 'FRONTEND',
+    techs: [
+      { id: 'html', name: 'HTML5' },
+      { id: 'css', name: 'CSS3 / VANILLA CSS' },
+      { id: 'javascript', name: 'JAVASCRIPT' },
+      { id: 'react', name: 'REACT' }
     ]
   },
   {
     id: 'programming',
-    title: 'PROGRAMMING & LOGIC',
-    icon: Terminal,
-    skills: [
-      { name: 'Java', highlight: true },
-      { name: 'Python', highlight: true },
-      { name: 'C / C++', highlight: true },
-      { name: 'Object-Oriented Programming (OOP)', highlight: false },
-      { name: 'Data Structures & Algorithms', highlight: false },
-      { name: 'Computational Problem Solving', highlight: false }
+    number: '02',
+    name: 'PROGRAMMING',
+    techs: [
+      { id: 'java', name: 'JAVA' },
+      { id: 'python', name: 'PYTHON' },
+      { id: 'cpp', name: 'C / C++' },
+      { id: 'dsa', name: 'DATA STRUCTURES' }
     ]
   },
   {
-    id: 'database',
-    title: 'DATABASE & BACKEND',
-    icon: Database,
-    skills: [
-      { name: 'MySQL', highlight: true },
-      { name: 'Relational Database Design', highlight: true },
-      { name: 'SQL Query Optimization', highlight: false },
-      { name: 'CRUD Architectures', highlight: false },
-      { name: 'RESTful API Integration', highlight: false }
+    id: 'backend',
+    number: '03',
+    name: 'BACKEND & DATABASE',
+    techs: [
+      { id: 'nodejs', name: 'NODE.JS' },
+      { id: 'mysql', name: 'MYSQL' },
+      { id: 'rest', name: 'REST APIS' },
+      { id: 'crud', name: 'CRUD PIPELINES' }
     ]
   },
   {
     id: 'tools',
-    title: 'TOOLS & WORKFLOW',
-    icon: Wrench,
-    skills: [
-      { name: 'Git', highlight: true },
-      { name: 'GitHub', highlight: true },
-      { name: 'VS Code', highlight: true },
-      { name: 'Vite', highlight: false },
-      { name: 'PowerShell / Terminal', highlight: false },
-      { name: 'Chrome Developer Tools', highlight: false }
+    number: '04',
+    name: 'TOOLS & WORKFLOW',
+    techs: [
+      { id: 'git', name: 'GIT' },
+      { id: 'github', name: 'GITHUB' },
+      { id: 'vscode', name: 'VS CODE' },
+      { id: 'vite', name: 'VITE' }
     ]
   },
   {
-    id: 'design',
-    title: 'DESIGN & CREATIVE TECH',
-    icon: Palette,
-    skills: [
-      { name: 'UI / UX Design Principles', highlight: true },
-      { name: 'Figma', highlight: true },
-      { name: 'Adobe Photoshop', highlight: true },
-      { name: 'Adobe Illustrator', highlight: true },
-      { name: 'Three.js / WebGL Basics', highlight: false },
-      { name: 'GSAP Animation', highlight: false }
+    id: 'creative',
+    number: '05',
+    name: 'CREATIVE TECH',
+    techs: [
+      { id: 'ui-design', name: 'UI / VISUAL DESIGN' },
+      { id: 'interactive', name: 'INTERACTIVE UI' },
+      { id: 'photoshop', name: 'PHOTOSHOP' },
+      { id: 'illustrator', name: 'ILLUSTRATOR' }
     ]
   }
 ];
 
 /**
- * SkillsSection: Interactive Editorial Skill Showcase
- * Displays real technical competencies categorized clearly without generic percentage bars.
+ * SkillsSection: "ATIYA'S TOOLKIT"
+ * Horizontal Moving Liquid-Glass Skill Strip.
+ * All 5 categories travel continuously as one connected unit from Left to Right.
  */
 const SkillsSection = () => {
   const sectionRef = useRef(null);
+  const [isMotionPaused, setIsMotionPaused] = useState(false);
 
+  const toggleMotion = () => {
+    setIsMotionPaused((prev) => !prev);
+  };
+
+  // Scroll entrance reveal
   useEffect(() => {
     const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (isReducedMotion) return;
@@ -88,39 +88,28 @@ const SkillsSection = () => {
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top 80%',
-            toggleActions: 'play none none none'
+            toggleActions: 'play none none none',
+            onComplete: () => {
+              gsap.set(['.skill-strip-header-reveal', '.skill-strip-viewport'], {
+                clearProps: 'opacity,transform'
+              });
+            }
           }
         });
 
-        tl.from('.skills-header-animate', {
+        tl.from('.skill-strip-header-reveal', {
           y: 28,
           opacity: 0,
           duration: 0.8,
-          stagger: 0.1,
+          stagger: 0.08,
           ease: 'power3.out'
         })
-        .from(
-          '.skills-card-animate',
-          {
-            y: 35,
-            opacity: 0,
-            duration: 0.85,
-            stagger: 0.12,
-            ease: 'power3.out'
-          },
-          '-=0.5'
-        )
-        .from(
-          '.skill-tag-item',
-          {
-            y: 12,
-            opacity: 0,
-            duration: 0.5,
-            stagger: 0.02,
-            ease: 'power2.out'
-          },
-          '-=0.4'
-        );
+        .from('.skill-strip-viewport', {
+          opacity: 0,
+          y: 30,
+          duration: 0.85,
+          ease: 'power3.out'
+        }, '-=0.4');
       }
     }, sectionRef);
 
@@ -128,49 +117,101 @@ const SkillsSection = () => {
   }, []);
 
   return (
-    <section id="skills" ref={sectionRef} className="section-wrapper" aria-label="Technical Skills">
-      <div className="section-container">
-        {/* Editorial Section Header */}
-        <div className="editorial-section-header">
-          <h2 className="editorial-main-title skills-header-animate">
-            MY <span className="heading-gradient-word">SKILLS</span>
+    <section 
+      id="skills" 
+      ref={sectionRef} 
+      className="skill-strip-section" 
+      aria-label="Atiya's Technical Toolkit Horizontal Moving Glass Strip"
+    >
+      <div className="section-container skill-strip-container">
+        
+        {/* ==================================================================
+            1. STATIONARY CENTERED SECTION HEADER
+            ================================================================== */}
+        <div className="skill-strip-intro skill-strip-header-reveal">
+          <div className="skill-strip-mini-badge">
+            <span className="skill-strip-badge-label">SKILLS</span>
+          </div>
+
+          <h2 className="editorial-main-title skill-strip-main-heading">
+            ATIYA'S <span className="heading-gradient-word">TOOLKIT</span>
           </h2>
-          <span className="editorial-subtitle skills-header-animate">
-            LANGUAGES, FRAMEWORKS, DATABASES & DESIGN TOOLS
-          </span>
-        </div>
 
-        {/* Editorial Category Grid */}
-        <div className="skills-editorial-container">
-          <div className="skills-category-grid">
-            {SKILL_CATEGORIES.map((cat) => {
-              const Icon = cat.icon;
-              return (
-                <div key={cat.id} className="skills-category-card skills-card-animate interactive">
-                  <div className="skills-category-header">
-                    <div className="skills-category-title">
-                      <Icon size={18} color="var(--color-secondary)" />
-                      <span>{cat.title}</span>
-                    </div>
-                    <span className="skills-category-count">{cat.skills.length} TECHNOLOGIES</span>
-                  </div>
+          <p className="skill-strip-editorial-tagline">
+            Tools and technologies I use to build digital experiences.
+          </p>
 
-                  <div className="skills-tags-list">
-                    {cat.skills.map((skill, idx) => (
-                      <span
-                        key={idx}
-                        className={`skill-tag-item ${skill.highlight ? 'highlight' : ''}`}
-                      >
-                        <span className="skill-tag-dot" />
-                        <span>{skill.name}</span>
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
+          {/* Centered Stop / Resume Motion Control Button */}
+          <div className="skill-strip-control-wrap">
+            <button
+              type="button"
+              className={`skill-strip-toggle-btn interactive ${isMotionPaused ? 'is-paused' : ''}`}
+              onClick={toggleMotion}
+              aria-label={isMotionPaused ? 'Resume horizontal motion' : 'Stop horizontal motion'}
+              aria-pressed={isMotionPaused}
+            >
+              {isMotionPaused ? (
+                <>
+                  <Play size={12} className="motion-btn-icon" />
+                  <span>RESUME MOTION</span>
+                </>
+              ) : (
+                <>
+                  <Pause size={12} className="motion-btn-icon" />
+                  <span>STOP MOTION</span>
+                </>
+              )}
+            </button>
           </div>
         </div>
+
+        {/* ==================================================================
+            2. FULL-WIDTH DEDICATED HORIZONTAL MOVING STRIP (LEFT → RIGHT)
+            ================================================================== */}
+        <div 
+          className="skill-strip-viewport" 
+          role="region" 
+          aria-label="Moving technology categories strip"
+        >
+          {/* Continuous Track (3 sets for seamless loop + initial full desktop visibility) */}
+          <div className={`skill-strip-track ${isMotionPaused ? 'is-paused' : ''}`}>
+            {[...SKILL_CATEGORIES, ...SKILL_CATEGORIES, ...SKILL_CATEGORIES].map((cat, idx) => (
+              <article
+                key={`${cat.id}-${idx}`}
+                className="skill-glass-panel"
+                aria-label={`${cat.name} category: ${cat.techs.length} technologies`}
+              >
+                {/* Specular Hairline Highlight */}
+                <div className="panel-glass-specular" aria-hidden="true" />
+
+                {/* Panel Top Header: Category Number & Title */}
+                <div className="panel-top-header">
+                  <span className="panel-category-num">{cat.number}</span>
+                  <h3 className="panel-category-title">{cat.name}</h3>
+                </div>
+
+                {/* Hairline Divider */}
+                <div className="panel-divider-hairline" aria-hidden="true" />
+
+                {/* Technology List (Clean Typographic Rows - No nested mini-cards) */}
+                <ul className="panel-techs-list">
+                  {cat.techs.map((tech) => (
+                    <li key={tech.id} className="panel-tech-row">
+                      <span className="tech-row-bullet" aria-hidden="true" />
+                      <span className="tech-row-name">{tech.name}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Panel Bottom Footer: Count Tag */}
+                <div className="panel-bottom-footer">
+                  <span className="panel-count-tag">{`0${cat.techs.length} TECHNOLOGIES`}</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+
       </div>
     </section>
   );

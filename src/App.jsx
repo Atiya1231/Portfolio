@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from './components/Navbar';
 import CustomCursor from './components/CustomCursor';
-import BackgroundCanvas from './components/BackgroundCanvas';
+import GlueDotsBackground from './components/GlueDotsBackground';
 import Footer from './components/Footer';
 
 // Sections
@@ -18,7 +18,21 @@ function App() {
       {/* Cinematic Background Atmosphere */}
       <div className="cinematic-bg-glow" aria-hidden="true" />
       <div className="film-grain-overlay" aria-hidden="true" />
-      <BackgroundCanvas />
+      
+      {/* Interactive Liquid Glue Dots Background Layer */}
+      <GlueDotsBackground
+        mode="fixed"
+        count={28}
+        minRadius={12}
+        maxRadius={28}
+        maxStretch={3.1}
+        viscosity={0.56}
+        handleRate={2.2}
+        speed={0.65}
+        interactive={true}
+        cursorRadius={24}
+        opacity={0.62}
+      />
 
       {/* Smooth Minimal Follower Cursor */}
       <CustomCursor />

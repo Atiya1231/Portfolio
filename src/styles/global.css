@@ -7,7 +7,7 @@
 
 html {
   font-size: 16px;
-  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-height, 80px) + 1.5rem);
   background-color: var(--bg-primary);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
@@ -15,6 +15,12 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
@@ -32,6 +38,8 @@ body {
   inset: 0;
   pointer-events: none;
   z-index: var(--z-bg);
+  transform: translateZ(0);
+  will-change: transform;
   background: 
     radial-gradient(ellipse 75% 55% at 50% 0%, rgba(213, 156, 197, 0.35) 0%, rgba(234, 218, 218, 0) 70%),
     radial-gradient(ellipse 65% 45% at 85% 60%, rgba(190, 92, 169, 0.16) 0%, rgba(234, 218, 218, 0) 65%),
@@ -45,6 +53,8 @@ body {
   pointer-events: none;
   z-index: var(--z-bg);
   opacity: 0.025;
+  transform: translateZ(0);
+  will-change: transform;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
@@ -88,6 +98,18 @@ button {
   cursor: pointer;
 }
 
+/* Accessible Focus States (UI UX Pro Max) */
+:focus-visible {
+  outline: 2px solid var(--color-secondary, #BE5CA9);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible) {
+  outline: none;
+}
+
 ul, ol {
   list-style: none;
 }
@@ -103,6 +125,8 @@ img {
   position: relative;
   min-height: 100vh;
   width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -111,4 +135,18 @@ img {
   position: relative;
   z-index: var(--z-content);
   width: 100%;
+}
+
+/* Comprehensive Accessibility & Reduced Motion Support (UI UX Pro Max + Ponytail) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

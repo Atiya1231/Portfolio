@@ -1,28 +1,25 @@
 import React, { useEffect, useRef } from 'react';
-import { ArrowUpRight, MessageCircle } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { gsap, ScrollTrigger, scrollToSection } from '../animations/gsapUtils';
-import MagneticButton from '../components/MagneticButton';
-import portraitNormal from '../assets/atiya-normal.png';
-import portraitFuturistic from '../assets/atiya-futuristic.png';
+import portraitImg from '../assets/atiya-anime-portrait.png';
 
 /**
- * HomeSection: Cinematic Editorial Hero for Atiya Ali Portfolio
- * Final Visual Polish:
- * - Exactly 100dvh viewport height (overflow: hidden, zero extra scrolling)
- * - Large portrait (88-95vh) anchored to bottom + 42px lift
- * - Pure continuous atmospheric sunset gradient (#EADADA -> #D59CC5 -> #BE5CA9 -> #4D3A4D)
- * - Interactive Cursor Spotlight Reveal: Soft circular mask reveals futuristic portrait over normal portrait
+ * EDITORIAL PORTFOLIO HERO SECTION
+ * Matches reference composition and visual hierarchy:
+ * - Centered, prominent portrait as the main visual focus
+ * - Oversized, tall, narrow, condensed fashion-editorial "PORTFOLIO" headline sitting behind/above the portrait
+ * - Portrait sits in front of / slightly overlaps the typography
+ * - Secondary identity on lower-left: "ATIYA ALI", "BCA STUDENT · DEVELOPER", description, and CTA
+ * - Secondary identity on lower-left: "ATIYA ALI", "SOFTWARE ENGINEER · DEVELOPER", description, and CTA
+ * - Strictly NO browser frame, NO card, NO box, NO "My First Design"
+ * - Palette strictly: #EADADA, #4D3A4D, #BE5CA9, #D59CC5
  */
 const HomeSection = () => {
   const sectionRef = useRef(null);
+  const titleRef = useRef(null);
   const portraitRef = useRef(null);
-  const revealImageRef = useRef(null);
-  const glowAtmosphereRef = useRef(null);
-  const glowPinkRef = useRef(null);
-  const glowPlumRef = useRef(null);
-  const nameAtiyaRef = useRef(null);
-  const nameAliRef = useRef(null);
-  const contentLeftRef = useRef(null);
+  const identityRef = useRef(null);
+  const badgeRef = useRef(null);
 
   useEffect(() => {
     const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -31,152 +28,57 @@ const HomeSection = () => {
       if (isReducedMotion) {
         gsap.set(
           [
-            glowAtmosphereRef.current,
-            glowPinkRef.current,
-            glowPlumRef.current,
+            '.hero-bg-gradient',
+            titleRef.current,
             portraitRef.current,
-            nameAtiyaRef.current,
-            nameAliRef.current,
-            '.hero-status-pill',
-            '.hero-tagline',
-            '.hero-editorial-statement',
-            '.hero-description',
-            '.magnetic-btn',
-            '.hero-scroll-indicator'
+            identityRef.current,
+            badgeRef.current
           ],
           { opacity: 1, visibility: 'visible', clearProps: 'transform,filter' }
         );
         return;
       }
 
-      // Initial state: hidden / blurred for cinematic entrance
-      gsap.set([glowAtmosphereRef.current, glowPinkRef.current, glowPlumRef.current], { opacity: 0 });
-      gsap.set(portraitRef.current, { opacity: 0, y: 20, filter: 'blur(8px)' });
-      gsap.set('.hero-status-pill', { opacity: 0, y: 14 });
-      gsap.set(nameAtiyaRef.current, { opacity: 0, y: 30, filter: 'blur(8px)' });
-      gsap.set(nameAliRef.current, { opacity: 0, y: 30, filter: 'blur(8px)' });
-      gsap.set('.hero-tagline', { opacity: 0, y: 16 });
-      gsap.set('.hero-editorial-statement', { opacity: 0, y: 16 });
-      gsap.set('.hero-description', { opacity: 0, y: 16 });
-      gsap.set('.magnetic-btn', { opacity: 0, y: 14, scale: 0.96 });
-      gsap.set('.hero-scroll-indicator', { opacity: 0, y: 10 });
+      // Initial States
+      gsap.set('.hero-bg-gradient', { opacity: 0 });
+      gsap.set(titleRef.current, { opacity: 0, y: 22 });
+      gsap.set(portraitRef.current, { opacity: 0, y: 30 });
+      gsap.set(identityRef.current, { opacity: 0, y: 18 });
+      gsap.set(badgeRef.current, { opacity: 0, y: 18 });
 
-      // Orchestrated Cinematic Entrance Timeline
-      const entranceTl = gsap.timeline({
-        defaults: { ease: 'power3.out' },
-        delay: 0.1
+      // Orchestrated Entrance: title -> portrait -> identity + badge
+      const tl = gsap.timeline({
+        defaults: { ease: 'cubic-bezier(0.16, 1, 0.3, 1)' }
       });
 
-      entranceTl
-        // 1. Atmospheric glows fade in smoothly
-        .to([glowAtmosphereRef.current, glowPinkRef.current, glowPlumRef.current], {
-          opacity: 1,
-          duration: 1.4,
-          ease: 'power2.out'
-        })
-        // 2. Large authentic portrait reveals cleanly at bottom
-        .to(
-          portraitRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            filter: 'blur(0px)',
-            duration: 1.3,
-            ease: 'power3.out',
-            clearProps: 'filter'
-          },
-          '-=1.1'
-        )
-        // 3. Status Pill & "ATIYA"
-        .to(
-          '.hero-status-pill',
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.7
-          },
-          '-=0.9'
-        )
-        .to(
-          nameAtiyaRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            filter: 'blur(0px)',
-            duration: 1.1,
-            ease: 'power3.out',
-            clearProps: 'filter'
-          },
-          '-=0.7'
-        )
-        // 4. "ALI"
-        .to(
-          nameAliRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            filter: 'blur(0px)',
-            duration: 1.1,
-            ease: 'power3.out',
-            clearProps: 'filter'
-          },
-          '-=0.85'
-        )
-        // 5. Tagline, Quote & Description
-        .to(
-          ['.hero-tagline', '.hero-editorial-statement', '.hero-description'],
-          {
-            opacity: 1,
-            y: 0,
-            stagger: 0.1,
-            duration: 0.75
-          },
-          '-=0.7'
-        )
-        // 6. Action buttons
-        .to(
-          '.magnetic-btn',
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            stagger: 0.1,
-            duration: 0.7
-          },
-          '-=0.55'
-        )
-        // 7. Scroll indicator
-        .to(
-          '.hero-scroll-indicator',
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.7,
-            ease: 'power2.out'
-          },
-          '-=0.4'
-        );
+      tl
+        .to('.hero-bg-gradient', { opacity: 1, duration: 0.8, ease: 'power2.out' }, 0)
+        .to(titleRef.current, { opacity: 1, y: 0, duration: 0.85 }, 0.15)
+        .to(portraitRef.current, { opacity: 1, y: 0, duration: 0.9 }, 0.3)
+        .to(identityRef.current, { opacity: 1, y: 0, duration: 0.75 }, 0.48)
+        .to(badgeRef.current, { opacity: 1, y: 0, duration: 0.75 }, 0.52);
 
-  // Subtle Parallax on scroll
-      if (typeof ScrollTrigger !== 'undefined') {
-        gsap.to('.hero-content-left', {
-          y: -30,
-          opacity: 0.65,
+      // Subtle editorial depth parallax on scroll
+      if (typeof ScrollTrigger !== 'undefined' && titleRef.current && portraitRef.current) {
+        gsap.to(titleRef.current, {
+          yPercent: -12,
+          ease: 'none',
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top top',
             end: 'bottom top',
-            scrub: 1
+            scrub: 0.5
           }
         });
 
         gsap.to(portraitRef.current, {
-          y: -15,
+          yPercent: -6,
+          ease: 'none',
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top top',
             end: 'bottom top',
-            scrub: 1
+            scrub: 0.5
           }
         });
       }
@@ -185,216 +87,82 @@ const HomeSection = () => {
     return () => ctx.revert();
   }, []);
 
-  // Cinematic Cursor-Following Spotlight Reveal for Futuristic Portrait Layer
-  useEffect(() => {
-    const section = sectionRef.current;
-    const revealEl = revealImageRef.current;
-    if (!section || !revealEl) return;
-
-    // Respect reduced-motion and touch device constraints
-    const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
-    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (isTouch || isReducedMotion) {
-      revealEl.style.display = 'none';
-      return;
-    }
-
-    const mouse = { x: -1000, y: -1000 };
-    const current = { x: -1000, y: -1000 };
-    let currentOpacity = 0;
-    let isHovered = false;
-    let animationFrameId = null;
-
-    const lerp = (start, end, factor) => start + (end - start) * factor;
-
-    const onPointerMove = (e) => {
-      isHovered = true;
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    };
-
-    const onPointerLeave = () => {
-      isHovered = false;
-    };
-
-    const render = () => {
-      const heroRect = section.getBoundingClientRect();
-      const isInsideHero =
-        isHovered &&
-        mouse.x >= heroRect.left &&
-        mouse.x <= heroRect.right &&
-        mouse.y >= heroRect.top &&
-        mouse.y <= heroRect.bottom;
-
-      const targetOpacity = isInsideHero ? 1 : 0;
-      currentOpacity = lerp(currentOpacity, targetOpacity, 0.12);
-
-      if (currentOpacity > 0.005) {
-        const rect = revealEl.getBoundingClientRect();
-        const targetX = mouse.x - rect.left;
-        const targetY = mouse.y - rect.top;
-
-        // On first frame, snap smoothly to avoid starting at origin
-        if (current.x === -1000) {
-          current.x = targetX;
-          current.y = targetY;
-        } else {
-          current.x = lerp(current.x, targetX, 0.14);
-          current.y = lerp(current.y, targetY, 0.14);
-        }
-
-        const radius = 320;
-        const maskGradient = `radial-gradient(circle ${radius}px at ${current.x.toFixed(2)}px ${current.y.toFixed(2)}px, black 0%, black 40%, rgba(0, 0, 0, 0.58) 65%, transparent 100%)`;
-
-        revealEl.style.maskImage = maskGradient;
-        revealEl.style.webkitMaskImage = maskGradient;
-        revealEl.style.opacity = currentOpacity.toFixed(3);
-        revealEl.style.visibility = 'visible';
-      } else {
-        currentOpacity = 0;
-        revealEl.style.opacity = '0';
-        revealEl.style.visibility = 'hidden';
-        current.x = -1000;
-        current.y = -1000;
-      }
-
-      animationFrameId = requestAnimationFrame(render);
-    };
-
-    animationFrameId = requestAnimationFrame(render);
-
-    window.addEventListener('pointermove', onPointerMove, { passive: true });
-    section.addEventListener('pointerleave', onPointerLeave);
-    document.addEventListener('mouseleave', onPointerLeave);
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('pointermove', onPointerMove);
-      section.removeEventListener('pointerleave', onPointerLeave);
-      document.removeEventListener('mouseleave', onPointerLeave);
-    };
-  }, []);
-
   return (
     <section
       id="home"
       ref={sectionRef}
-      className="hero-section"
-      aria-label="Atiya Ali Portfolio Presentation"
+      className="hero-editorial-section"
+      aria-label="Atiya Ali — Portfolio Cover"
     >
-      {/* ==========================================================================
-          CONTINUOUS FULL-SCREEN ATMOSPHERIC SUNSET GRADIENTS
-          Strictly locked: Light (#EADADA) -> Soft Pink (#D59CC5) -> Magenta (#BE5CA9) -> Deep Plum (#4D3A4D)
-          No geometric shapes, no polygons, no boxes
-          ========================================================================== */}
-      <div ref={glowAtmosphereRef} className="hero-glow-atmosphere" aria-hidden="true" />
-      <div ref={glowPinkRef} className="hero-glow-pink" aria-hidden="true" />
-      <div ref={glowPlumRef} className="hero-glow-plum" aria-hidden="true" />
+      {/* Smooth continuous background gradient within palette */}
+      <div className="hero-bg-gradient" aria-hidden="true">
+        <div className="hero-bg-subtle-glow" />
+      </div>
 
-      {/* Main Responsive Grid Layout */}
-      <div className="hero-layout-grid">
-        {/* ==========================================================================
-            LEFT COLUMN: EDITORIAL TYPOGRAPHY & INTERACTIVE CTAs
-            ========================================================================== */}
-        <div ref={contentLeftRef} className="hero-content-left">
-          {/* Status Badge */}
-          <div className="hero-status-pill">
-            <span className="hero-status-dot" />
-            <span>AVAILABLE FOR OPPORTUNITIES</span>
-          </div>
+      <div className="hero-container">
+        {/* UPPER TITLE: OVERSIZED TALL CONDENSED EDITORIAL "PORTFOLIO" */}
+        <div className="hero-title-container">
+          <h1 ref={titleRef} className="hero-editorial-title" aria-label="PORTFOLIO">
+            <span className="hero-char char-p">P</span>
+            <span className="hero-char char-o">O</span>
+            <span className="hero-char char-r">R</span>
+            <span className="hero-char char-t">T</span>
+            <span className="hero-char char-f">F</span>
+            <span className="hero-char char-o2">O</span>
+            <span className="hero-char char-l">L</span>
+            <span className="hero-char char-i">I</span>
+            <span className="hero-char char-o3">O</span>
+          </h1>
+        </div>
 
-          {/* Massive Dominant Editorial Typography */}
-          <div className="hero-name-container">
-            <h1 className="hero-name-line name-atiya" ref={nameAtiyaRef}>
-              ATIYA
-            </h1>
-            <span className="hero-name-line name-ali" ref={nameAliRef}>
-              ALI
-            </span>
-          </div>
+        {/* YEAR BADGE IN UPPER RIGHT (matching reference watermark) */}
+        <div className="hero-year-watermark" aria-hidden="true">
+          '26
+        </div>
 
-          {/* Tagline Subtitle */}
-          <div className="hero-tagline">
-            <span>BCA STUDENT</span>
-            <span className="hero-tagline-bullet">•</span>
-            <span>DEVELOPER</span>
-          </div>
+        {/* CENTERED PROMINENT PORTRAIT SITTING IN FRONT OF / OVERLAPPING TYPOGRAPHY */}
+        <div ref={portraitRef} className="hero-portrait-center">
+          <div className="hero-portrait-glow" aria-hidden="true" />
+          <img
+            src={portraitImg}
+            alt="Atiya Ali — Character Portrait"
+            className="hero-portrait-img"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
 
-          {/* Supporting Statement & Description */}
-          <p className="hero-editorial-statement">
-            "Building digital experiences where technology meets creativity."
+        {/* SECONDARY IDENTITY: LOWER-LEFT COLUMN AROUND CENTERED PORTRAIT */}
+        <div ref={identityRef} className="hero-identity-left">
+          <h2 className="hero-canvas-name">
+            ATIYA ALI
+          </h2>
+
+          <p className="hero-canvas-role">
+            BCA STUDENT <span className="hero-role-separator">·</span> DEVELOPER
+            SOFTWARE ENGINEER <span className="hero-role-separator">·</span> DEVELOPER
           </p>
 
-          <p className="hero-description">
-            Crafting immersive web applications with modern engineering, precision aesthetics, and interactive 3D environments.
+          <p className="hero-canvas-desc">
+            Building digital experiences where technology meets creativity.
           </p>
 
-          {/* Magnetic CTA Buttons */}
-          <div className="hero-cta-group">
-            <MagneticButton
-              id="hero-btn-explore"
-              variant="primary"
-              onClick={() => scrollToSection('projects')}
-              ariaLabel="Explore my projects and work"
-            >
-              <span>EXPLORE MY WORK</span>
-              <ArrowUpRight size={16} />
-            </MagneticButton>
-
-            <MagneticButton
-              id="hero-btn-contact"
-              variant="secondary"
-              onClick={() => scrollToSection('contact')}
-              ariaLabel="Contact Atiya Ali"
-            >
-              <span>CONTACT ME</span>
-              <MessageCircle size={15} />
-            </MagneticButton>
-          </div>
-
-          {/* Bottom Scroll Indicator Aligned With Left Editorial Column */}
           <button
             type="button"
-            className="hero-scroll-indicator interactive"
-            onClick={() => scrollToSection('about')}
-            aria-label="Scroll to About section"
+            className="hero-canvas-cta"
+            onClick={() => scrollToSection('projects')}
+            aria-label="Explore Projects"
           >
-            <span className="hero-scroll-text">SCROLL TO EXPLORE</span>
-            <div className="hero-scroll-line-container">
-              <div className="hero-scroll-line" />
-            </div>
+            <span>EXPLORE WORK</span>
+            <ArrowUpRight size={15} className="hero-cta-icon" />
           </button>
         </div>
 
-        {/* ==========================================================================
-            RIGHT COLUMN: LARGE BOTTOM-ALIGNED EDITORIAL PORTRAIT (88-95vh)
-            Base Normal Portrait + Cursor-Revealed Futuristic Portrait Layer
-            ========================================================================== */}
-        <div className="hero-visual-right">
-          {/* Soft Radial Ambient Glow Behind Portrait */}
-          <div className="hero-portrait-ambient-glow" aria-hidden="true" />
-
-          {/* Bottom-Aligned Authentic Portrait Container */}
-          <div ref={portraitRef} className="hero-portrait-wrapper">
-            {/* Permanent Base Normal Portrait */}
-            <img
-              src={portraitNormal}
-              alt="Atiya Ali — BCA Student & Aspiring Developer"
-              className="hero-portrait-image hero-portrait-base"
-              loading="eager"
-              decoding="async"
-            />
-
-            {/* Futuristic Reveal Portrait (Overlaid and revealed via soft circular cursor spotlight) */}
-            <img
-              ref={revealImageRef}
-              src={portraitFuturistic}
-              alt=""
-              aria-hidden="true"
-              className="hero-portrait-image hero-portrait-reveal"
-              loading="eager"
-              decoding="async"
-            />
+        {/* OPEN TO OPPORTUNITIES BADGE: LOWER-RIGHT AREA */}
+        <div ref={badgeRef} className="hero-badge-lower-right">
+          <div className="hero-badge-pill">
+            <span className="hero-badge-dot" />
+            <span>OPEN TO OPPORTUNITIES</span>
           </div>
         </div>
       </div>
@@ -403,5 +171,3 @@ const HomeSection = () => {
 };
 
 export default HomeSection;
-
-

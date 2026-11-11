@@ -3,8 +3,6 @@ import { ArrowUp } from 'lucide-react';
 import { scrollToSection } from '../animations/gsapUtils';
 import GithubIcon from './GithubIcon';
 
-const CURRENT_YEAR = 2025;
-
 const NAV_ITEMS = [
   { id: 'home', label: 'HOME' },
   { id: 'about', label: 'ABOUT' },
@@ -28,7 +26,7 @@ const Footer = () => {
               ATIYA ALI
             </div>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', letterSpacing: '0.16em', color: 'var(--color-secondary)', marginTop: '0.2rem' }}>
-              BCA STUDENT • DEVELOPER
+              SOFTWARE ENGINEER · DEVELOPER
             </div>
           </div>
 
@@ -61,7 +59,7 @@ const Footer = () => {
         {/* Bottom Footer Tier */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
           <div className="footer-copy">
-            © {CURRENT_YEAR} ATIYA ALI — CRAFTED WITH CREATIVE CODE & REACT.
+            © 2026 ATIYA ALI. ALL RIGHTS RESERVED.
           </div>
 
           <div className="footer-status">

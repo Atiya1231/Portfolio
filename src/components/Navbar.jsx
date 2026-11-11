@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { scrollToSection } from '../animations/gsapUtils';
 
 const NAV_ITEMS = [
@@ -17,29 +17,45 @@ const Navbar = () => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   useEffect(() => {
+    let prevScrolled = false;
     const handleScroll = () => {
-      // Toggle navbar background
-      if (window.scrollY > 40) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-
-      // Track active section on scroll
-      const sections = NAV_ITEMS.map((item) => document.getElementById(item.id));
-      const scrollPosition = window.scrollY + 200;
-
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = sections[i];
-        if (section && section.offsetTop <= scrollPosition) {
-          setActiveSection(NAV_ITEMS[i].id);
-          break;
-        }
+      const scrolled = window.scrollY > 30;
+      if (scrolled !== prevScrolled) {
+        prevScrolled = scrolled;
+        setIsScrolled(scrolled);
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    handleScroll();
+
+    // Native IntersectionObserver for active section tracking (zero forced synchronous layout)
+    let observer = null;
+    if (typeof IntersectionObserver !== 'undefined') {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setActiveSection(entry.target.id);
+            }
+          });
+        },
+        {
+          rootMargin: '-25% 0px -65% 0px',
+          threshold: 0
+        }
+      );
+
+      NAV_ITEMS.forEach((item) => {
+        const el = document.getElementById(item.id);
+        if (el) observer.observe(el);
+      });
+    }
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (observer) observer.disconnect();
+    };
   }, []);
 
   const handleNavClick = (e, id) => {
@@ -62,7 +78,7 @@ const Navbar = () => {
     <>
       <header className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
         <div className="navbar-inner">
-          {/* Brand Logo */}
+          {/* Brand Logo - LEFT: ATIYA */}
           <a
             href="#home"
             className="brand-logo"
@@ -70,16 +86,16 @@ const Navbar = () => {
             aria-label="Atiya Ali Homepage"
           >
             <span className="brand-dot" />
-            <span>ATIYA ALI</span>
+            <span className="brand-text">ATIYA</span>
           </a>
 
-          {/* Desktop Navigation */}
-          <nav className="nav-links-desktop" aria-label="Main Navigation">
+          {/* Center Navigation - Floating Liquid-Glass Pill */}
+          <nav className="nav-pill-desktop" aria-label="Main Navigation">
             {NAV_ITEMS.map((item) => (
               <a
                 key={item.id}
                 href={`#${item.id}`}
-                className={`nav-link-item ${activeSection === item.id ? 'active' : ''}`}
+                className={`nav-pill-item ${activeSection === item.id ? 'active' : ''}`}
                 onClick={(e) => handleNavClick(e, item.id)}
               >
                 {item.label}
@@ -87,15 +103,28 @@ const Navbar = () => {
             ))}
           </nav>
 
-          {/* Mobile Hamburger Toggle */}
-          <button
-            className="mobile-menu-toggle"
-            onClick={() => setIsMobileOpen((prev) => !prev)}
-            aria-expanded={isMobileOpen}
-            aria-label="Toggle mobile menu"
-          >
-            {isMobileOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
+          {/* Right Action - Dark-Plum LET'S TALK Button */}
+          <div className="navbar-right-actions">
+            <a
+              href="#contact"
+              className="nav-cta-talk"
+              onClick={(e) => handleNavClick(e, 'contact')}
+              aria-label="Contact Atiya - Let's Talk"
+            >
+              <span>LET'S TALK</span>
+              <ArrowUpRight size={14} className="nav-cta-icon" />
+            </a>
+
+            {/* Mobile Hamburger Toggle */}
+            <button
+              className="mobile-menu-toggle"
+              onClick={() => setIsMobileOpen((prev) => !prev)}
+              aria-expanded={isMobileOpen}
+              aria-label="Toggle mobile menu"
+            >
+              {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -108,6 +137,17 @@ const Navbar = () => {
 
       {/* Mobile Drawer */}
       <aside className={`mobile-drawer ${isMobileOpen ? 'open' : ''}`} aria-hidden={!isMobileOpen}>
+        <div className="mobile-drawer-header">
+          <div className="mobile-brand">ATIYA</div>
+          <button 
+            className="mobile-close-btn"
+            onClick={() => setIsMobileOpen(false)}
+            aria-label="Close menu"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
         <div className="mobile-nav-links">
           {NAV_ITEMS.map((item) => (
             <a
@@ -123,8 +163,14 @@ const Navbar = () => {
         </div>
 
         <div className="mobile-drawer-footer">
-          <div>ATIYA ALI // PORTFOLIO</div>
-          <div>BCA STUDENT & ASPIRING DEVELOPER</div>
+          <a
+            href="#contact"
+            className="mobile-drawer-cta"
+            onClick={(e) => handleNavClick(e, 'contact')}
+          >
+            LET'S TALK
+          </a>
+          <div className="mobile-subtitle">BCA STUDENT & DEVELOPER</div>
         </div>
       </aside>
     </>

@@ -14,13 +14,17 @@ export const scrollToSection = (targetId) => {
   const targetElement = document.getElementById(targetId);
   if (!targetElement) return;
 
+  const prefersReduced =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   const navHeight = 80;
   const elementPosition = targetElement.getBoundingClientRect().top;
   const offsetPosition = elementPosition + window.pageYOffset - navHeight;
 
   window.scrollTo({
     top: offsetPosition,
-    behavior: 'smooth'
+    behavior: prefersReduced ? 'auto' : 'smooth'
   });
 };
 
