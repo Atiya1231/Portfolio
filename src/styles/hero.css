@@ -5,7 +5,7 @@
    2. Oversized, tall, narrow, dramatic high-contrast serif "PORTFOLIO" headline
       sitting prominently behind/above the portrait
    3. Portrait sits in front of / slightly overlaps the typography
-   4. Secondary Identity on lower-left: "ATIYA ALI", "BCA STUDENT · DEVELOPER",
+   4. Secondary Identity on lower-left: "ATIYA ALI", "SOFTWARE ENGINEER · DEVELOPER",
       description, and CTA button
    5. Clean and dramatic: NO enclosing card, NO browser frame, NO box
    6. Palette strictly: #EADADA (Blush), #4D3A4D (Deep Plum), #BE5CA9 (Magenta), #D59CC5 (Soft Pink-Lavender)
@@ -225,7 +225,7 @@
 
 /* ==========================================================================
    SECONDARY IDENTITY: LOWER-LEFT COLUMN AROUND THE CENTERED PORTRAIT
-   - "ATIYA ALI", "BCA STUDENT · DEVELOPER", description, and CTA
+   - "ATIYA ALI", "SOFTWARE ENGINEER · DEVELOPER", description, and CTA
    - Balanced with generous breathing space, non-competing with headline
    ========================================================================== */
 .hero-identity-left {

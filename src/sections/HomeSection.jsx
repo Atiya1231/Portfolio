@@ -9,7 +9,6 @@ import portraitImg from '../assets/atiya-anime-portrait.png';
  * - Centered, prominent portrait as the main visual focus
  * - Oversized, tall, narrow, condensed fashion-editorial "PORTFOLIO" headline sitting behind/above the portrait
  * - Portrait sits in front of / slightly overlaps the typography
- * - Secondary identity on lower-left: "ATIYA ALI", "BCA STUDENT · DEVELOPER", description, and CTA
  * - Secondary identity on lower-left: "ATIYA ALI", "SOFTWARE ENGINEER · DEVELOPER", description, and CTA
  * - Strictly NO browser frame, NO card, NO box, NO "My First Design"
  * - Palette strictly: #EADADA, #4D3A4D, #BE5CA9, #D59CC5
@@ -139,7 +138,6 @@ const HomeSection = () => {
           </h2>
 
           <p className="hero-canvas-role">
-            BCA STUDENT <span className="hero-role-separator">·</span> DEVELOPER
             SOFTWARE ENGINEER <span className="hero-role-separator">·</span> DEVELOPER
           </p>
 
